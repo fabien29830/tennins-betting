@@ -1,0 +1,153 @@
+name: Tennis Auto
+
+# ──────────────────────────────────────────────────────────────
+# Horaires en UTC (France = UTC+1 hiver / UTC+2 été)
+#   Lundi 07h CET  → 06:00 UTC  → pipeline complet
+#   Quotidien 08h  → 07:00 UTC  → analyse
+#   Quotidien 13h  → 12:00 UTC  → analyse
+#   Quotidien 19h  → 18:00 UTC  → analyse
+#   Quotidien 23h  → 22:00 UTC  → résultats
+# En été (CEST = UTC+2) les runs auront 1h d'avance — ajuster les
+# cron si besoin en remplaçant par 05 / 06 / 11 / 17 / 21.
+# ──────────────────────────────────────────────────────────────
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'    # Lundi   07:00 CET  → pipeline
+    - cron: '0 7 * * *'    # Quotidien 08:00 CET → analyse
+    - cron: '0 12 * * *'   # Quotidien 13:00 CET → analyse
+    - cron: '0 18 * * *'   # Quotidien 19:00 CET → analyse
+    - cron: '0 22 * * *'   # Quotidien 23:00 CET → résultats
+
+  # Déclenchement manuel depuis l'onglet Actions de GitHub
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Mode à exécuter'
+        required: true
+        default: 'analyse'
+        type: choice
+        options:
+          - analyse
+          - resultats
+          - pipeline
+
+jobs:
+  tennis:
+    name: "Tennis Auto — ${{ github.event.schedule || inputs.mode }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # ── 1. Récupérer le code ────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Python 3.11 ─────────────────────────────────────
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'          # cache des wheels pip entre les runs
+
+      # ── 3. Dépendances ─────────────────────────────────────
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # ── 4. Restaurer les données générées (CSV, pkl) ───────
+      #       Clé primaire = run du dernier pipeline
+      #       restore-keys = toujours récupérer le cache le plus récent
+      - name: Restore tennis_data cache
+        id: cache-data
+        uses: actions/cache@v4
+        with:
+          path: tennis_data
+          key: tennis-data-${{ github.run_id }}
+          restore-keys: |
+            tennis-data-
+
+      # ── 5. Écrire les credentials Google depuis le secret ──
+      #       (fait APRÈS la restauration du cache pour écraser
+      #        toute version en cache avec la valeur fraîche)
+      - name: Write Google credentials
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        run: |
+          mkdir -p tennis_data
+          printf '%s' "$GOOGLE_CREDENTIALS" > tennis_data/gsheet_credentials.json
+          echo "Credentials écrits dans tennis_data/gsheet_credentials.json"
+
+      # ── 6. Déterminer le mode selon le cron ou l'input ─────
+      - name: Determine run mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            MODE="${{ inputs.mode }}"
+          elif [ "${{ github.event.schedule }}" = "0 6 * * 1" ]; then
+            MODE="pipeline"
+          elif [ "${{ github.event.schedule }}" = "0 22 * * *" ]; then
+            MODE="resultats"
+          else
+            MODE="analyse"
+          fi
+          echo "mode=$MODE" >> $GITHUB_OUTPUT
+          echo "▶  Mode sélectionné : $MODE"
+
+      # ── 7a. Pipeline complet (lundi 07h) ───────────────────
+      - name: Run pipeline
+        if: steps.mode.outputs.mode == 'pipeline'
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        run: python tennis_auto.py --pipeline
+
+      # ── 7b. Analyse + value bets (08h / 13h / 19h) ─────────
+      - name: Run analyse
+        if: steps.mode.outputs.mode == 'analyse'
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        run: |
+          # Fallback : si le modèle est absent (premier run ou cache expiré),
+          # lancer le pipeline complet avant l'analyse
+          if [ ! -f tennis_data/modele_tennis.pkl ]; then
+            echo "⚠  Modèle absent — exécution du pipeline complet d'abord..."
+            python tennis_auto.py --pipeline
+          fi
+          python tennis_auto.py --analyse
+
+      # ── 7c. Résultats (23h) ────────────────────────────────
+      - name: Run resultats
+        if: steps.mode.outputs.mode == 'resultats'
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        run: |
+          if [ ! -f tennis_data/modele_tennis.pkl ]; then
+            echo "⚠  Modèle absent — exécution du pipeline complet d'abord..."
+            python tennis_auto.py --pipeline
+          fi
+          python tennis_auto.py --resultats
+
+      # ── 8. Sauvegarder le cache après pipeline ─────────────
+      #       (uniquement si le pipeline a tourné pour éviter
+      #        d'écraser un bon cache avec des données incomplètes)
+      - name: Save tennis_data cache
+        if: >
+          steps.mode.outputs.mode == 'pipeline' ||
+          (steps.mode.outputs.mode == 'analyse' && steps.cache-data.outputs.cache-hit != 'true') ||
+          (steps.mode.outputs.mode == 'resultats' && steps.cache-data.outputs.cache-hit != 'true')
+        uses: actions/cache@v4
+        with:
+          path: tennis_data
+          key: tennis-data-${{ github.run_id }}
+
+      # ── 9. Uploader le rapport comme artifact ───────────────
+      - name: Upload rapport
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapport-${{ steps.mode.outputs.mode }}-${{ github.run_id }}
+          path: tennis_data/rapports/
+          retention-days: 30
+          if-no-files-found: ignore
