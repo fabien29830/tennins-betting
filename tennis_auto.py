@@ -1322,34 +1322,95 @@ def _noms_correspondent(a, b):
     return SequenceMatcher(None, na, nb).ratio() > 0.82
 
 
-def _scores_depuis_api(sport_key, jours=3):
-    """Retourne la liste des events terminés pour ce sport_key."""
-    url = f"https://api.the-odds-api.com/v4/sports/{sport_key}/scores/"
+def _resultats_espn(circuit, dates_a_verifier):
+    """
+    Source primaire : ESPN scoreboard ATP/WTA (gratuit, sans clé).
+    Retourne {frozenset({nom1_norm, nom2_norm}): winner_display_name}
+    pour tous les matchs terminés couvrant les dates demandées.
+    ESPN publie les résultats dans les minutes qui suivent la fin du match.
+    """
+    base = (f"http://site.api.espn.com/apis/site/v2"
+            f"/sports/tennis/{circuit}/scoreboard")
+    resultats = {}
+
+    # Interroger chaque date + J+1 et J+2 pour les matchs terminés tard
+    dates_espn = set()
+    for d in dates_a_verifier:
+        for delta in range(3):
+            dates_espn.add(d + timedelta(days=delta))
+
+    for d in sorted(dates_espn):
+        try:
+            r = requests.get(base, params={"dates": d.strftime("%Y%m%d")},
+                             timeout=15)
+            if r.status_code != 200:
+                continue
+            data = r.json()
+        except Exception:
+            continue
+
+        for event in data.get("events", []):
+            for grp in event.get("groupings", []):
+                for comp in grp.get("competitions", []):
+                    if not comp.get("status", {}).get("type", {}).get("completed"):
+                        continue
+                    competitors = comp.get("competitors", [])
+                    if len(competitors) < 2:
+                        continue
+                    names  = [c.get("athlete", {}).get("displayName", "")
+                              for c in competitors]
+                    winner = next(
+                        (c.get("athlete", {}).get("displayName", "")
+                         for c in competitors if c.get("winner")),
+                        None,
+                    )
+                    if winner and all(names):
+                        key = frozenset(normaliser(n) for n in names)
+                        resultats[key] = winner
+    return resultats
+
+
+def _resultats_csv(circuit):
+    """
+    Source secondaire : CSV locaux mis à jour par tennis_scraper.py.
+    Retourne {frozenset({winner_norm, loser_norm}): winner_name}.
+    """
+    fname = ("atp_matchs_bruts.csv" if circuit == "atp"
+             else "wta_matchs_bruts.csv")
+    p = os.path.join(DOSSIER_DATA, fname)
+    resultats = {}
+    if not os.path.exists(p):
+        return resultats
     try:
-        r = requests.get(url,
-                         params={"apiKey": ODDS_API_KEY,
-                                 "daysFrom": jours,
-                                 "dateFormat": "iso"},
-                         timeout=15)
-        if r.status_code == 200:
-            return [e for e in r.json() if e.get("completed")]
-        if r.status_code == 422:          # clé invalide / sport inconnu
-            return []
+        import pandas as pd
+        df = pd.read_csv(p, usecols=["winner_name", "loser_name", "date"])
+        cutoff = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+        df = df[df["date"] >= cutoff]
+        for _, row in df.iterrows():
+            w, l = str(row["winner_name"]), str(row["loser_name"])
+            if w and l and w != "nan" and l != "nan":
+                key = frozenset([normaliser(w), normaliser(l)])
+                resultats[key] = w
     except Exception:
         pass
-    return []
+    return resultats
 
 
-def _gagnant_event(event):
-    """Retourne le nom du gagnant depuis un event API (scores = sets gagnés)."""
-    sc = event.get("scores") or []
-    if len(sc) < 2:
-        return None
-    try:
-        s = {x["name"]: int(x["score"]) for x in sc}
-        return max(s, key=s.get)
-    except (ValueError, KeyError):
-        return None
+def _chercher_resultat(pari, resultats_dict):
+    """
+    Cherche le résultat d'un pari dans {frozenset(noms_normalisés): winner}.
+    Retourne 'Gagné', 'Perdu' ou None.
+    """
+    for key, winner in resultats_dict.items():
+        noms = list(key)
+        if len(noms) < 2:
+            continue
+        # Les deux joueurs du pari doivent correspondre aux deux noms de la clé
+        match_j = any(_noms_correspondent(pari["joueur"],     n) for n in noms)
+        match_a = any(_noms_correspondent(pari["adversaire"], n) for n in noms)
+        if match_j and match_a:
+            return "Gagné" if _noms_correspondent(pari["joueur"], winner) else "Perdu"
+    return None
 
 
 def recuperer_resultats():
@@ -1357,13 +1418,15 @@ def recuperer_resultats():
     --resultats : met à jour Gagné/Perdu pour tous les paris passés
     encore marqués 'En cours' dans l'onglet Paris du Google Sheet.
 
-    Stratégie :
-      1. Lire les paris 'En cours' avec date < aujourd'hui
-      2. Interroger /scores/ pour chaque tournoi concerné (daysFrom=3,
-         puis retry à 7 si le résultat n'est pas trouvé)
-      3. Écrire Gagné / Perdu en col M  (N Gain/Perte et O Bankroll
-         se recalculent automatiquement via les formules existantes)
-      4. Afficher le bilan et la bankroll mise à jour
+    Sources (priorité décroissante) :
+      1. ESPN scoreboard ATP/WTA — temps réel, sans clé, mis à jour
+         dans les minutes suivant la fin de chaque match.
+      2. CSV locaux atp/wta_matchs_bruts.csv — données tennis-data.co.uk
+         mises à jour lors du pipeline hebdomadaire.
+
+    Seule la colonne M (Résultat) est écrite.
+    Les colonnes N (Gain/Perte) et O (Bankroll) se recalculent
+    automatiquement via leurs formules Google Sheets en cascade.
     """
     print("\n" + "=" * 60)
     print("  MISE À JOUR DES RÉSULTATS")
@@ -1385,90 +1448,83 @@ def recuperer_resultats():
 
     aujourd_hui = datetime.now(timezone.utc).date()
 
-    # ── 1. Sélectionner les paris à résoudre ──────────────────
+    # ── 1. Sélectionner les paris passés encore "En cours" ────
     paris = []
     for ri, row in enumerate(data[1:], start=2):
-        if len(row) < 13:
-            continue
-        if row[12] != "En cours":          # col M
+        if len(row) < 13 or row[12] != "En cours":
             continue
         try:
             date_match = datetime.strptime(row[0][:10], "%Y-%m-%d").date()
         except ValueError:
             continue
         if date_match >= aujourd_hui:
-            continue                        # match pas encore joué
+            continue                    # match pas encore joué
         paris.append({
-            "ri":          ri,
-            "date":        date_match,
-            "tournoi":     row[1],          # B : sport_key API
-            "circuit":     row[2],          # C
-            "joueur":      row[5],          # F : joueur parié
-            "adversaire":  row[6],          # G
+            "ri":         ri,
+            "date":       date_match,
+            "circuit":    row[2].lower(),   # C : "atp" ou "wta"
+            "joueur":     row[5],           # F : joueur parié
+            "adversaire": row[6],           # G : adversaire
         })
 
     if not paris:
         print("  Aucun pari passé marqué 'En cours' — tout est à jour.")
         return
 
-    print(f"  {len(paris)} pari(s) passé(s) à résoudre :\n")
+    print(f"  {len(paris)} pari(s) à résoudre :\n")
     for p in paris:
-        print(f"    [{p['circuit'].upper()}] {p['joueur']} vs {p['adversaire']}  ({p['date']})")
+        print(f"    [{p['circuit'].upper()}] {p['joueur']} vs "
+              f"{p['adversaire']}  ({p['date']})")
 
-    # ── 2. Récupérer les scores par tournoi ───────────────────
-    tournois = set(p["tournoi"] for p in paris if p["tournoi"].startswith("tennis_"))
-    cache_scores = {}     # sport_key -> list[event]
+    # ── 2. Charger les résultats (ESPN + CSV) ─────────────────
+    circuits   = set(p["circuit"] for p in paris)
+    espn_data  = {}
+    csv_data   = {}
 
-    for sk in tournois:
-        events = _scores_depuis_api(sk, jours=3)
-        if not events:                      # retry avec fenêtre plus large
-            events = _scores_depuis_api(sk, jours=7)
-        cache_scores[sk] = events
-        print(f"\n  {sk} : {len(events)} résultat(s) récupéré(s)")
+    for circuit in circuits:
+        dates = {p["date"] for p in paris if p["circuit"] == circuit}
+
+        print(f"\n  ESPN {circuit.upper()} :", end="  ")
+        espn = _resultats_espn(circuit, dates)
+        espn_data[circuit] = espn
+        print(f"{len(espn)} match(s) terminé(s) trouvé(s)")
+
+        csv = _resultats_csv(circuit)
+        csv_data[circuit] = csv
+        print(f"  CSV  {circuit.upper()} :  {len(csv)} match(s) en base locale")
 
     # ── 3. Matcher chaque pari ────────────────────────────────
-    updates      = []     # {'ri', 'resultat', 'joueur', 'adversaire'}
-    non_trouves  = []
+    updates     = []
+    non_trouves = []
 
     for pari in paris:
-        events = cache_scores.get(pari["tournoi"], [])
+        circuit  = pari["circuit"]
         resultat = None
+        source   = None
 
-        for ev in events:
-            home = ev.get("home_team", "")
-            away = ev.get("away_team", "")
+        # Source 1 : ESPN (temps réel)
+        r = _chercher_resultat(pari, espn_data.get(circuit, {}))
+        if r:
+            resultat, source = r, "ESPN"
 
-            # Le match doit contenir nos deux joueurs
-            joueur_home     = _noms_correspondent(pari["joueur"],     home)
-            joueur_away     = _noms_correspondent(pari["joueur"],     away)
-            adversaire_home = _noms_correspondent(pari["adversaire"], home)
-            adversaire_away = _noms_correspondent(pari["adversaire"], away)
-
-            if not ((joueur_home and adversaire_away) or
-                    (joueur_away and adversaire_home)):
-                continue
-
-            winner = _gagnant_event(ev)
-            if winner is None:
-                break                       # match trouvé mais score illisible
-
-            if _noms_correspondent(pari["joueur"], winner):
-                resultat = "Gagné"
-            else:
-                resultat = "Perdu"
-            break
+        # Source 2 : CSV local (pipeline hebdomadaire)
+        if not resultat:
+            r = _chercher_resultat(pari, csv_data.get(circuit, {}))
+            if r:
+                resultat, source = r, "CSV local"
 
         if resultat:
             updates.append({
-                "ri":          pari["ri"],
-                "resultat":    resultat,
-                "joueur":      pari["joueur"],
-                "adversaire":  pari["adversaire"],
+                "ri":         pari["ri"],
+                "resultat":   resultat,
+                "joueur":     pari["joueur"],
+                "adversaire": pari["adversaire"],
+                "source":     source,
             })
         else:
             non_trouves.append(pari)
 
-    # ── 4. Écriture en col M (N et O = formules → recalcul auto) ─
+    # ── 4. Écriture col M → N et O recalculés par formules ────
     print()
     if updates:
         ws.batch_update(
@@ -1481,21 +1537,21 @@ def recuperer_resultats():
         print(f"  {len(updates)} résultat(s) enregistré(s) :")
         for u in updates:
             icone = "✅" if u["resultat"] == "Gagné" else "❌"
-            print(f"    {icone} {u['joueur']} vs {u['adversaire']}  →  {u['resultat']}")
+            print(f"    {icone}  {u['joueur']} vs {u['adversaire']}"
+                  f"  →  {u['resultat']}  [{u['source']}]")
         print(f"\n  Bilan : {gagnes} gagné(s) · {perdus} perdu(s)")
     else:
-        print("  Aucun résultat trouvé dans l'API pour ces matchs.")
+        print("  Aucun résultat disponible pour le moment "
+              "(matchs peut-être encore en cours).")
 
     if non_trouves:
-        print(f"\n  ⚠  {len(non_trouves)} résultat(s) introuvable(s) "
-              f"(match peut-être hors fenêtre 7 j ou annulé) :")
+        print(f"\n  ⚠  {len(non_trouves)} résultat(s) non trouvé(s) :")
         for p in non_trouves:
             print(f"    ?  {p['joueur']} vs {p['adversaire']}  ({p['date']})")
 
-    # ── 5. Afficher la bankroll mise à jour ───────────────────
+    # ── 5. Afficher la bankroll après recalcul ────────────────
     if updates:
-        import time
-        time.sleep(2)       # laisser Google recalculer les formules
+        import time; time.sleep(2)
         try:
             bk = ws_bord.acell("D6").value
             print(f"\n  💰 Bankroll actuelle (D6) : {bk}")
