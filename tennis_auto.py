@@ -719,19 +719,265 @@ def tableau_cotes(event, nom1, nom2):
 
 def lire_bankroll_gsheet(sh):
     """
-    Lit la bankroll actuelle depuis 'Tableau de bord'!D3.
+    Lit la bankroll actuelle depuis 'Tableau de bord'!D6
+    (dernière valeur non vide de Paris!O, recalculée par formule).
     Retourne la valeur float, ou None si non disponible.
     """
     if not sh:
         return None
     try:
         ws = sh.worksheet("Tableau de bord")
-        val = ws.acell("D3").value
+        val = ws.acell("D6").value
         if val is None:
             return None
         return float(str(val).replace(" ", "").replace(",", ".").replace("€", "").strip())
     except Exception:
         return None
+
+
+def mettre_a_jour_tableau_bord(sh):
+    """
+    Réécrit les formules des onglets 'Tableau de bord' et 'Analyse Modèle'
+    en référençant correctement l'onglet Paris (layout actuel A–O) :
+
+      A:Date  B:Tournoi  C:Circuit  D:Surface  E:Match
+      F:Joueur parié  G:Adversaire  H:Bookmaker
+      I:Cote  J:Mise (€)  K:EV Modèle (%)  L:Prob. Modèle (%)
+      M:Résultat  N:Gain/Perte (€)  O:Bankroll (€)
+
+    D3 = bankroll initiale (NE PAS TOUCHER — référencée par les formules Paris!O).
+    D6 = bankroll actuelle (INDEX/MATCH sur Paris!O).
+
+    Appelé à chaque --analyse et --resultats pour maintenir les deux onglets
+    à jour sans intervention manuelle.
+    """
+    if not sh:
+        return
+
+    ts = datetime.now().strftime("%d/%m/%Y %H:%M")
+
+    # ── Onglet "Tableau de bord" ──────────────────────────────────────
+    try:
+        try:
+            ws_bord = sh.worksheet("Tableau de bord")
+        except Exception:
+            ws_bord = sh.add_worksheet(title="Tableau de bord", rows=40, cols=6)
+
+        # Formules avec séparateur ";" (locale française Google Sheets)
+        # Fonctions en anglais — acceptées avec USER_ENTERED dans toutes les locales
+        ws_bord.batch_update([
+            # ── Labels colonne A ─────────────────────────────────────
+            {"range": "A1",  "values": [["TABLEAU DE BORD"]]},
+            {"range": "A3",  "values": [["Bankroll initiale (€)"]]},
+            {"range": "A4",  "values": [["P&L total (€)"]]},
+            {"range": "A5",  "values": [["ROI"]]},
+            {"range": "A6",  "values": [["Bankroll actuelle (€)"]]},
+            {"range": "A8",  "values": [["STATISTIQUES PARIS"]]},
+            {"range": "A9",  "values": [["Total paris"]]},
+            {"range": "A10", "values": [["Gagnés"]]},
+            {"range": "A11", "values": [["Perdus"]]},
+            {"range": "A12", "values": [["En cours"]]},
+            {"range": "A13", "values": [["Taux de réussite"]]},
+            {"range": "A15", "values": [["FINANCES"]]},
+            {"range": "A16", "values": [["Total misé (€)"]]},
+            {"range": "A17", "values": [["Mise moyenne (€)"]]},
+            {"range": "A18", "values": [["Gain moyen / victoire (€)"]]},
+            {"range": "A20", "values": [["PAR CIRCUIT"]]},
+            {"range": "A21", "values": [["", "Paris", "Taux", "ROI"]]},
+            {"range": "A22", "values": [["ATP"]]},
+            {"range": "A23", "values": [["WTA"]]},
+            {"range": "A25", "values": [["PAR SURFACE"]]},
+            {"range": "A26", "values": [["", "Paris", "Taux", "ROI"]]},
+            {"range": "A27", "values": [["Dur"]]},
+            {"range": "A28", "values": [["Terre"]]},
+            {"range": "A29", "values": [["Gazon"]]},
+            {"range": "A31", "values": [["PAR BOOKMAKER"]]},
+            {"range": "A32", "values": [["", "Paris", "Taux", "ROI"]]},
+            {"range": "A33", "values": [["Betclic"]]},
+            {"range": "A34", "values": [["Unibet"]]},
+            {"range": "A35", "values": [["Winamax"]]},
+            {"range": "A37", "values": [["Dernière mise à jour"]]},
+            # ── Formules KPI colonne D ────────────────────────────────
+            # D3 = bankroll initiale — NE PAS TOUCHER
+            {"range": "D4",  "values": [['=IFERROR(SUM(Paris!N2:N);"n/a")']]},
+            {"range": "D5",  "values": [['=IFERROR(SUM(Paris!N2:N)/SUM(Paris!J2:J);"n/a")']]},
+            {"range": "D6",  "values": [['=IFERROR(INDEX(Paris!O:O;MATCH(9^9;Paris!O:O));D3)']]},
+            # ── Statistiques paris ────────────────────────────────────
+            {"range": "D9",  "values": [['=COUNTIF(Paris!M2:M;"Gagné")'
+                                         '+COUNTIF(Paris!M2:M;"Perdu")'
+                                         '+COUNTIF(Paris!M2:M;"En cours")']]},
+            {"range": "D10", "values": [['=COUNTIF(Paris!M2:M;"Gagné")']]},
+            {"range": "D11", "values": [['=COUNTIF(Paris!M2:M;"Perdu")']]},
+            {"range": "D12", "values": [['=COUNTIF(Paris!M2:M;"En cours")']]},
+            {"range": "D13", "values": [['=IFERROR(D10/(D10+D11);"n/a")']]},
+            # ── Finances ─────────────────────────────────────────────
+            {"range": "D16", "values": [['=IFERROR(SUM(Paris!J2:J);"n/a")']]},
+            {"range": "D17", "values": [['=IFERROR(AVERAGE(Paris!J2:J);"n/a")']]},
+            {"range": "D18", "values": [['=IFERROR(SUMIF(Paris!M2:M;"Gagné";Paris!N2:N)'
+                                         '/COUNTIF(Paris!M2:M;"Gagné");"n/a")']]},
+            # ── Par circuit (Paris!C = Circuit ATP/WTA) ───────────────
+            {"range": "B22", "values": [['=COUNTIF(Paris!C2:C;"ATP")']]},
+            {"range": "C22", "values": [['=IFERROR('
+                                         'COUNTIFS(Paris!C2:C;"ATP";Paris!M2:M;"Gagné")'
+                                         '/(COUNTIFS(Paris!C2:C;"ATP";Paris!M2:M;"Gagné")'
+                                         '+COUNTIFS(Paris!C2:C;"ATP";Paris!M2:M;"Perdu"))'
+                                         ';"n/a")']]},
+            {"range": "D22", "values": [['=IFERROR('
+                                         'SUMIFS(Paris!N2:N;Paris!C2:C;"ATP")'
+                                         '/SUMIFS(Paris!J2:J;Paris!C2:C;"ATP")'
+                                         ';"n/a")']]},
+            {"range": "B23", "values": [['=COUNTIF(Paris!C2:C;"WTA")']]},
+            {"range": "C23", "values": [['=IFERROR('
+                                         'COUNTIFS(Paris!C2:C;"WTA";Paris!M2:M;"Gagné")'
+                                         '/(COUNTIFS(Paris!C2:C;"WTA";Paris!M2:M;"Gagné")'
+                                         '+COUNTIFS(Paris!C2:C;"WTA";Paris!M2:M;"Perdu"))'
+                                         ';"n/a")']]},
+            {"range": "D23", "values": [['=IFERROR('
+                                         'SUMIFS(Paris!N2:N;Paris!C2:C;"WTA")'
+                                         '/SUMIFS(Paris!J2:J;Paris!C2:C;"WTA")'
+                                         ';"n/a")']]},
+            # ── Par surface (Paris!D = Surface : dur/terre/gazon) ─────
+            {"range": "B27", "values": [['=COUNTIFS(Paris!D2:D;"dur";Paris!M2:M;"<>En cours")']]},
+            {"range": "C27", "values": [['=IFERROR('
+                                         'COUNTIFS(Paris!D2:D;"dur";Paris!M2:M;"Gagné")'
+                                         '/(COUNTIFS(Paris!D2:D;"dur";Paris!M2:M;"Gagné")'
+                                         '+COUNTIFS(Paris!D2:D;"dur";Paris!M2:M;"Perdu"))'
+                                         ';"n/a")']]},
+            {"range": "D27", "values": [['=IFERROR('
+                                         'SUMIFS(Paris!N2:N;Paris!D2:D;"dur")'
+                                         '/SUMIFS(Paris!J2:J;Paris!D2:D;"dur")'
+                                         ';"n/a")']]},
+            {"range": "B28", "values": [['=COUNTIFS(Paris!D2:D;"terre";Paris!M2:M;"<>En cours")']]},
+            {"range": "C28", "values": [['=IFERROR('
+                                         'COUNTIFS(Paris!D2:D;"terre";Paris!M2:M;"Gagné")'
+                                         '/(COUNTIFS(Paris!D2:D;"terre";Paris!M2:M;"Gagné")'
+                                         '+COUNTIFS(Paris!D2:D;"terre";Paris!M2:M;"Perdu"))'
+                                         ';"n/a")']]},
+            {"range": "D28", "values": [['=IFERROR('
+                                         'SUMIFS(Paris!N2:N;Paris!D2:D;"terre")'
+                                         '/SUMIFS(Paris!J2:J;Paris!D2:D;"terre")'
+                                         ';"n/a")']]},
+            {"range": "B29", "values": [['=COUNTIFS(Paris!D2:D;"gazon";Paris!M2:M;"<>En cours")']]},
+            {"range": "C29", "values": [['=IFERROR('
+                                         'COUNTIFS(Paris!D2:D;"gazon";Paris!M2:M;"Gagné")'
+                                         '/(COUNTIFS(Paris!D2:D;"gazon";Paris!M2:M;"Gagné")'
+                                         '+COUNTIFS(Paris!D2:D;"gazon";Paris!M2:M;"Perdu"))'
+                                         ';"n/a")']]},
+            {"range": "D29", "values": [['=IFERROR('
+                                         'SUMIFS(Paris!N2:N;Paris!D2:D;"gazon")'
+                                         '/SUMIFS(Paris!J2:J;Paris!D2:D;"gazon")'
+                                         ';"n/a")']]},
+            # ── Par bookmaker (Paris!H = Bookmaker) ───────────────────
+            {"range": "B33", "values": [['=COUNTIF(Paris!H2:H;"betclic_fr")']]},
+            {"range": "C33", "values": [['=IFERROR('
+                                         'COUNTIFS(Paris!H2:H;"betclic_fr";Paris!M2:M;"Gagné")'
+                                         '/(COUNTIFS(Paris!H2:H;"betclic_fr";Paris!M2:M;"Gagné")'
+                                         '+COUNTIFS(Paris!H2:H;"betclic_fr";Paris!M2:M;"Perdu"))'
+                                         ';"n/a")']]},
+            {"range": "D33", "values": [['=IFERROR('
+                                         'SUMIFS(Paris!N2:N;Paris!H2:H;"betclic_fr")'
+                                         '/SUMIFS(Paris!J2:J;Paris!H2:H;"betclic_fr")'
+                                         ';"n/a")']]},
+            {"range": "B34", "values": [['=COUNTIF(Paris!H2:H;"unibet_fr")']]},
+            {"range": "C34", "values": [['=IFERROR('
+                                         'COUNTIFS(Paris!H2:H;"unibet_fr";Paris!M2:M;"Gagné")'
+                                         '/(COUNTIFS(Paris!H2:H;"unibet_fr";Paris!M2:M;"Gagné")'
+                                         '+COUNTIFS(Paris!H2:H;"unibet_fr";Paris!M2:M;"Perdu"))'
+                                         ';"n/a")']]},
+            {"range": "D34", "values": [['=IFERROR('
+                                         'SUMIFS(Paris!N2:N;Paris!H2:H;"unibet_fr")'
+                                         '/SUMIFS(Paris!J2:J;Paris!H2:H;"unibet_fr")'
+                                         ';"n/a")']]},
+            {"range": "B35", "values": [['=COUNTIF(Paris!H2:H;"winamax_fr")']]},
+            {"range": "C35", "values": [['=IFERROR('
+                                         'COUNTIFS(Paris!H2:H;"winamax_fr";Paris!M2:M;"Gagné")'
+                                         '/(COUNTIFS(Paris!H2:H;"winamax_fr";Paris!M2:M;"Gagné")'
+                                         '+COUNTIFS(Paris!H2:H;"winamax_fr";Paris!M2:M;"Perdu"))'
+                                         ';"n/a")']]},
+            {"range": "D35", "values": [['=IFERROR('
+                                         'SUMIFS(Paris!N2:N;Paris!H2:H;"winamax_fr")'
+                                         '/SUMIFS(Paris!J2:J;Paris!H2:H;"winamax_fr")'
+                                         ';"n/a")']]},
+            # ── Timestamp ─────────────────────────────────────────────
+            {"range": "D37", "values": [[ts]]},
+        ], value_input_option="USER_ENTERED")
+        print("  Tableau de bord : formules mises à jour")
+    except Exception as e:
+        print(f"  Tableau de bord erreur : {e}")
+
+    # ── Onglet "Analyse Modèle" ───────────────────────────────────────
+    # Paris!K = EV Modèle (%) stocké en nombre entier/décimal : ex. 7.3 = 7.3 %
+    try:
+        try:
+            ws_am = sh.worksheet("Analyse Modèle")
+        except Exception:
+            ws_am = sh.add_worksheet(title="Analyse Modèle", rows=40, cols=6)
+
+        ws_am.batch_update([
+            {"range": "A1",  "values": [["ANALYSE MODÈLE"]]},
+            {"range": "A3",  "values": [["INFORMATIONS MODÈLE"]]},
+            {"range": "A4",  "values": [["Type"]]},
+            {"range": "D4",  "values": [["XGBoost"]]},
+            {"range": "A5",  "values": [["Données"]]},
+            {"range": "D5",  "values": [["ATP + WTA 2020-2026"]]},
+            {"range": "A6",  "values": [["Précision estimée"]]},
+            {"range": "D6",  "values": [["~65 %"]]},
+            {"range": "A7",  "values": [["Nb features"]]},
+            {"range": "D7",  "values": [[12]]},
+            {"range": "A8",  "values": [["Features principales"]]},
+            {"range": "D8",  "values": [["Elo global/surface · rang ATP/WTA · "
+                                          "forme 5 matchs · H2H · 1stIn% · pts servi/reçu"]]},
+            # ── Performance par tranche d'EV ──────────────────────────
+            # Paris!K = EV% ex. 7.3, 12.1 — Paris!M = Résultat — Paris!N = Gain — Paris!J = Mise
+            {"range": "A10", "values": [["PERFORMANCE PAR TRANCHE EV"]]},
+            {"range": "A11", "values": [["Tranche EV"]]},
+            {"range": "B11", "values": [["Paris résolus"]]},
+            {"range": "C11", "values": [["Gagnés"]]},
+            {"range": "D11", "values": [["Taux"]]},
+            {"range": "E11", "values": [["ROI"]]},
+            {"range": "A12", "values": [["EV 5–10 %"]]},
+            {"range": "A13", "values": [["EV 10–15 %"]]},
+            {"range": "A14", "values": [["EV > 15 %"]]},
+            {"range": "A15", "values": [["EV > 5 % (tous)"]]},
+            # EV 5–10 %
+            {"range": "B12", "values": [['=COUNTIFS(Paris!K2:K;">=5";Paris!K2:K;"<10";Paris!M2:M;"<>En cours")']]},
+            {"range": "C12", "values": [['=COUNTIFS(Paris!K2:K;">=5";Paris!K2:K;"<10";Paris!M2:M;"Gagné")']]},
+            {"range": "D12", "values": [['=IFERROR(C12/B12;"n/a")']]},
+            {"range": "E12", "values": [['=IFERROR('
+                                          'SUMIFS(Paris!N2:N;Paris!K2:K;">=5";Paris!K2:K;"<10")'
+                                          '/SUMIFS(Paris!J2:J;Paris!K2:K;">=5";Paris!K2:K;"<10")'
+                                          ';"n/a")']]},
+            # EV 10–15 %
+            {"range": "B13", "values": [['=COUNTIFS(Paris!K2:K;">=10";Paris!K2:K;"<15";Paris!M2:M;"<>En cours")']]},
+            {"range": "C13", "values": [['=COUNTIFS(Paris!K2:K;">=10";Paris!K2:K;"<15";Paris!M2:M;"Gagné")']]},
+            {"range": "D13", "values": [['=IFERROR(C13/B13;"n/a")']]},
+            {"range": "E13", "values": [['=IFERROR('
+                                          'SUMIFS(Paris!N2:N;Paris!K2:K;">=10";Paris!K2:K;"<15")'
+                                          '/SUMIFS(Paris!J2:J;Paris!K2:K;">=10";Paris!K2:K;"<15")'
+                                          ';"n/a")']]},
+            # EV > 15 %
+            {"range": "B14", "values": [['=COUNTIFS(Paris!K2:K;">=15";Paris!M2:M;"<>En cours")']]},
+            {"range": "C14", "values": [['=COUNTIFS(Paris!K2:K;">=15";Paris!M2:M;"Gagné")']]},
+            {"range": "D14", "values": [['=IFERROR(C14/B14;"n/a")']]},
+            {"range": "E14", "values": [['=IFERROR('
+                                          'SUMIFS(Paris!N2:N;Paris!K2:K;">=15")'
+                                          '/SUMIFS(Paris!J2:J;Paris!K2:K;">=15")'
+                                          ';"n/a")']]},
+            # Tous EV > 5 %
+            {"range": "B15", "values": [['=COUNTIFS(Paris!K2:K;">=5";Paris!M2:M;"<>En cours")']]},
+            {"range": "C15", "values": [['=COUNTIFS(Paris!K2:K;">=5";Paris!M2:M;"Gagné")']]},
+            {"range": "D15", "values": [['=IFERROR(C15/B15;"n/a")']]},
+            {"range": "E15", "values": [['=IFERROR('
+                                          'SUMIFS(Paris!N2:N;Paris!K2:K;">=5")'
+                                          '/SUMIFS(Paris!J2:J;Paris!K2:K;">=5")'
+                                          ';"n/a")']]},
+            # ── Timestamp ─────────────────────────────────────────────
+            {"range": "A17", "values": [["Dernière mise à jour"]]},
+            {"range": "D17", "values": [[ts]]},
+        ], value_input_option="USER_ENTERED")
+        print("  Analyse Modèle : mis à jour")
+    except Exception as e:
+        print(f"  Analyse Modèle erreur : {e}")
 
 
 def init_gsheet():
@@ -1575,11 +1821,12 @@ def recuperer_resultats():
         for p in non_trouves:
             print(f"    ?  {p['joueur']} vs {p['adversaire']}  ({p['date']})")
 
-    # ── 5. Afficher la bankroll après recalcul ────────────────
+    # ── 5. Mettre à jour tableau de bord + afficher bankroll ─────
+    mettre_a_jour_tableau_bord(sh)
     if updates:
         import time; time.sleep(2)
         try:
-            bk = ws_bord.acell("D6").value
+            bk = sh.worksheet("Tableau de bord").acell("D6").value
             print(f"\n  💰 Bankroll actuelle (D6) : {bk}")
         except Exception:
             pass
@@ -1954,6 +2201,7 @@ def analyser_semaine():
         if sh:
             mettre_a_jour_resultats_gsheet(sh)
             enregistrer_paris_gsheet(sh, value_bets)
+            mettre_a_jour_tableau_bord(sh)
 
     # Email déclenché si au moins 1 bet EV > SEUIL_ALERTE,
     # mais le tableau contient TOUS les value bets (EV > SEUIL_VALUE)
