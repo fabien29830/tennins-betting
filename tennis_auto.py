@@ -85,7 +85,7 @@ RAPPORT_DIR  = os.path.join(DOSSIER_DATA, "rapports")
 os.makedirs(RAPPORT_DIR, exist_ok=True)
 
 CACHE_COTES_FILE = os.path.join(DOSSIER_DATA, "cache_cotes.json")
-CACHE_COTES_TTL  = 30   # minutes avant expiration du cache
+CACHE_COTES_TTL  = 90   # minutes avant expiration du cache
 
 # ─────────────────────────────────────────────────────────────
 # UTILITAIRES

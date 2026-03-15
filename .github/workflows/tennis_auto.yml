@@ -14,8 +14,8 @@ name: Tennis Auto
 
 on:
   schedule:
-    # Toutes les heures, 07h-23h Europe/Paris (hiver et été)
-    - cron: '0 5-22 * * *'
+    # Toutes les 2 heures, 07h-23h Europe/Paris (hiver et été)
+    - cron: '0 5-22/2 * * *'
 
   # Déclenchement manuel depuis l'onglet Actions de GitHub
   workflow_dispatch:
