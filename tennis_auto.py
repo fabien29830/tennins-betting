@@ -84,6 +84,9 @@ DOSSIER_DATA = os.path.join(DOSSIER, "tennis_data")
 RAPPORT_DIR  = os.path.join(DOSSIER_DATA, "rapports")
 os.makedirs(RAPPORT_DIR, exist_ok=True)
 
+CACHE_COTES_FILE = os.path.join(DOSSIER_DATA, "cache_cotes.json")
+CACHE_COTES_TTL  = 30   # minutes avant expiration du cache
+
 # ─────────────────────────────────────────────────────────────
 # UTILITAIRES
 # ─────────────────────────────────────────────────────────────
@@ -106,6 +109,44 @@ def normaliser(nom):
     n = unicodedata.normalize("NFD", nom)
     n = "".join(c for c in n if unicodedata.category(c) != "Mn")
     return n.lower().strip()
+
+
+# ─────────────────────────────────────────────────────────────
+# CACHE COTES (The Odds API)
+# ─────────────────────────────────────────────────────────────
+
+def _charger_cache_cotes():
+    """
+    Retourne (events, restantes, age_min) si le cache est frais
+    (< CACHE_COTES_TTL min ET même jour UTC), sinon (None, None, None).
+    """
+    if not os.path.exists(CACHE_COTES_FILE):
+        return None, None, None
+    try:
+        with open(CACHE_COTES_FILE, encoding="utf-8") as f:
+            data = json.load(f)
+        ts      = datetime.fromisoformat(data["timestamp"])
+        age_min = (datetime.now(timezone.utc) - ts).total_seconds() / 60
+        # Cache valide uniquement si < TTL et même jour calendaire
+        if (age_min < CACHE_COTES_TTL
+                and ts.date() == datetime.now(timezone.utc).date()):
+            return data["events"], data.get("restantes", "?"), int(age_min)
+    except Exception:
+        pass
+    return None, None, None
+
+
+def _sauvegarder_cache_cotes(events, restantes):
+    """Persiste les cotes et le compteur restant dans le cache JSON."""
+    try:
+        with open(CACHE_COTES_FILE, "w", encoding="utf-8") as f:
+            json.dump({
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "restantes": str(restantes),
+                "events":    events,
+            }, f)
+    except Exception:
+        pass
 
 
 def trouver_joueur(nom_api, noms_connus_norm):
@@ -481,10 +522,23 @@ def recuperer_matchs_et_cotes():
       1. /events  → liste complète de TOUS les matchs (sans cotes)
       2. /odds    → enrichit avec les cotes bookmakers
     Les matchs sans cotes sont conservés (affichés sans EV).
+
+    Cache : si le dernier appel date de moins de CACHE_COTES_TTL minutes
+    (et du même jour), retourne les données en cache sans appeler l'API.
     """
     if ODDS_API_KEY == "REMPLACE_PAR_TA_CLE":
         print("\n  ATTENTION : ODDS_API_KEY non configuré.")
         return []
+
+    # ── Vérification du cache ─────────────────────────────────
+    events_cache, restantes_cache, age_min = _charger_cache_cotes()
+    if events_cache is not None:
+        nb_avec_cotes = sum(1 for e in events_cache if e.get("bookmakers"))
+        print(f"\n  Cotes en cache ({age_min} min) — appel API économisé")
+        print(f"  {len(events_cache)} matchs en cache "
+              f"({nb_avec_cotes} avec cotes) "
+              f"| Requêtes restantes : {restantes_cache}")
+        return events_cache
 
     # Fenêtre : aujourd'hui 00h00 UTC → après-demain 00h00 UTC
     maintenant = datetime.now(timezone.utc)
@@ -574,6 +628,7 @@ def recuperer_matchs_et_cotes():
             tous_events.extend(events_par_id.values())
 
         print(f"  Total : {len(tous_events)} matchs | Requêtes restantes : {restantes}")
+        _sauvegarder_cache_cotes(tous_events, restantes)
         return tous_events
 
     except Exception as e:
@@ -989,99 +1044,70 @@ def enregistrer_paris_gsheet(sh, value_bets):
 
 def mettre_a_jour_resultats_gsheet(sh):
     """
-    Interroge l'API scores pour les 2 derniers jours et met à jour
-    le champ Résultat des paris 'En cours' dans Google Sheets.
+    Appelée automatiquement depuis analyser_semaine().
+    Guard : skip silencieux si aucun pari passé n'est encore 'En cours'
+    (évite tout appel réseau inutile).
+    Source : ESPN scoreboard (même logique que --resultats).
     """
     if not sh:
         return
     try:
-        ws = sh.worksheet("Paris")
+        ws   = sh.worksheet("Paris")
         data = ws.get_all_values()
         if len(data) <= 1:
             return
 
-        # Récupérer les scores récents depuis The Odds API
-        base = "https://api.the-odds-api.com/v4"
-        scores_events = []
-        try:
-            r_sports = requests.get(
-                f"{base}/sports/",
-                params={"apiKey": ODDS_API_KEY}, timeout=10
-            )
-            sports_tennis = [
-                s["key"] for s in r_sports.json()
-                if "tennis_atp" in s["key"] or "tennis_wta" in s["key"]
-            ]
-            for sport_key in sports_tennis:
-                r_sc = requests.get(
-                    f"{base}/sports/{sport_key}/scores/",
-                    params={"apiKey": ODDS_API_KEY, "daysFrom": 2,
-                            "dateFormat": "iso"},
-                    timeout=10,
-                )
-                if r_sc.status_code == 200:
-                    scores_events.extend(r_sc.json())
-        except Exception:
-            pass
+        aujourd_hui = datetime.now(timezone.utc).date()
 
-        if not scores_events:
-            return
-
-        # Index des matchs terminés : {frozenset({j1, j2}): winner_name}
-        resultats_connus = {}
-        for ev in scores_events:
-            if not ev.get("completed"):
-                continue
-            sc = ev.get("scores") or []
-            if len(sc) < 2:
-                continue
-            try:
-                s0 = int(sc[0]["score"])
-                s1 = int(sc[1]["score"])
-                winner = sc[0]["name"] if s0 > s1 else sc[1]["name"]
-                key = frozenset([ev["home_team"], ev["away_team"]])
-                resultats_connus[key] = winner
-            except (ValueError, KeyError):
-                continue
-
-        if not resultats_connus:
-            return
-
-        # Parcourir les lignes "En cours" et mettre à jour
-        updates = []
-        for ri, row in enumerate(data[1:], start=2):  # ri = numéro ligne Sheets (1-based)
-            # Statut en col M (idx 12) — layout actuel sans type_pari
+        # ── Guard : y a-t-il des paris passés encore "En cours" ? ─
+        paris_pendants = []
+        for ri, row in enumerate(data[1:], start=2):
             if len(row) < 13 or row[12] != "En cours":
                 continue
-            joueur     = row[5]
-            adversaire = row[6]
-            key = frozenset([joueur, adversaire])
-            # Cherche correspondance exacte ou partielle (nom API vs nom DB)
-            winner = resultats_connus.get(key)
-            if winner is None:
-                # Correspondance souple : cherche si le nom de l'un des joueurs
-                # apparaît dans les clés connues
-                for k, w in resultats_connus.items():
-                    j1k, j2k = list(k)
-                    if (joueur in j1k or j1k in joueur or
-                            joueur in j2k or j2k in joueur):
-                        winner = w
-                        break
-            if winner:
-                resultat = "Gagné" if (winner in joueur or joueur in winner) else "Perdu"
+            try:
+                date_match = datetime.strptime(row[0][:10], "%Y-%m-%d").date()
+            except ValueError:
+                continue
+            if date_match < aujourd_hui:
+                paris_pendants.append({
+                    "ri":         ri,
+                    "date":       date_match,
+                    "circuit":    row[2].lower(),
+                    "joueur":     row[5],
+                    "adversaire": row[6],
+                })
+
+        if not paris_pendants:
+            return          # rien à résoudre — 0 appel réseau
+
+        # ── Résultats via ESPN (pas d'appel Odds API) ─────────────
+        circuits  = set(p["circuit"] for p in paris_pendants)
+        espn_data = {}
+        csv_local = {}
+        for circuit in circuits:
+            dates          = {p["date"] for p in paris_pendants
+                              if p["circuit"] == circuit}
+            espn_data[circuit] = _resultats_espn(circuit, dates)
+            csv_local[circuit] = _resultats_csv(circuit)
+
+        updates = []
+        for pari in paris_pendants:
+            circuit  = pari["circuit"]
+            resultat = _chercher_resultat(pari, espn_data.get(circuit, {}))
+            if not resultat:
+                resultat = _chercher_resultat(pari, csv_local.get(circuit, {}))
+            if resultat:
                 updates.append({
-                    "range":  f"M{ri}",   # col M = Résultat
+                    "range":  f"M{pari['ri']}",
                     "values": [[resultat]],
                 })
 
         if updates:
             ws.batch_update(updates, value_input_option="USER_ENTERED")
-            print(f"  Google Sheets : {len(updates)} résultat(s) mis à jour")
-        else:
-            print("  Google Sheets : aucun résultat nouveau à mettre à jour")
+            print(f"  Résultats auto (ESPN) : {len(updates)} mis à jour")
 
     except Exception as e:
-        print(f"  Erreur Google Sheets (résultats) : {e}")
+        print(f"  Erreur résultats auto : {e}")
 
 
 def envoyer_email_alerte(value_bets, rapport_chemin=None, bankroll=None):
