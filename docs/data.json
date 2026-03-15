@@ -1,22 +1,48 @@
 {
   "meta": {
-    "updated_at": "2026-03-15T20:49:35",
+    "updated_at": "2026-03-15T21:43:03",
     "bankroll_initiale": 100.0
   },
   "stats": {
-    "bankroll_actuelle": 100.0,
-    "roi_global": 0.0,
+    "bankroll_actuelle": 95.0,
+    "roi_global": -5.0,
     "total_paris": 3,
     "paris_gagnes": 0,
     "paris_perdus": 1,
     "paris_en_cours": 2,
     "taux_reussite": 0.0,
-    "total_mise": 0.0,
-    "gain_perte_total": 0.0,
+    "total_mise": 34.24,
+    "gain_perte_total": -5.0,
     "ev_moyen_global": 29.0
   },
-  "bankroll_historique": [],
-  "roi_cumulatif": [],
+  "bankroll_historique": [
+    {
+      "date": "2026-03-14",
+      "bankroll": 100.0,
+      "match": "Départ",
+      "joueur": "",
+      "resultat": "",
+      "gain_perte": 0
+    },
+    {
+      "date": "2026-03-14",
+      "bankroll": 95.0,
+      "match": "Alexander Zverev vs Jannik Sinner",
+      "joueur": "Alexander Zverev",
+      "resultat": "Perdu",
+      "gain_perte": -5.0
+    }
+  ],
+  "roi_cumulatif": [
+    {
+      "date": "2026-03-14",
+      "roi": 0.0
+    },
+    {
+      "date": "2026-03-14",
+      "roi": -5.0
+    }
+  ],
   "ev_par_semaine": [
     {
       "semaine": "2026-S11",
@@ -31,11 +57,11 @@
       "joueur": "Jannik Sinner",
       "bookmaker": "betclic_fr",
       "cote": 1.26,
-      "mise": 0.0,
+      "mise": 21.68,
       "ev": 11.3,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": null
+      "bankroll": 95.0
     },
     {
       "date": "2026-03-15",
@@ -43,11 +69,11 @@
       "joueur": "Elena Rybakina",
       "bookmaker": "betclic_fr",
       "cote": 4.5,
-      "mise": 0.0,
+      "mise": 7.56,
       "ev": 52.9,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": null
+      "bankroll": 95.0
     },
     {
       "date": "2026-03-14",
@@ -55,11 +81,11 @@
       "joueur": "Alexander Zverev",
       "bookmaker": "betclic_fr",
       "cote": 5.5,
-      "mise": 0.0,
+      "mise": 5.0,
       "ev": 22.9,
       "resultat": "Perdu",
-      "gain_perte": null,
-      "bankroll": null
+      "gain_perte": -5.0,
+      "bankroll": 95.0
     }
   ]
 }
