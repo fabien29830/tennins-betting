@@ -1,31 +1,21 @@
 name: Tennis Auto
 
 # ──────────────────────────────────────────────────────────────
-# GitHub Actions ne supporte pas les fuseaux horaires nativement.
-# Stratégie : cron UTC large couvrant hiver (UTC+1) ET été (UTC+2),
-# puis vérification de l'heure Europe/Paris dans le job pour filtrer
-# les runs hors fenêtre.
+# Cron unique UTC couvrant 07h-23h Europe/Paris (hiver ET été)
+#   Hiver UTC+1 : 05h-22h UTC = 06h-23h Paris  → valide 07h-23h
+#   Été   UTC+2 : 05h-22h UTC = 07h-00h Paris  → valide 07h-23h
 #
-#   --analyse  : toutes les heures entre 07:00 et 23:00 Europe/Paris
-#                Cron UTC : 0 5-22 * * *
-#                  → couvre 07h-23h en hiver (UTC+1 → 06h-22h UTC)
-#                  → couvre 07h-23h en été   (UTC+2 → 05h-21h UTC)
-#                  → runs hors fenêtre ignorés via check Paris
+# Chaque run exécute les deux étapes en séquence :
+#   1. --resultats  (met à jour Gagné/Perdu dès qu'un match est fini)
+#   2. --analyse    (détecte les nouveaux value bets)
 #
-#   --resultats : une fois par jour à 23:30 Europe/Paris
-#                Cron UTC : 30 21 * * *  (23:30 Paris été = 21:30 UTC)
-#                           30 22 * * *  (23:30 Paris hiver = 22:30 UTC)
-#                → un seul des deux triggers passera le check Paris
+# Runs hors fenêtre 07h-23h Paris → ignorés silencieusement (skip)
 # ──────────────────────────────────────────────────────────────
 
 on:
   schedule:
-    # --analyse : toutes les heures, 07h00-23h00 Europe/Paris
+    # Toutes les heures, 07h-23h Europe/Paris (hiver et été)
     - cron: '0 5-22 * * *'
-
-    # --resultats : 23h30 Europe/Paris (hiver = 22h30 UTC, été = 21h30 UTC)
-    - cron: '30 21 * * *'
-    - cron: '30 22 * * *'
 
   # Déclenchement manuel depuis l'onglet Actions de GitHub
   workflow_dispatch:
@@ -33,36 +23,37 @@ on:
       mode:
         description: 'Mode à exécuter'
         required: true
-        default: 'analyse'
+        default: 'hourly'
         type: choice
         options:
-          - analyse
-          - resultats
-          - pipeline
+          - hourly      # resultats + analyse (comportement normal)
+          - analyse     # analyse seule
+          - resultats   # résultats seuls
+          - pipeline    # pipeline complet (data + elo + modèle + analyse)
 
 jobs:
   tennis:
     name: "Tennis Auto"
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     steps:
-      # ── 1. Récupérer le code ────────────────────────────────
+      # ── 1. Code ─────────────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ── 2. Python 3.11 ─────────────────────────────────────
+      # ── 2. Python 3.11 ──────────────────────────────────────
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      # ── 3. Dépendances ─────────────────────────────────────
+      # ── 3. Dépendances ──────────────────────────────────────
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # ── 4. Restaurer les données générées (CSV, pkl) ───────
+      # ── 4. Cache données (CSV, pkl) ─────────────────────────
       - name: Restore tennis_data cache
         id: cache-data
         uses: actions/cache@v4
@@ -72,7 +63,7 @@ jobs:
           restore-keys: |
             tennis-data-
 
-      # ── 5. Écrire les credentials Google depuis le secret ──
+      # ── 5. Credentials Google (toujours depuis le secret) ───
       - name: Write Google credentials
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
@@ -80,95 +71,85 @@ jobs:
           mkdir -p tennis_data
           printf '%s' "$GOOGLE_CREDENTIALS" > tennis_data/gsheet_credentials.json
 
-      # ── 6. Déterminer le mode + vérifier la fenêtre Paris ──
-      - name: Determine run mode
-        id: mode
+      # ── 6. Vérifier la fenêtre horaire Europe/Paris ─────────
+      - name: Check Paris time window
+        id: timecheck
         run: |
-          # Heure et minute courantes en Europe/Paris (gère hiver/été auto)
           PARIS_HOUR=$(TZ="Europe/Paris" date +%H)
-          PARIS_MIN=$(TZ="Europe/Paris" date +%M)
-          PARIS_TIME="${PARIS_HOUR}h${PARIS_MIN}"
-          echo "Heure Europe/Paris : $PARIS_TIME"
+          PARIS_TIME="$(TZ='Europe/Paris' date '+%H:%M') Europe/Paris"
+          echo "Heure actuelle : $PARIS_TIME"
 
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            # Déclenchement manuel → utiliser l'input directement
-            MODE="${{ inputs.mode }}"
-
-          elif [ "${{ github.event.schedule }}" = "30 21 * * *" ] || \
-               [ "${{ github.event.schedule }}" = "30 22 * * *" ]; then
-            # Cron résultats : valide uniquement si Paris = 23hxx
-            if [ "$PARIS_HOUR" = "23" ]; then
-              MODE="resultats"
-            else
-              MODE="skip"
-              echo "  → Trigger résultats hors-saison ($PARIS_TIME) — ignoré"
-            fi
-
+            echo "skip=false" >> $GITHUB_OUTPUT
+            echo "  → Déclenchement manuel, pas de vérification horaire"
+          elif [ "$PARIS_HOUR" -ge 7 ] && [ "$PARIS_HOUR" -le 23 ]; then
+            echo "skip=false" >> $GITHUB_OUTPUT
+            echo "  → Dans la fenêtre 07h-23h ✓"
           else
-            # Cron analyse (0 5-22) : valide si 07h ≤ Paris ≤ 23h
-            if [ "$PARIS_HOUR" -ge 7 ] && [ "$PARIS_HOUR" -le 23 ]; then
-              MODE="analyse"
-            else
-              MODE="skip"
-              echo "  → Hors fenêtre 07h-23h Paris ($PARIS_TIME) — ignoré"
-            fi
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "  → Hors fenêtre 07h-23h ($PARIS_TIME) — run ignoré"
           fi
 
-          echo "mode=$MODE" >> $GITHUB_OUTPUT
-          echo "▶  Mode sélectionné : $MODE ($PARIS_TIME Europe/Paris)"
+      # ── 7. Fallback pipeline si données absentes ────────────
+      - name: Bootstrap pipeline (si cache absent)
+        if: |
+          steps.timecheck.outputs.skip == 'false' &&
+          steps.cache-data.outputs.cache-hit != 'true'
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        run: |
+          echo "⚠  Cache absent — exécution du pipeline complet..."
+          python tennis_auto.py --pipeline
 
-      # ── 7a. Pipeline complet (manuel uniquement) ───────────
+      # ── 8a. Pipeline complet (manuel uniquement) ────────────
       - name: Run pipeline
-        if: steps.mode.outputs.mode == 'pipeline'
+        if: |
+          steps.timecheck.outputs.skip == 'false' &&
+          (github.event_name == 'workflow_dispatch' && inputs.mode == 'pipeline')
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: python tennis_auto.py --pipeline
 
-      # ── 7b. Analyse + value bets (toutes les heures 07h-23h) ─
-      - name: Run analyse
-        if: steps.mode.outputs.mode == 'analyse'
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-        run: |
-          # Fallback : pipeline si données absentes (premier run ou cache expiré)
-          if [ ! -f tennis_data/modele_tennis.pkl ]; then
-            echo "⚠  Modèle absent — exécution du pipeline complet d'abord..."
-            python tennis_auto.py --pipeline
-          fi
-          python tennis_auto.py --analyse
-
-      # ── 7c. Résultats (23h30 Europe/Paris) ─────────────────
+      # ── 8b. Résultats ────────────────────────────────────────
+      #   Toutes les heures (hourly) OU mode resultats manuel
       - name: Run resultats
-        if: steps.mode.outputs.mode == 'resultats'
+        if: |
+          steps.timecheck.outputs.skip == 'false' &&
+          inputs.mode != 'pipeline' &&
+          inputs.mode != 'analyse'
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-        run: |
-          if [ ! -f tennis_data/modele_tennis.pkl ]; then
-            echo "⚠  Modèle absent — exécution du pipeline complet d'abord..."
-            python tennis_auto.py --pipeline
-          fi
-          python tennis_auto.py --resultats
+        run: python tennis_auto.py --resultats
 
-      # ── 8. Sauvegarder le cache après pipeline ou premier run ─
+      # ── 8c. Analyse ──────────────────────────────────────────
+      #   Toutes les heures (hourly) OU mode analyse manuel
+      - name: Run analyse
+        if: |
+          steps.timecheck.outputs.skip == 'false' &&
+          inputs.mode != 'pipeline' &&
+          inputs.mode != 'resultats'
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        run: python tennis_auto.py --analyse
+
+      # ── 9. Sauvegarder le cache ──────────────────────────────
       - name: Save tennis_data cache
-        if: >
-          steps.mode.outputs.mode == 'pipeline' ||
-          (steps.mode.outputs.mode == 'analyse'   && steps.cache-data.outputs.cache-hit != 'true') ||
-          (steps.mode.outputs.mode == 'resultats' && steps.cache-data.outputs.cache-hit != 'true')
+        if: steps.timecheck.outputs.skip == 'false'
         uses: actions/cache@v4
         with:
           path: tennis_data
           key: tennis-data-${{ github.run_id }}
 
-      # ── 9. Uploader le rapport comme artifact (30 jours) ───
+      # ── 10. Rapport en artifact (30 jours) ──────────────────
       - name: Upload rapport
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: rapport-${{ steps.mode.outputs.mode }}-${{ github.run_id }}
+          name: rapport-${{ github.run_id }}
           path: tennis_data/rapports/
           retention-days: 30
           if-no-files-found: ignore
