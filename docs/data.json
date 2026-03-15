@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "updated_at": "2026-03-15T20:49:35",
+    "bankroll_initiale": 100.0
+  },
+  "stats": {
+    "bankroll_actuelle": 100.0,
+    "roi_global": 0.0,
+    "total_paris": 3,
+    "paris_gagnes": 0,
+    "paris_perdus": 1,
+    "paris_en_cours": 2,
+    "taux_reussite": 0.0,
+    "total_mise": 0.0,
+    "gain_perte_total": 0.0,
+    "ev_moyen_global": 29.0
+  },
+  "bankroll_historique": [],
+  "roi_cumulatif": [],
+  "ev_par_semaine": [
+    {
+      "semaine": "2026-S11",
+      "ev_moyen": 29.0,
+      "nb_paris": 3
+    }
+  ],
+  "paris_recents": [
+    {
+      "date": "2026-03-15",
+      "match": "Daniil Medvedev vs Jannik Sinner",
+      "joueur": "Jannik Sinner",
+      "bookmaker": "betclic_fr",
+      "cote": 1.26,
+      "mise": 0.0,
+      "ev": 11.3,
+      "resultat": "En cours",
+      "gain_perte": null,
+      "bankroll": null
+    },
+    {
+      "date": "2026-03-15",
+      "match": "Aryna Sabalenka vs Elena Rybakina",
+      "joueur": "Elena Rybakina",
+      "bookmaker": "betclic_fr",
+      "cote": 4.5,
+      "mise": 0.0,
+      "ev": 52.9,
+      "resultat": "En cours",
+      "gain_perte": null,
+      "bankroll": null
+    },
+    {
+      "date": "2026-03-14",
+      "match": "Alexander Zverev vs Jannik Sinner",
+      "joueur": "Alexander Zverev",
+      "bookmaker": "betclic_fr",
+      "cote": 5.5,
+      "mise": 0.0,
+      "ev": 22.9,
+      "resultat": "Perdu",
+      "gain_perte": null,
+      "bankroll": null
+    }
+  ]
+}

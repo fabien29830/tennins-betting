@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎾 Tennis Betting — Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg:      #0d1117;
+      --surf:    #161b22;
+      --surf2:   #1c2128;
+      --border:  #30363d;
+      --text:    #e6edf3;
+      --muted:   #7d8590;
+      --green:   #3fb950;
+      --green-d: rgba(63,185,80,.15);
+      --blue:    #58a6ff;
+      --blue-d:  rgba(88,166,255,.12);
+      --red:     #f85149;
+      --red-d:   rgba(248,81,73,.15);
+      --orange:  #d29922;
+      --orange-d:rgba(210,153,34,.15);
+      --radius:  8px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+                   'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 48px;
+    }
+
+    /* ── Header ─────────────────────────────── */
+    header {
+      background: var(--surf);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .h-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -.3px;
+    }
+    .h-brand .pill {
+      font-size: 10px;
+      font-weight: 600;
+      background: var(--green-d);
+      color: var(--green);
+      border: 1px solid rgba(63,185,80,.3);
+      border-radius: 20px;
+      padding: 2px 8px;
+      letter-spacing: .4px;
+    }
+    .h-ts {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── Layout ──────────────────────────────── */
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    /* ── Section title ───────────────────────── */
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin: 28px 0 12px;
+    }
+
+    /* ── KPI grid ────────────────────────────── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .kpi {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      transition: border-color .15s;
+    }
+    .kpi:hover { border-color: #484f58; }
+    .kpi-lbl {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      margin-bottom: 6px;
+    }
+    .kpi-val {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+    .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+    .pos  { color: var(--green); }
+    .neg  { color: var(--red); }
+    .neu  { color: var(--text); }
+    .ora  { color: var(--orange); }
+
+    /* ── Charts grid ─────────────────────────── */
+    .charts-top {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .charts-mid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 14px;
+    }
+    .charts-bot {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+    }
+    .card-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chart-box { position: relative; }
+    .chart-box-lg { height: 240px; }
+    .chart-box-md { height: 220px; }
+    .chart-box-pie{ height: 260px; }
+
+    /* ── Table ───────────────────────────────── */
+    .t-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      padding: 8px 12px;
+      text-align: left;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #1c2128;
+      white-space: nowrap;
+    }
+    tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: rgba(255,255,255,.025); }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .b-win  { background: var(--green-d); color: var(--green); border: 1px solid rgba(63,185,80,.25); }
+    .b-loss { background: var(--red-d);   color: var(--red);   border: 1px solid rgba(248,81,73,.25); }
+    .b-pen  { background: var(--orange-d);color: var(--orange);border: 1px solid rgba(210,153,34,.25); }
+
+    /* ── Empty / error ───────────────────────── */
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .err-box {
+      background: var(--red-d);
+      border: 1px solid var(--red);
+      border-radius: var(--radius);
+      padding: 20px;
+      color: var(--red);
+      text-align: center;
+      line-height: 1.7;
+    }
+    .err-box code {
+      background: rgba(0,0,0,.3);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    /* ── Sparkline badge (ROI inline) ────────── */
+    .roi-inline {
+      display: inline-block;
+      margin-left: 8px;
+      font-size: 11px;
+      padding: 1px 7px;
+      border-radius: 10px;
+    }
+
+    /* ── Responsive ──────────────────────────── */
+    @media (max-width: 720px) {
+      .charts-mid { grid-template-columns: 1fr; }
+      .kpi-grid   { grid-template-columns: repeat(2, 1fr); }
+      .kpi-val    { font-size: 22px; }
+    }
+    @media (max-width: 400px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="h-brand">
+    <span>🎾</span>
+    <span>Tennis Betting</span>
+    <span class="pill">LIVE</span>
+  </div>
+  <div class="h-ts" id="ts">Chargement…</div>
+</header>
+
+<div class="wrap" id="app">
+  <div class="empty">⏳ Chargement des données…</div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════════════════ */
+const C = {
+  green:  '#3fb950',  greenA: 'rgba(63,185,80,.18)',
+  blue:   '#58a6ff',  blueA:  'rgba(88,166,255,.12)',
+  red:    '#f85149',  redA:   'rgba(248,81,73,.15)',
+  orange: '#d29922',  orA:    'rgba(210,153,34,.15)',
+  muted:  '#7d8590',  border: '#30363d',
+  surf:   '#161b22',  text:   '#e6edf3',
+};
+
+Chart.defaults.color       = C.muted;
+Chart.defaults.borderColor = C.border;
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+Chart.defaults.font.size   = 12;
+
+const eur = (v, d=2) =>
+  v == null || isNaN(v) ? '—' : Number(v).toFixed(d) + '\u202f€';
+const pct = (v, d=1) =>
+  v == null || isNaN(v) ? '—' : (v >= 0 ? '+' : '') + Number(v).toFixed(d) + '%';
+const fd  = s => {
+  if (!s) return '—';
+  const [y,m,d] = s.split('-');
+  return `${d}/${m}/${y}`;
+};
+const cc = v => v > 0 ? 'pos' : v < 0 ? 'neg' : 'neu';
+
+/* ═══════════════════════════════════════════════════════════
+   RENDER
+═══════════════════════════════════════════════════════════ */
+function render(D) {
+  const s   = D.stats;
+  const m   = D.meta;
+  const app = document.getElementById('app');
+
+  /* Header timestamp */
+  const dt = new Date(m.updated_at);
+  document.getElementById('ts').textContent =
+    'Mis à jour le ' +
+    dt.toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric'}) +
+    ' à ' + dt.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
+
+  /* ── KPIs ─────────────────────────────────────────────── */
+  const roiC = cc(s.roi_global);
+  const bkC  = cc(s.bankroll_actuelle - m.bankroll_initiale);
+  const html = `
+  <p class="section-title">Chiffres clés</p>
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-lbl">💰 Bankroll</div>
+      <div class="kpi-val ${bkC}">${eur(s.bankroll_actuelle)}</div>
+      <div class="kpi-sub">Départ ${eur(m.bankroll_initiale)} · ${pct((s.bankroll_actuelle - m.bankroll_initiale)/m.bankroll_initiale*100)} net</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">📈 ROI global</div>
+      <div class="kpi-val ${roiC}">${pct(s.roi_global)}</div>
+      <div class="kpi-sub">${eur(s.gain_perte_total)} de P&amp;L net</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">🎯 Paris</div>
+      <div class="kpi-val neu">${s.total_paris}</div>
+      <div class="kpi-sub">${eur(s.total_mise)} misés au total</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">✅ Réussite</div>
+      <div class="kpi-val ${s.taux_reussite >= 50 ? 'pos' : 'neu'}">${s.taux_reussite.toFixed(1)}%</div>
+      <div class="kpi-sub">${s.paris_gagnes}W / ${s.paris_perdus}L / ${s.paris_en_cours} en cours</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">⚡ EV moyen</div>
+      <div class="kpi-val pos">+${s.ev_moyen_global.toFixed(1)}%</div>
+      <div class="kpi-sub">Sur l'ensemble des paris</div>
+    </div>
+  </div>
+
+  <p class="section-title">Évolution</p>
+  <div class="charts-top">
+    <div class="card">
+      <div class="card-title">📊 Bankroll dans le temps</div>
+      <div class="chart-box chart-box-lg"><canvas id="cBankroll"></canvas></div>
+    </div>
+  </div>
+
+  <div class="charts-mid" style="margin-top:14px">
+    <div class="card">
+      <div class="card-title">📉 ROI cumulé</div>
+      <div class="chart-box chart-box-md"><canvas id="cRoi"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">🥧 Résultats</div>
+      <div class="chart-box chart-box-pie"><canvas id="cPie"></canvas></div>
+    </div>
+  </div>
+
+  <div class="charts-bot" style="margin-top:14px">
+    <div class="card">
+      <div class="card-title">📅 EV moyen par semaine</div>
+      <div class="chart-box chart-box-md"><canvas id="cEv"></canvas></div>
+    </div>
+  </div>
+
+  <p class="section-title">Historique des paris</p>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="t-wrap">
+    <table>
+      <thead><tr>
+        <th>Date</th><th>Match</th><th>Pari</th>
+        <th>Cote</th><th>Mise</th><th>EV</th>
+        <th>Résultat</th><th>Gain/Perte</th><th>Bankroll</th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    </div>
+  </div>`;
+
+  app.innerHTML = html;
+
+  /* ── Table rows ──────────────────────────────────────── */
+  const tbody = document.getElementById('tbody');
+  const recents = D.paris_recents || [];
+  if (!recents.length) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px">Aucun pari enregistré</td></tr>`;
+  } else {
+    tbody.innerHTML = recents.map(p => {
+      const badge = p.resultat === 'Gagné'
+        ? `<span class="badge b-win">Gagné</span>`
+        : p.resultat === 'Perdu'
+        ? `<span class="badge b-loss">Perdu</span>`
+        : `<span class="badge b-pen">En cours</span>`;
+      const gpColor = p.gain_perte > 0 ? C.green : p.gain_perte < 0 ? C.red : '';
+      return `<tr>
+        <td style="color:var(--muted)">${fd(p.date)}</td>
+        <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis">${p.match}</td>
+        <td><b>${p.joueur}</b></td>
+        <td>${p.cote ? p.cote.toFixed(2) : '—'}</td>
+        <td>${p.mise ? eur(p.mise) : '—'}</td>
+        <td style="color:var(--blue);font-weight:600">+${p.ev ? p.ev.toFixed(1) : '0'}%</td>
+        <td>${badge}</td>
+        <td style="color:${gpColor};font-weight:600">${p.gain_perte !== null ? eur(p.gain_perte) : '—'}</td>
+        <td style="color:var(--muted)">${p.bankroll !== null ? eur(p.bankroll) : '—'}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  /* ── Draw charts ─────────────────────────────────────── */
+  chartBankroll(D.bankroll_historique, m.bankroll_initiale);
+  chartRoi(D.roi_cumulatif);
+  chartPie(s);
+  chartEv(D.ev_par_semaine);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CHART DEFAULTS
+═══════════════════════════════════════════════════════════ */
+const BASE_OPTS = () => ({
+  responsive: true,
+  maintainAspectRatio: false,
+  interaction: { mode: 'index', intersect: false },
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      backgroundColor: '#1c2128',
+      borderColor: C.border,
+      borderWidth: 1,
+      titleColor: C.muted,
+      bodyColor: C.text,
+      padding: 10,
+    },
+  },
+  scales: {
+    x: { grid: { color: C.border }, ticks: { maxTicksLimit: 9, color: C.muted } },
+    y: { grid: { color: C.border }, ticks: { maxTicksLimit: 6, color: C.muted } },
+  },
+});
+
+/* ═══════════════════════════════════════════════════════════
+   BANKROLL CHART
+═══════════════════════════════════════════════════════════ */
+function chartBankroll(hist, init) {
+  if (!hist || hist.length < 2) return;
+  const labels = hist.map(h => fd(h.date));
+  const vals   = hist.map(h => h.bankroll);
+  const ctx    = document.getElementById('cBankroll').getContext('2d');
+  const grad   = ctx.createLinearGradient(0, 0, 0, 240);
+  grad.addColorStop(0, 'rgba(63,185,80,.30)');
+  grad.addColorStop(1, 'rgba(63,185,80,.00)');
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data:            vals,
+        borderColor:     C.green,
+        backgroundColor: grad,
+        borderWidth:     2.5,
+        pointRadius:     hist.length > 20 ? 0 : 4,
+        pointHoverRadius:5,
+        pointBackgroundColor: C.green,
+        fill:            true,
+        tension:         0.35,
+      }],
+    },
+    options: {
+      ...BASE_OPTS(),
+      plugins: {
+        ...BASE_OPTS().plugins,
+        tooltip: {
+          ...BASE_OPTS().plugins.tooltip,
+          callbacks: {
+            title: ([ctx]) => `${ctx.label}`,
+            label: ctx => {
+              const v   = ctx.parsed.y;
+              const roi = ((v - init) / init * 100).toFixed(1);
+              return ` Bankroll : ${eur(v)}  (ROI ${roi > 0 ? '+' : ''}${roi}%)`;
+            },
+          },
+        },
+      },
+      scales: {
+        x: { grid: { color: C.border }, ticks: { maxTicksLimit: 9, color: C.muted } },
+        y: {
+          grid: { color: C.border },
+          ticks: { color: C.muted, maxTicksLimit: 6,
+                   callback: v => eur(v, 0) },
+        },
+      },
+    },
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ROI CHART
+═══════════════════════════════════════════════════════════ */
+function chartRoi(roi) {
+  if (!roi || roi.length < 2) return;
+  const labels = roi.map(r => fd(r.date));
+  const vals   = roi.map(r => r.roi);
+  const ctx    = document.getElementById('cRoi').getContext('2d');
+  const grad   = ctx.createLinearGradient(0, 0, 0, 220);
+  grad.addColorStop(0, 'rgba(88,166,255,.20)');
+  grad.addColorStop(1, 'rgba(88,166,255,.00)');
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data:            vals,
+        borderColor:     C.blue,
+        backgroundColor: grad,
+        borderWidth:     2,
+        pointRadius:     roi.length > 20 ? 0 : 3,
+        pointHoverRadius:5,
+        pointBackgroundColor: C.blue,
+        fill:            true,
+        tension:         0.3,
+      }],
+    },
+    options: {
+      ...BASE_OPTS(),
+      plugins: {
+        ...BASE_OPTS().plugins,
+        tooltip: {
+          ...BASE_OPTS().plugins.tooltip,
+          callbacks: {
+            label: ctx => ` ROI : ${pct(ctx.parsed.y)}`,
+          },
+        },
+      },
+      scales: {
+        x: { grid: { color: C.border }, ticks: { maxTicksLimit: 7, color: C.muted } },
+        y: {
+          grid: { color: C.border },
+          ticks: { color: C.muted, maxTicksLimit: 6,
+                   callback: v => (v >= 0 ? '+' : '') + v.toFixed(0) + '%' },
+        },
+      },
+    },
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PIE CHART
+═══════════════════════════════════════════════════════════ */
+function chartPie(s) {
+  const total = s.paris_gagnes + s.paris_perdus + s.paris_en_cours;
+  if (total === 0) return;
+  const ctx = document.getElementById('cPie').getContext('2d');
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels:   ['Gagnés', 'Perdus', 'En cours'],
+      datasets: [{
+        data:            [s.paris_gagnes, s.paris_perdus, s.paris_en_cours],
+        backgroundColor: [C.green, C.red, C.orange],
+        hoverBackgroundColor: ['#4dcc5f', '#ff6b63', '#e5aa3a'],
+        borderColor:     '#161b22',
+        borderWidth:     3,
+        hoverOffset:     8,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '62%',
+      plugins: {
+        legend: {
+          display: true,
+          position: 'bottom',
+          labels: { boxWidth: 12, padding: 16, color: C.text, font: { size: 12 } },
+        },
+        tooltip: {
+          backgroundColor: '#1c2128',
+          borderColor: C.border,
+          borderWidth: 1,
+          titleColor: C.muted,
+          bodyColor: C.text,
+          padding: 10,
+          callbacks: {
+            label: ctx => {
+              const v   = ctx.parsed;
+              const pct_ = total > 0 ? (v / total * 100).toFixed(1) : '0.0';
+              return `  ${ctx.label} : ${v} (${pct_}%)`;
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   EV BAR CHART
+═══════════════════════════════════════════════════════════ */
+function chartEv(evData) {
+  if (!evData || evData.length === 0) return;
+  const labels = evData.map(e => e.semaine);
+  const vals   = evData.map(e => e.ev_moyen);
+  const cols   = vals.map(v => v >= 10 ? C.green : v >= 5 ? C.blue : C.orange);
+  const ctx    = document.getElementById('cEv').getContext('2d');
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data:            vals,
+        backgroundColor: cols,
+        borderRadius:    5,
+        borderSkipped:   false,
+      }],
+    },
+    options: {
+      ...BASE_OPTS(),
+      plugins: {
+        ...BASE_OPTS().plugins,
+        tooltip: {
+          ...BASE_OPTS().plugins.tooltip,
+          callbacks: {
+            label: ctx => {
+              const e = evData[ctx.dataIndex];
+              return ` EV moyen : +${ctx.parsed.y.toFixed(1)}%  (${e.nb_paris} paris)`;
+            },
+          },
+        },
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { maxTicksLimit: 14, color: C.muted } },
+        y: {
+          grid: { color: C.border },
+          min: 0,
+          ticks: { color: C.muted, maxTicksLimit: 5,
+                   callback: v => '+' + v.toFixed(0) + '%' },
+        },
+      },
+    },
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BOOTSTRAP
+═══════════════════════════════════════════════════════════ */
+(async function init() {
+  const app = document.getElementById('app');
+  try {
+    const resp = await fetch('data.json?t=' + Date.now());
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const data = await resp.json();
+    render(data);
+  } catch (e) {
+    document.getElementById('ts').textContent = 'Données non disponibles';
+    app.innerHTML = `
+      <div style="margin-top:40px">
+        <div class="err-box">
+          ❌ Impossible de charger <code>data.json</code><br>
+          <small style="opacity:.75">${e.message}</small><br><br>
+          <small>
+            Lance <code>python -X utf8 tennis_auto.py --analyse</code>
+            pour générer les données, puis pousse sur GitHub Pages.
+          </small>
+        </div>
+      </div>`;
+  }
+})();
+</script>
+</body>
+</html>
