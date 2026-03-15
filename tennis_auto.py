@@ -901,6 +901,126 @@ def mettre_a_jour_tableau_bord(sh):
             # ── Timestamp ─────────────────────────────────────────────
             {"range": "D37", "values": [[ts]]},
         ], value_input_option="USER_ENTERED")
+
+        # ── Corrections formules pré-existantes ──────────────────────
+        # Cause des #ERROR! :
+        #   1. Séparateur virgule au lieu de point-virgule (locale française)
+        #   2. Critères A15/A16/A17 réécrit par ce script avec d'autres labels
+        #      (ex "FINANCES") → remplacés par des chaînes littérales de surface
+        #   3. Seuils EV décimaux (0.10) alors que Paris!K stocke en % (10)
+        #   4. Formules G27-G31 décalées d'une ligne (F28/E28 au lieu de F27/E27)
+        ws_bord.batch_update([
+            # ── D7 : ROI global (virgule → point-virgule) ─────────────
+            {"range": "D7",  "values": [['=IFERROR('
+                                          '(SUMIF(Paris!M2:M;"Gagné";Paris!N2:N)'
+                                          '+SUMIF(Paris!M2:M;"Perdu";Paris!N2:N))'
+                                          '/SUMIF(Paris!M2:M;"<>En cours";Paris!J2:J)'
+                                          ';"-")']]},
+            # ── D8 : doublon de D9 avec virgule → vider ───────────────
+            {"range": "D8",  "values": [[""]]},
+            # ── Section PAR SURFACE (lignes 14-17, cols B/C/D/G) ──────
+            # Critères A15/A16/A17 écrasés par mes labels → strings littérales
+            {"range": "B15", "values": [['=COUNTIFS(Paris!D2:D;"dur";Paris!M2:M;"Gagné")'
+                                          '+COUNTIFS(Paris!D2:D;"dur";Paris!M2:M;"Perdu")']]},
+            {"range": "C15", "values": [['=COUNTIFS(Paris!D2:D;"dur";Paris!M2:M;"Gagné")']]},
+            {"range": "D15", "values": [['=IFERROR(C15/B15;"-")']]},
+            {"range": "B16", "values": [['=COUNTIFS(Paris!D2:D;"terre";Paris!M2:M;"Gagné")'
+                                          '+COUNTIFS(Paris!D2:D;"terre";Paris!M2:M;"Perdu")']]},
+            {"range": "C16", "values": [['=COUNTIFS(Paris!D2:D;"terre";Paris!M2:M;"Gagné")']]},
+            # D16 = Total misé (déjà correct depuis ce script)
+            {"range": "B17", "values": [['=COUNTIFS(Paris!D2:D;"gazon";Paris!M2:M;"Gagné")'
+                                          '+COUNTIFS(Paris!D2:D;"gazon";Paris!M2:M;"Perdu")']]},
+            {"range": "C17", "values": [['=COUNTIFS(Paris!D2:D;"gazon";Paris!M2:M;"Gagné")']]},
+            # D17 = Mise moyenne (déjà correct depuis ce script)
+            {"range": "G15", "values": [['=IFERROR(F15/E15;"-")']]},
+            {"range": "G16", "values": [['=IFERROR(F16/E16;"-")']]},
+            {"range": "G17", "values": [['=IFERROR(F17/E17;"-")']]},
+            # ── Section PAR BOOKMAKER pré-existante (lignes 20-24) ────
+            # A20="PAR CIRCUIT" (mon label) n'est pas un bookmaker → vider B/C/D
+            {"range": "B20", "values": [[""]]},
+            {"range": "C20", "values": [[""]]},
+            {"range": "D20", "values": [[""]]},
+            # A24="pinnacle" non configuré dans BOOKMAKERS_CIBLES → vider
+            {"range": "B24", "values": [[""]]},
+            {"range": "C24", "values": [[""]]},
+            {"range": "D24", "values": [[""]]},
+            # G20-G24 : virgule → point-virgule
+            {"range": "G20", "values": [['=IFERROR(F20/E20;"-")']]},
+            {"range": "G21", "values": [['=IFERROR(F21/E21;"-")']]},
+            {"range": "G22", "values": [['=IFERROR(F22/E22;"-")']]},
+            {"range": "G23", "values": [['=IFERROR(F23/E23;"-")']]},
+            {"range": "G24", "values": [['=IFERROR(F24/E24;"-")']]},
+            # ── Bloc KPI droit (colonne I, lignes 6-12) ───────────────
+            # Virgule → point-virgule
+            {"range": "I6",  "values": [['=SUMIF(Paris!M2:M;"Gagné";Paris!N2:N)'
+                                          '+SUMIF(Paris!M2:M;"Perdu";Paris!N2:N)']]},
+            {"range": "I7",  "values": [['=IFERROR('
+                                          'COUNTIF(Paris!M2:M;"Gagné")'
+                                          '/(COUNTIF(Paris!M2:M;"Gagné")'
+                                          '+COUNTIF(Paris!M2:M;"Perdu"))'
+                                          ';"-")']]},
+            {"range": "I8",  "values": [['=COUNTIF(Paris!M2:M;"En cours")']]},
+            {"range": "I9",  "values": [['=COUNTIF(Paris!M2:M;"Perdu")']]},
+            {"range": "I10", "values": [['=IFERROR(AVERAGE(Paris!J2:J);"-")']]},
+            {"range": "I11", "values": [['=IFERROR(AVERAGEIF(Paris!K2:K;">"&0);"-")']]},
+            {"range": "I12", "values": [['=IFERROR(MIN(Paris!N2:N);"-")']]},
+            # ── Buckets EV cols B/C/D lignes 30-31 ───────────────────
+            # Paris!K stocke EV en % (7.3 = 7.3%) — seuils décimaux → entiers
+            {"range": "B30", "values": [['=SUMPRODUCT((Paris!K2:K>=10)*(Paris!K2:K<15)'
+                                          '*(Paris!M2:M="Gagné"))'
+                                          '+SUMPRODUCT((Paris!K2:K>=10)*(Paris!K2:K<15)'
+                                          '*(Paris!M2:M="Perdu"))']]},
+            {"range": "C30", "values": [['=SUMPRODUCT((Paris!K2:K>=10)*(Paris!K2:K<15)'
+                                          '*(Paris!M2:M="Gagné"))']]},
+            {"range": "D30", "values": [['=IFERROR(C30/B30;"-")']]},
+            {"range": "B31", "values": [['=SUMPRODUCT((Paris!K2:K>=15)*(Paris!M2:M="Gagné"))'
+                                          '+SUMPRODUCT((Paris!K2:K>=15)*(Paris!M2:M="Perdu"))']]},
+            {"range": "C31", "values": [['=SUMPRODUCT((Paris!K2:K>=15)*(Paris!M2:M="Gagné"))']]},
+            {"range": "D31", "values": [['=IFERROR(C31/B31;"-")']]},
+            # ── Buckets EV cols E/F/G lignes 27-31 ───────────────────
+            # Seuils décimaux → entiers ; décalage de ligne G corrigé ; IFERROR interne
+            {"range": "E27", "values": [['=IFERROR(SUMPRODUCT((Paris!K2:K<5)'
+                                          '*(Paris!M2:M<>"En cours")'
+                                          '*IFERROR(Paris!J2:J;0));0)']]},
+            {"range": "F27", "values": [['=IFERROR('
+                                          'SUMPRODUCT((Paris!K2:K<5)*(Paris!M2:M="Gagné")*IFERROR(Paris!N2:N;0))'
+                                          '+SUMPRODUCT((Paris!K2:K<5)*(Paris!M2:M="Perdu")*IFERROR(Paris!N2:N;0))'
+                                          ';0)']]},
+            {"range": "G27", "values": [['=IFERROR(F27/E27;"-")']]},
+            {"range": "E28", "values": [['=IFERROR(SUMPRODUCT((Paris!K2:K>=5)*(Paris!K2:K<10)'
+                                          '*(Paris!M2:M<>"En cours")'
+                                          '*IFERROR(Paris!J2:J;0));0)']]},
+            {"range": "F28", "values": [['=IFERROR('
+                                          'SUMPRODUCT((Paris!K2:K>=5)*(Paris!K2:K<10)*(Paris!M2:M="Gagné")*IFERROR(Paris!N2:N;0))'
+                                          '+SUMPRODUCT((Paris!K2:K>=5)*(Paris!K2:K<10)*(Paris!M2:M="Perdu")*IFERROR(Paris!N2:N;0))'
+                                          ';0)']]},
+            {"range": "G28", "values": [['=IFERROR(F28/E28;"-")']]},
+            {"range": "E29", "values": [['=IFERROR(SUMPRODUCT((Paris!K2:K>=10)*(Paris!K2:K<15)'
+                                          '*(Paris!M2:M<>"En cours")'
+                                          '*IFERROR(Paris!J2:J;0));0)']]},
+            {"range": "F29", "values": [['=IFERROR('
+                                          'SUMPRODUCT((Paris!K2:K>=10)*(Paris!K2:K<15)*(Paris!M2:M="Gagné")*IFERROR(Paris!N2:N;0))'
+                                          '+SUMPRODUCT((Paris!K2:K>=10)*(Paris!K2:K<15)*(Paris!M2:M="Perdu")*IFERROR(Paris!N2:N;0))'
+                                          ';0)']]},
+            {"range": "G29", "values": [['=IFERROR(F29/E29;"-")']]},
+            {"range": "E30", "values": [['=IFERROR(SUMPRODUCT((Paris!K2:K>=15)'
+                                          '*(Paris!M2:M<>"En cours")'
+                                          '*IFERROR(Paris!J2:J;0));0)']]},
+            {"range": "F30", "values": [['=IFERROR('
+                                          'SUMPRODUCT((Paris!K2:K>=15)*(Paris!M2:M="Gagné")*IFERROR(Paris!N2:N;0))'
+                                          '+SUMPRODUCT((Paris!K2:K>=15)*(Paris!M2:M="Perdu")*IFERROR(Paris!N2:N;0))'
+                                          ';0)']]},
+            {"range": "G30", "values": [['=IFERROR(F30/E30;"-")']]},
+            # Row 31 : Total EV≥5% (tous les value bets)
+            {"range": "E31", "values": [['=IFERROR(SUMPRODUCT((Paris!K2:K>=5)'
+                                          '*(Paris!M2:M<>"En cours")'
+                                          '*IFERROR(Paris!J2:J;0));0)']]},
+            {"range": "F31", "values": [['=IFERROR('
+                                          'SUMPRODUCT((Paris!K2:K>=5)*(Paris!M2:M="Gagné")*IFERROR(Paris!N2:N;0))'
+                                          '+SUMPRODUCT((Paris!K2:K>=5)*(Paris!M2:M="Perdu")*IFERROR(Paris!N2:N;0))'
+                                          ';0)']]},
+            {"range": "G31", "values": [['=IFERROR(F31/E31;"-")']]},
+        ], value_input_option="USER_ENTERED")
         print("  Tableau de bord : formules mises à jour")
     except Exception as e:
         print(f"  Tableau de bord erreur : {e}")
