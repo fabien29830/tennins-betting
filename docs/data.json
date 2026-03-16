@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-03-16T13:51:59",
+    "updated_at": "2026-03-16T14:01:24",
     "bankroll_initiale": 100.0
   },
   "stats": {
-    "bankroll_actuelle": 95.0,
-    "roi_global": -5.0,
+    "bankroll_actuelle": 96.17,
+    "roi_global": -3.83,
     "total_paris": 3,
     "paris_gagnes": 1,
     "paris_perdus": 2,
     "paris_en_cours": 0,
     "taux_reussite": 33.3,
     "total_mise": 39.01,
-    "gain_perte_total": -5.0,
+    "gain_perte_total": -3.83,
     "ev_moyen_global": 31.1
   },
   "bankroll_historique": [
@@ -34,19 +34,19 @@
     },
     {
       "date": "2026-03-15",
-      "bankroll": 95.0,
+      "bankroll": 87.44,
       "match": "Aryna Sabalenka vs Elena Rybakina",
       "joueur": "Elena Rybakina",
       "resultat": "Perdu",
-      "gain_perte": null
+      "gain_perte": -7.56
     },
     {
       "date": "2026-03-15",
-      "bankroll": 95.0,
+      "bankroll": 96.17,
       "match": "Daniil Medvedev vs Jannik Sinner",
       "joueur": "Jannik Sinner",
       "resultat": "Gagné",
-      "gain_perte": null
+      "gain_perte": 8.73
     }
   ],
   "roi_cumulatif": [
@@ -60,11 +60,11 @@
     },
     {
       "date": "2026-03-15",
-      "roi": -5.0
+      "roi": -12.56
     },
     {
       "date": "2026-03-15",
-      "roi": -5.0
+      "roi": -3.83
     }
   ],
   "ev_par_semaine": [
@@ -84,8 +84,8 @@
       "mise": 26.45,
       "ev": 17.5,
       "resultat": "Gagné",
-      "gain_perte": null,
-      "bankroll": 95.0
+      "gain_perte": 8.73,
+      "bankroll": 96.17
     },
     {
       "date": "2026-03-15",
@@ -96,8 +96,8 @@
       "mise": 7.56,
       "ev": 52.9,
       "resultat": "Perdu",
-      "gain_perte": null,
-      "bankroll": 95.0
+      "gain_perte": -7.56,
+      "bankroll": 87.44
     },
     {
       "date": "2026-03-14",
@@ -112,218 +112,5 @@
       "bankroll": 95.0
     }
   ],
-  "value_bets": [],
-  "matchs_venir": [],
-  "top_joueurs": [
-    {
-      "joueur": "Carlos Alcaraz",
-      "circuit": "ATP",
-      "elo_global": 2163,
-      "elo_surface": 1980,
-      "forme": 100
-    },
-    {
-      "joueur": "Jannik Sinner",
-      "circuit": "ATP",
-      "elo_global": 2108,
-      "elo_surface": 2037,
-      "forme": 60
-    },
-    {
-      "joueur": "Novak Djokovic",
-      "circuit": "ATP",
-      "elo_global": 1984,
-      "elo_surface": 1922,
-      "forme": 80
-    },
-    {
-      "joueur": "Alexander Zverev",
-      "circuit": "ATP",
-      "elo_global": 1862,
-      "elo_surface": 1822,
-      "forme": 60
-    },
-    {
-      "joueur": "Alex De Minaur",
-      "circuit": "ATP",
-      "elo_global": 1848,
-      "elo_surface": 1791,
-      "forme": 80
-    },
-    {
-      "joueur": "Lorenzo Musetti",
-      "circuit": "ATP",
-      "elo_global": 1832,
-      "elo_surface": 1660,
-      "forme": 80
-    },
-    {
-      "joueur": "Jack Draper",
-      "circuit": "ATP",
-      "elo_global": 1828,
-      "elo_surface": 1772,
-      "forme": 40
-    },
-    {
-      "joueur": "Felix Auger Aliassime",
-      "circuit": "ATP",
-      "elo_global": 1810,
-      "elo_surface": 1762,
-      "forme": 60
-    },
-    {
-      "joueur": "Tommy Paul",
-      "circuit": "ATP",
-      "elo_global": 1809,
-      "elo_surface": 1697,
-      "forme": 60
-    },
-    {
-      "joueur": "Daniil Medvedev",
-      "circuit": "ATP",
-      "elo_global": 1806,
-      "elo_surface": 1780,
-      "forme": 100
-    },
-    {
-      "joueur": "Arthur Fils",
-      "circuit": "ATP",
-      "elo_global": 1802,
-      "elo_surface": 1690,
-      "forme": 80
-    },
-    {
-      "joueur": "Ben Shelton",
-      "circuit": "ATP",
-      "elo_global": 1798,
-      "elo_surface": 1740,
-      "forme": 80
-    },
-    {
-      "joueur": "Taylor Fritz",
-      "circuit": "ATP",
-      "elo_global": 1797,
-      "elo_surface": 1758,
-      "forme": 60
-    },
-    {
-      "joueur": "Andrey Rublev",
-      "circuit": "ATP",
-      "elo_global": 1757,
-      "elo_surface": 1705,
-      "forme": 60
-    },
-    {
-      "joueur": "Francisco Cerundolo",
-      "circuit": "ATP",
-      "elo_global": 1750,
-      "elo_surface": 1644,
-      "forme": 80
-    },
-    {
-      "joueur": "Iga Swiatek",
-      "circuit": "WTA",
-      "elo_global": 2051,
-      "elo_surface": 1941,
-      "forme": null
-    },
-    {
-      "joueur": "Aryna Sabalenka",
-      "circuit": "WTA",
-      "elo_global": 1991,
-      "elo_surface": 1884,
-      "forme": null
-    },
-    {
-      "joueur": "Coco Gauff",
-      "circuit": "WTA",
-      "elo_global": 1938,
-      "elo_surface": 1852,
-      "forme": null
-    },
-    {
-      "joueur": "Ashleigh Barty",
-      "circuit": "WTA",
-      "elo_global": 1914,
-      "elo_surface": 1797,
-      "forme": null
-    },
-    {
-      "joueur": "Qinwen Zheng",
-      "circuit": "WTA",
-      "elo_global": 1913,
-      "elo_surface": 1789,
-      "forme": null
-    },
-    {
-      "joueur": "Karolina Muchova",
-      "circuit": "WTA",
-      "elo_global": 1865,
-      "elo_surface": 1782,
-      "forme": null
-    },
-    {
-      "joueur": "Elena Rybakina",
-      "circuit": "WTA",
-      "elo_global": 1860,
-      "elo_surface": 1774,
-      "forme": null
-    },
-    {
-      "joueur": "Jessica Pegula",
-      "circuit": "WTA",
-      "elo_global": 1844,
-      "elo_surface": 1789,
-      "forme": null
-    },
-    {
-      "joueur": "Paula Badosa",
-      "circuit": "WTA",
-      "elo_global": 1842,
-      "elo_surface": 1724,
-      "forme": null
-    },
-    {
-      "joueur": "Jasmine Paolini",
-      "circuit": "WTA",
-      "elo_global": 1816,
-      "elo_surface": 1689,
-      "forme": null
-    },
-    {
-      "joueur": "Madison Keys",
-      "circuit": "WTA",
-      "elo_global": 1787,
-      "elo_surface": 1636,
-      "forme": null
-    },
-    {
-      "joueur": "Mirra Andreeva",
-      "circuit": "WTA",
-      "elo_global": 1782,
-      "elo_surface": 1634,
-      "forme": null
-    },
-    {
-      "joueur": "Yulia Putintseva",
-      "circuit": "WTA",
-      "elo_global": 1776,
-      "elo_surface": 1636,
-      "forme": null
-    },
-    {
-      "joueur": "Diana Shnaider",
-      "circuit": "WTA",
-      "elo_global": 1768,
-      "elo_surface": 1660,
-      "forme": null
-    },
-    {
-      "joueur": "Emma Navarro",
-      "circuit": "WTA",
-      "elo_global": 1764,
-      "elo_surface": 1671,
-      "forme": null
-    }
-  ]
+  "matchs_venir": []
 }
