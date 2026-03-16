@@ -31,6 +31,9 @@ on:
           - resultats   # résultats seuls
           - pipeline    # pipeline complet (data + elo + modèle + analyse)
 
+permissions:
+  contents: write
+
 jobs:
   tennis:
     name: "Tennis Auto"
