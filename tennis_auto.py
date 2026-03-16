@@ -65,6 +65,12 @@ SMTP_PASS      = os.environ.get("EMAIL_PASSWORD",  "cngg gfew wthp baiw")
 # Pour Gmail : active "Mots de passe d'application" dans Sécurité Google
 # https://myaccount.google.com/apppasswords
 
+# ── Notifications push (ntfy.sh) ─────────────────────────────
+# Créer un topic unique sur https://ntfy.sh  (ex: tennis-fabien-abc123)
+# Puis installer l'app ntfy sur iPhone et s'abonner au topic.
+# Mettre le nom du topic dans le secret GitHub NTFY_TOPIC.
+NTFY_TOPIC = os.environ.get("NTFY_TOPIC", "")   # laisser vide pour désactiver
+
 # ── Google Sheets ─────────────────────────────────────────────
 GSHEET_ACTIF      = True
 GSHEET_CREDENTIALS = os.path.join(
@@ -1786,6 +1792,86 @@ def mettre_a_jour_resultats_gsheet(sh):
         print(f"  Erreur résultats auto : {e}")
 
 
+def envoyer_notification(titre, message, priorite=3, tags=None):
+    """
+    Envoie une notification push via ntfy.sh.
+    priorite : 1=min  2=low  3=default  4=high  5=urgent
+    tags      : liste d'emojis/mots-clés ntfy (ex: ["tennis", "money_with_wings"])
+    """
+    if not NTFY_TOPIC:
+        return
+    try:
+        hdrs = {"Priority": str(priorite)}
+        # ntfy attend les headers en ASCII — encoder les caractères spéciaux
+        hdrs["Title"] = titre.encode("utf-8").decode("latin-1", errors="replace")
+        if tags:
+            hdrs["Tags"] = ",".join(tags)
+        requests.post(
+            f"https://ntfy.sh/{NTFY_TOPIC}",
+            data=message.encode("utf-8"),
+            headers=hdrs,
+            timeout=10,
+        )
+        print(f"  Notification push : {titre}")
+    except Exception as e:
+        print(f"  Notification ntfy : erreur ({e})")
+
+
+def envoyer_email_resultats(updates, bankroll_apres):
+    """Email récapitulatif quand des paris sont réglés (Gagné/Perdu)."""
+    if not EMAIL_ACTIF or not updates:
+        return
+    if not EMAIL_FROM or not EMAIL_TO or not SMTP_PASS:
+        return
+    try:
+        date_str = datetime.now().strftime("%d/%m/%Y %H:%M")
+        gagnes   = [u for u in updates if u["resultat"] == "Gagné"]
+        perdus   = [u for u in updates if u["resultat"] == "Perdu"]
+
+        rows_html = ""
+        for u in updates:
+            couleur = "#1e8449" if u["resultat"] == "Gagné" else "#922b21"
+            icone   = "+" if u["resultat"] == "Gagné" else "x"
+            rows_html += f"""
+            <tr>
+              <td style="padding:10px 12px;border-bottom:1px solid #eee;">
+                <b>{u['joueur']}</b> vs {u['adversaire']}</td>
+              <td style="padding:10px 8px;border-bottom:1px solid #eee;
+                         color:{couleur};font-weight:bold;text-align:center;">
+                [{icone}] {u['resultat']}</td>
+            </tr>"""
+
+        bk_str = f"{bankroll_apres:.2f}" if bankroll_apres else "—"
+        corps = f"""
+        <html><body style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;">
+        <h2 style="color:#1a5276;border-bottom:2px solid #1a5276;padding-bottom:8px;">
+          Paris réglés — {date_str}</h2>
+        <p>{len(gagnes)} gagné(s) &nbsp;·&nbsp; {len(perdus)} perdu(s)
+           &nbsp;·&nbsp; <b>Bankroll : {bk_str}&nbsp;€</b></p>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead><tr style="background:#f0f3f4;">
+            <th style="padding:8px 12px;text-align:left;">Match</th>
+            <th style="padding:8px 12px;">Résultat</th>
+          </tr></thead>
+          <tbody>{rows_html}</tbody>
+        </table>
+        </body></html>"""
+
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = f"[Tennis] {len(gagnes)}W / {len(perdus)}L — Bankroll {bk_str}€"
+        msg["From"]    = EMAIL_FROM
+        msg["To"]      = EMAIL_TO
+        msg.attach(MIMEText(corps, "html", "utf-8"))
+
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as srv:
+            srv.starttls()
+            srv.login(SMTP_USER, SMTP_PASS)
+            srv.sendmail(EMAIL_FROM, [EMAIL_TO], msg.as_string())
+        print(f"  Email résultats envoyé : {len(updates)} pari(s) réglé(s)")
+    except Exception as e:
+        print(f"  Email résultats : erreur ({e})")
+
+
 def envoyer_email_alerte(value_bets, rapport_chemin=None, bankroll=None):
     """
     Envoie un email HTML récapitulatif des value bets.
@@ -2248,6 +2334,27 @@ def recuperer_resultats():
             print(f"    {icone}  {u['joueur']} vs {u['adversaire']}"
                   f"  ->  {u['resultat']}  [{u['source']}]")
         print(f"\n  Bilan : {gagnes} gagne(s) · {perdus} perdu(s)")
+
+        # ── Notifications push + email résultats ──────────────────
+        try:
+            bk_notif = sh.worksheet("Tableau de bord").acell("B7").value
+        except Exception:
+            bk_notif = None
+        envoyer_email_resultats(updates, bk_notif)
+        if NTFY_TOPIC:
+            lignes_notif = [
+                f"{'✅' if u['resultat']=='Gagné' else '❌'} {u['joueur']} vs {u['adversaire']} → {u['resultat']}"
+                for u in updates
+            ]
+            bilan_txt = f"{gagnes} gagné · {perdus} perdu"
+            if bk_notif:
+                bilan_txt += f" | Bankroll : {bk_notif}"
+            envoyer_notification(
+                titre=f"Tennis : {bilan_txt}",
+                message="\n".join(lignes_notif),
+                priorite=4 if gagnes > perdus else 3,
+                tags=["tennis", "tada" if gagnes > perdus else "x"],
+            )
 
     else:
         print("  Aucun résultat disponible pour le moment "
@@ -2991,8 +3098,29 @@ def analyser_semaine():
         print(f"\n  {nb_alerte} value bet(s) EV>{SEUIL_ALERTE*100:.0f}% → envoi email "
               f"({nb_total} paris au total)...")
         envoyer_email_alerte(value_bets, chemin, bankroll=bankroll)
+        # ── Notification push value bets ──────────────────────────
+        if NTFY_TOPIC:
+            lignes_vb = [
+                f"• {vb['joueur']} vs {vb['adversaire']} | EV {vb['ev']*100:+.0f}% | cote {vb['cote']:.2f} | mise {vb['mise']:.0f}€"
+                for vb in sorted(value_bets_email, key=lambda x: -x["ev"])
+            ]
+            envoyer_notification(
+                titre=f"Tennis : {nb_alerte} value bet{'s' if nb_alerte>1 else ''} detecte{'s' if nb_alerte>1 else ''}",
+                message="\n".join(lignes_vb),
+                priorite=4,
+                tags=["tennis", "moneybag"],
+            )
     elif EMAIL_ACTIF:
         print(f"  Aucun value bet >{SEUIL_ALERTE*100:.0f}% → pas d'email")
+        # ── Notification push résumé quotidien (aucun bet) ────────
+        if NTFY_TOPIC:
+            nb_matchs = len([m for m in matchs_analyses if m]) if matchs_analyses else 0
+            envoyer_notification(
+                titre="Tennis : analyse terminee",
+                message=f"{nb_matchs} match(s) analyse(s) — aucun value bet cette session.",
+                priorite=2,
+                tags=["tennis", "eyes"],
+            )
 
     # ── Dashboard GitHub Pages ──────────────────────────────────
     if GSHEET_ACTIF:

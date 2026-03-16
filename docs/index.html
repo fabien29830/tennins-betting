@@ -246,9 +246,32 @@
   </div>
   <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
     <span id="refresh-indicator" style="font-size:11px;color:var(--muted)">Auto-refresh actif</span>
+    <button id="notif-btn" onclick="setupNtfy()" title="Recevoir des notifications push sur mobile"
+      style="font-size:11px;padding:3px 10px;border-radius:12px;border:1px solid var(--muted);background:transparent;color:var(--muted);cursor:pointer">
+      🔔 Notifs
+    </button>
     <div class="h-ts" id="ts">Chargement…</div>
   </div>
 </header>
+
+<div id="ntfy-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;align-items:center;justify-content:center">
+  <div style="background:#1e2530;border-radius:12px;padding:24px;max-width:420px;width:90%;color:var(--fg)">
+    <h3 style="margin:0 0 12px">🔔 Notifications push</h3>
+    <p style="font-size:13px;color:var(--muted);margin:0 0 16px">
+      Installe l'app <strong>ntfy</strong> sur ton iPhone / Android, puis abonne-toi au topic ci-dessous pour recevoir les alertes value bets et résultats.
+    </p>
+    <ol style="font-size:13px;padding-left:18px;margin:0 0 16px;line-height:1.8">
+      <li>Télécharge <strong>ntfy</strong> (<a href="https://apps.apple.com/app/ntfy/id1625396347" target="_blank" style="color:var(--green)">App Store</a> / <a href="https://play.google.com/store/apps/details?id=io.heckel.ntfy" target="_blank" style="color:var(--green)">Play Store</a>)</li>
+      <li>Dans l'app : <em>+ Subscribe to topic</em></li>
+      <li>Entre le topic : <code id="ntfy-topic-display" style="background:#111;padding:2px 6px;border-radius:4px">—</code></li>
+      <li>Dans GitHub → Settings → Secrets, ajoute <code>NTFY_TOPIC</code> = ton topic</li>
+    </ol>
+    <button onclick="document.getElementById('ntfy-modal').style.display='none'"
+      style="width:100%;padding:8px;border-radius:8px;background:var(--green);border:none;color:#000;font-weight:700;cursor:pointer">
+      Compris
+    </button>
+  </div>
+</div>
 
 <div class="wrap" id="app">
   <div class="empty">⏳ Chargement des données…</div>
@@ -741,6 +764,15 @@ async function loadAndRender(firstLoad) {
   await loadAndRender(true);
   setInterval(() => loadAndRender(false), REFRESH_MS);
 })();
+
+function setupNtfy() {
+  // Try to read the topic from data.json meta if available
+  const modal = document.getElementById('ntfy-modal');
+  const topicEl = document.getElementById('ntfy-topic-display');
+  // The topic is stored in GitHub secrets, show a placeholder
+  topicEl.textContent = 'ton-topic-perso (ex: tennis-fabien-2026)';
+  modal.style.display = 'flex';
+}
 </script>
 </body>
 </html>
