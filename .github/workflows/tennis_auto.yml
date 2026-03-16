@@ -15,7 +15,7 @@ on:
     # Pipeline complet : lundi 6h UTC = 7h Paris (hiver UTC+1)
     - cron: '0 6 * * 1'
     # Analyse 3x/jour (mar-dim) : 7h, 12h, 18h UTC
-    - cron: '0 7,12,18 * * 2-7'
+    - cron: '0 7,12,18 * * 2,3,4,5,6,0'
 
   # Déclenchement manuel depuis l'onglet Actions de GitHub
   workflow_dispatch:
