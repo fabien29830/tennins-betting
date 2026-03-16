@@ -1,664 +1,194 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎾 Tennis Betting — Dashboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <style>
-    :root {
-      --bg:      #0d1117;
-      --surf:    #161b22;
-      --surf2:   #1c2128;
-      --border:  #30363d;
-      --text:    #e6edf3;
-      --muted:   #7d8590;
-      --green:   #3fb950;
-      --green-d: rgba(63,185,80,.15);
-      --blue:    #58a6ff;
-      --blue-d:  rgba(88,166,255,.12);
-      --red:     #f85149;
-      --red-d:   rgba(248,81,73,.15);
-      --orange:  #d29922;
-      --orange-d:rgba(210,153,34,.15);
-      --radius:  8px;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-                   'Helvetica Neue', Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding-bottom: 48px;
-    }
-
-    /* ── Header ─────────────────────────────── */
-    header {
-      background: var(--surf);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    .h-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 17px;
-      font-weight: 700;
-      letter-spacing: -.3px;
-    }
-    .h-brand .pill {
-      font-size: 10px;
-      font-weight: 600;
-      background: var(--green-d);
-      color: var(--green);
-      border: 1px solid rgba(63,185,80,.3);
-      border-radius: 20px;
-      padding: 2px 8px;
-      letter-spacing: .4px;
-    }
-    .h-ts {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    /* ── Layout ──────────────────────────────── */
-    .wrap {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 24px 16px;
-    }
-
-    /* ── Section title ───────────────────────── */
-    .section-title {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--muted);
-      margin: 28px 0 12px;
-    }
-
-    /* ── KPI grid ────────────────────────────── */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 12px;
-    }
-    .kpi {
-      background: var(--surf);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px 18px;
-      transition: border-color .15s;
-    }
-    .kpi:hover { border-color: #484f58; }
-    .kpi-lbl {
-      font-size: 11px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .7px;
-      margin-bottom: 6px;
-    }
-    .kpi-val {
-      font-size: 28px;
-      font-weight: 700;
-      line-height: 1.15;
-    }
-    .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
-
-    .pos  { color: var(--green); }
-    .neg  { color: var(--red); }
-    .neu  { color: var(--text); }
-    .ora  { color: var(--orange); }
-
-    /* ── Charts grid ─────────────────────────── */
-    .charts-top {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
-    .charts-mid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 14px;
-    }
-    .charts-bot {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
-
-    .card {
-      background: var(--surf);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 20px;
-    }
-    .card-title {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: .7px;
-      color: var(--muted);
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .chart-box { position: relative; }
-    .chart-box-lg { height: 240px; }
-    .chart-box-md { height: 220px; }
-    .chart-box-pie{ height: 260px; }
-
-    /* ── Table ───────────────────────────────── */
-    .t-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th {
-      padding: 8px 12px;
-      text-align: left;
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: .5px;
-      border-bottom: 1px solid var(--border);
-      white-space: nowrap;
-    }
-    td {
-      padding: 10px 12px;
-      border-bottom: 1px solid #1c2128;
-      white-space: nowrap;
-    }
-    tr:last-child td { border-bottom: none; }
-    tbody tr:hover td { background: rgba(255,255,255,.025); }
-
-    .badge {
-      display: inline-block;
-      padding: 2px 9px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 600;
-    }
-    .b-win  { background: var(--green-d); color: var(--green); border: 1px solid rgba(63,185,80,.25); }
-    .b-loss { background: var(--red-d);   color: var(--red);   border: 1px solid rgba(248,81,73,.25); }
-    .b-pen  { background: var(--orange-d);color: var(--orange);border: 1px solid rgba(210,153,34,.25); }
-
-    /* ── Empty / error ───────────────────────── */
-    .empty {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-    .err-box {
-      background: var(--red-d);
-      border: 1px solid var(--red);
-      border-radius: var(--radius);
-      padding: 20px;
-      color: var(--red);
-      text-align: center;
-      line-height: 1.7;
-    }
-    .err-box code {
-      background: rgba(0,0,0,.3);
-      padding: 1px 6px;
-      border-radius: 4px;
-      font-size: 12px;
-    }
-
-    /* ── Sparkline badge (ROI inline) ────────── */
-    .roi-inline {
-      display: inline-block;
-      margin-left: 8px;
-      font-size: 11px;
-      padding: 1px 7px;
-      border-radius: 10px;
-    }
-
-    /* ── Responsive ──────────────────────────── */
-    @media (max-width: 720px) {
-      .charts-mid { grid-template-columns: 1fr; }
-      .kpi-grid   { grid-template-columns: repeat(2, 1fr); }
-      .kpi-val    { font-size: 22px; }
-    }
-    @media (max-width: 400px) {
-      .kpi-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BetAnalytics — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg:        #0f0f1a;
+    --bg2:       #13131f;
+    --bg3:       #1a1a2e;
+    --card:      rgba(255,255,255,0.04);
+    --card-b:    rgba(255,255,255,0.08);
+    --violet:    #6c63ff;
+    --violet2:   #8b85ff;
+    --emerald:   #00d4aa;
+    --emerald2:  #00ffcc;
+    --red:       #ff4d6d;
+    --amber:     #ffb830;
+    --text:      #e8e8f0;
+    --muted:     #7070a0;
+    --border:    rgba(108,99,255,0.2);
+    --font:      'Space Grotesk', sans-serif;
+    --mono:      'JetBrains Mono', monospace;
+    --radius:    16px;
+    --shadow:    0 8px 32px rgba(0,0,0,0.4);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: .5; }
+  header { position: sticky; top: 0; z-index: 100; background: rgba(15,15,26,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; gap: 16px; height: 64px; }
+  .logo { font-size: 1.2rem; font-weight: 700; background: linear-gradient(135deg, var(--violet), var(--emerald)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -.5px; }
+  .live-badge { display: flex; align-items: center; gap: 6px; background: rgba(255,77,109,0.15); border: 1px solid rgba(255,77,109,0.4); border-radius: 20px; padding: 3px 10px; font-size: .7rem; font-weight: 600; color: var(--red); letter-spacing: .5px; }
+  .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); animation: blink 1.2s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+  nav { display: flex; gap: 4px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); padding: 0 24px; overflow-x: auto; scrollbar-width: none; }
+  nav::-webkit-scrollbar { display: none; }
+  .tab-btn { flex-shrink: 0; padding: 14px 20px; font-family: var(--font); font-size: .85rem; font-weight: 500; color: var(--muted); background: none; border: none; cursor: pointer; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; white-space: nowrap; }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--violet2); border-bottom-color: var(--violet); }
+  .tab-btn span { margin-right: 6px; }
+  main { position: relative; z-index: 1; padding: 28px 24px; max-width: 1400px; margin: 0 auto; }
+  .tab-pane { display: none; animation: fadeIn .35s ease; }
+  .tab-pane.active { display: block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .card { background: var(--card); backdrop-filter: blur(16px); border: 1px solid var(--card-b); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
+  .card-title { font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 16px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .kpi { background: var(--card); backdrop-filter: blur(16px); border: 1px solid var(--card-b); border-radius: var(--radius); padding: 20px 24px; position: relative; overflow: hidden; transition: transform .2s, border-color .2s; }
+  .kpi:hover { transform: translateY(-2px); border-color: rgba(108,99,255,0.4); }
+  .kpi::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--violet), var(--emerald)); opacity: 0; transition: opacity .2s; }
+  .kpi:hover::after { opacity: 1; }
+  .kpi-label { font-size: .72rem; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 10px; }
+  .kpi-val { font-size: 1.9rem; font-weight: 700; font-family: var(--mono); line-height: 1; }
+  .kpi-sub { font-size: .75rem; color: var(--muted); margin-top: 6px; }
+  .pos { color: var(--emerald); } .neg { color: var(--red); } .neu { color: var(--violet2); }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-bottom: 20px; }
+  @media(max-width:900px) { .grid-2,.grid-3 { grid-template-columns: 1fr; } }
+  .chart-wrap { position: relative; height: 260px; }
+  .chart-wrap-sm { position: relative; height: 200px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .83rem; }
+  th { text-align: left; padding: 10px 14px; font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .7px; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); white-space: nowrap; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(108,99,255,0.06); }
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: .7rem; font-weight: 600; }
+  .badge-win { background: rgba(0,212,170,0.15); color: var(--emerald); border: 1px solid rgba(0,212,170,0.3); }
+  .badge-loss { background: rgba(255,77,109,0.12); color: var(--red); border: 1px solid rgba(255,77,109,0.25); }
+  .badge-live { background: rgba(255,184,48,0.12); color: var(--amber); border: 1px solid rgba(255,184,48,0.25); }
+  .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+  .filter-btn { padding: 6px 16px; border-radius: 20px; font-family: var(--font); font-size: .78rem; font-weight: 500; cursor: pointer; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--muted); transition: all .2s; }
+  .filter-btn:hover, .filter-btn.active { background: rgba(108,99,255,0.2); border-color: var(--violet); color: var(--text); }
+  .stats-tbl { width: 100%; font-size: .82rem; }
+  .stats-tbl th { color: var(--muted); font-size: .68rem; font-weight: 600; letter-spacing: .7px; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  .stats-tbl td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .stats-tbl tr:last-child td { border-bottom: none; }
+  .progress-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.07); overflow: hidden; margin-top: 8px; }
+  .progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--violet), var(--emerald)); transition: width .6s ease; }
+  .model-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 16px; margin-bottom: 24px; }
+  .metric-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .metric-row:last-child { border-bottom: none; }
+  .metric-label { font-size: .82rem; color: var(--muted); }
+  .metric-val { font-family: var(--mono); font-size: .9rem; font-weight: 600; }
+  .ev-bands { display: grid; gap: 10px; }
+  .ev-band { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 16px 20px; }
+  .ev-band-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .ev-band-label { font-size: .8rem; font-weight: 600; }
+  .ev-band-roi { font-family: var(--mono); font-size: .85rem; }
+  .section-title { font-size: .78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .update-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,212,170,0.1); border: 1px solid rgba(0,212,170,0.25); border-radius: 8px; padding: 6px 14px; font-size: .78rem; color: var(--emerald); }
+  @media(max-width:600px) { main { padding: 16px 14px; } .kpi-val { font-size: 1.5rem; } .kpi { padding: 16px 18px; } header { padding: 0 14px; } nav { padding: 0 14px; } }
+</style>
 </head>
 <body>
-
 <header>
-  <div class="h-brand">
-    <span>🎾</span>
-    <span>Tennis Betting</span>
-    <span class="pill">LIVE</span>
-  </div>
-  <div class="h-ts" id="ts">Chargement…</div>
+  <div class="logo">⚡ BetAnalytics</div>
+  <div class="live-badge"><span class="live-dot"></span>LIVE</div>
 </header>
-
-<div class="wrap" id="app">
-  <div class="empty">⏳ Chargement des données…</div>
-</div>
-
-<script>
-/* ═══════════════════════════════════════════════════════════
-   HELPERS
-═══════════════════════════════════════════════════════════ */
-const C = {
-  green:  '#3fb950',  greenA: 'rgba(63,185,80,.18)',
-  blue:   '#58a6ff',  blueA:  'rgba(88,166,255,.12)',
-  red:    '#f85149',  redA:   'rgba(248,81,73,.15)',
-  orange: '#d29922',  orA:    'rgba(210,153,34,.15)',
-  muted:  '#7d8590',  border: '#30363d',
-  surf:   '#161b22',  text:   '#e6edf3',
-};
-
-Chart.defaults.color       = C.muted;
-Chart.defaults.borderColor = C.border;
-Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
-Chart.defaults.font.size   = 12;
-
-const eur = (v, d=2) =>
-  v == null || isNaN(v) ? '—' : Number(v).toFixed(d) + '\u202f€';
-const pct = (v, d=1) =>
-  v == null || isNaN(v) ? '—' : (v >= 0 ? '+' : '') + Number(v).toFixed(d) + '%';
-const fd  = s => {
-  if (!s) return '—';
-  const [y,m,d] = s.split('-');
-  return `${d}/${m}/${y}`;
-};
-const cc = v => v > 0 ? 'pos' : v < 0 ? 'neg' : 'neu';
-
-/* ═══════════════════════════════════════════════════════════
-   RENDER
-═══════════════════════════════════════════════════════════ */
-function render(D) {
-  const s   = D.stats;
-  const m   = D.meta;
-  const app = document.getElementById('app');
-
-  /* Header timestamp */
-  const dt = new Date(m.updated_at);
-  document.getElementById('ts').textContent =
-    'Mis à jour le ' +
-    dt.toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric'}) +
-    ' à ' + dt.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
-
-  /* ── KPIs ─────────────────────────────────────────────── */
-  const roiC = cc(s.roi_global);
-  const bkC  = cc(s.bankroll_actuelle - m.bankroll_initiale);
-  const html = `
-  <p class="section-title">Chiffres clés</p>
+<nav id="nav">
+  <button class="tab-btn active" data-tab="overview"><span>📊</span>Vue Générale</button>
+  <button class="tab-btn" data-tab="bets"><span>🎯</span>Paris</button>
+  <button class="tab-btn" data-tab="perf"><span>📈</span>Performance</button>
+  <button class="tab-btn" data-tab="model"><span>🤖</span>Modèle</button>
+</nav>
+<main>
+<div class="tab-pane active" id="tab-overview">
   <div class="kpi-grid">
-    <div class="kpi">
-      <div class="kpi-lbl">💰 Bankroll</div>
-      <div class="kpi-val ${bkC}">${eur(s.bankroll_actuelle)}</div>
-      <div class="kpi-sub">Départ ${eur(m.bankroll_initiale)} · ${pct((s.bankroll_actuelle - m.bankroll_initiale)/m.bankroll_initiale*100)} net</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-lbl">📈 ROI global</div>
-      <div class="kpi-val ${roiC}">${pct(s.roi_global)}</div>
-      <div class="kpi-sub">${eur(s.gain_perte_total)} de P&amp;L net</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-lbl">🎯 Paris</div>
-      <div class="kpi-val neu">${s.total_paris}</div>
-      <div class="kpi-sub">${eur(s.total_mise)} misés au total</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-lbl">✅ Réussite</div>
-      <div class="kpi-val ${s.taux_reussite >= 50 ? 'pos' : 'neu'}">${s.taux_reussite.toFixed(1)}%</div>
-      <div class="kpi-sub">${s.paris_gagnes}W / ${s.paris_perdus}L / ${s.paris_en_cours} en cours</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-lbl">⚡ EV moyen</div>
-      <div class="kpi-val pos">+${s.ev_moyen_global.toFixed(1)}%</div>
-      <div class="kpi-sub">Sur l'ensemble des paris</div>
-    </div>
+    <div class="kpi"><div class="kpi-label">Bankroll</div><div class="kpi-val neu">€2 847</div><div class="kpi-sub">Initial : €2 000</div></div>
+    <div class="kpi"><div class="kpi-label">ROI</div><div class="kpi-val pos">+14.2%</div><div class="kpi-sub">↑ +2.1% ce mois</div></div>
+    <div class="kpi"><div class="kpi-label">Total Paris</div><div class="kpi-val neu">138</div><div class="kpi-sub">12 en cours</div></div>
+    <div class="kpi"><div class="kpi-label">Taux Réussite</div><div class="kpi-val pos">58.7%</div><div class="kpi-sub">81 gagnés / 57 perdus</div></div>
+    <div class="kpi"><div class="kpi-label">EV Moyen</div><div class="kpi-val pos">+7.3%</div><div class="kpi-sub">Médiane : +5.8%</div></div>
   </div>
-
-  <p class="section-title">Évolution</p>
-  <div class="charts-top">
-    <div class="card">
-      <div class="card-title">📊 Bankroll dans le temps</div>
-      <div class="chart-box chart-box-lg"><canvas id="cBankroll"></canvas></div>
-    </div>
+  <div class="grid-2">
+    <div class="card"><div class="card-title">📈 Courbe Bankroll</div><div class="chart-wrap"><canvas id="bankrollChart"></canvas></div></div>
+    <div class="card"><div class="card-title">🥧 Résultats</div><div class="chart-wrap"><canvas id="pieChart"></canvas></div></div>
   </div>
-
-  <div class="charts-mid" style="margin-top:14px">
-    <div class="card">
-      <div class="card-title">📉 ROI cumulé</div>
-      <div class="chart-box chart-box-md"><canvas id="cRoi"></canvas></div>
-    </div>
-    <div class="card">
-      <div class="card-title">🥧 Résultats</div>
-      <div class="chart-box chart-box-pie"><canvas id="cPie"></canvas></div>
-    </div>
+</div>
+<div class="tab-pane" id="tab-bets">
+  <div class="filters" id="filters-result">
+    <button class="filter-btn active" data-filter-result="all">Tous</button>
+    <button class="filter-btn" data-filter-result="Gagné">✅ Gagné</button>
+    <button class="filter-btn" data-filter-result="Perdu">❌ Perdu</button>
+    <button class="filter-btn" data-filter-result="En cours">⏳ En cours</button>
   </div>
-
-  <div class="charts-bot" style="margin-top:14px">
-    <div class="card">
-      <div class="card-title">📅 EV moyen par semaine</div>
-      <div class="chart-box chart-box-md"><canvas id="cEv"></canvas></div>
-    </div>
+  <div class="filters" id="filters-period">
+    <button class="filter-btn active" data-filter-period="all">Tout</button>
+    <button class="filter-btn" data-filter-period="7">7 jours</button>
+    <button class="filter-btn" data-filter-period="30">30 jours</button>
   </div>
-
-  <p class="section-title">Historique des paris</p>
-  <div class="card" style="padding:0;overflow:hidden">
-    <div class="t-wrap">
-    <table>
-      <thead><tr>
-        <th>Date</th><th>Match</th><th>Pari</th>
-        <th>Cote</th><th>Mise</th><th>EV</th>
-        <th>Résultat</th><th>Gain/Perte</th><th>Bankroll</th>
-      </tr></thead>
-      <tbody id="tbody"></tbody>
-    </table>
-    </div>
-  </div>`;
-
-  app.innerHTML = html;
-
-  /* ── Table rows ──────────────────────────────────────── */
-  const tbody = document.getElementById('tbody');
-  const recents = D.paris_recents || [];
-  if (!recents.length) {
-    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px">Aucun pari enregistré</td></tr>`;
-  } else {
-    tbody.innerHTML = recents.map(p => {
-      const badge = p.resultat === 'Gagné'
-        ? `<span class="badge b-win">Gagné</span>`
-        : p.resultat === 'Perdu'
-        ? `<span class="badge b-loss">Perdu</span>`
-        : `<span class="badge b-pen">En cours</span>`;
-      const gpColor = p.gain_perte > 0 ? C.green : p.gain_perte < 0 ? C.red : '';
-      return `<tr>
-        <td style="color:var(--muted)">${fd(p.date)}</td>
-        <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis">${p.match}</td>
-        <td><b>${p.joueur}</b></td>
-        <td>${p.cote ? p.cote.toFixed(2) : '—'}</td>
-        <td>${p.mise ? eur(p.mise) : '—'}</td>
-        <td style="color:var(--blue);font-weight:600">+${p.ev ? p.ev.toFixed(1) : '0'}%</td>
-        <td>${badge}</td>
-        <td style="color:${gpColor};font-weight:600">${p.gain_perte !== null ? eur(p.gain_perte) : '—'}</td>
-        <td style="color:var(--muted)">${p.bankroll !== null ? eur(p.bankroll) : '—'}</td>
-      </tr>`;
-    }).join('');
-  }
-
-  /* ── Draw charts ─────────────────────────────────────── */
-  chartBankroll(D.bankroll_historique, m.bankroll_initiale);
-  chartRoi(D.roi_cumulatif);
-  chartPie(s);
-  chartEv(D.ev_par_semaine);
-}
-
-/* ═══════════════════════════════════════════════════════════
-   CHART DEFAULTS
-═══════════════════════════════════════════════════════════ */
-const BASE_OPTS = () => ({
-  responsive: true,
-  maintainAspectRatio: false,
-  interaction: { mode: 'index', intersect: false },
-  plugins: {
-    legend: { display: false },
-    tooltip: {
-      backgroundColor: '#1c2128',
-      borderColor: C.border,
-      borderWidth: 1,
-      titleColor: C.muted,
-      bodyColor: C.text,
-      padding: 10,
-    },
-  },
-  scales: {
-    x: { grid: { color: C.border }, ticks: { maxTicksLimit: 9, color: C.muted } },
-    y: { grid: { color: C.border }, ticks: { maxTicksLimit: 6, color: C.muted } },
-  },
-});
-
-/* ═══════════════════════════════════════════════════════════
-   BANKROLL CHART
-═══════════════════════════════════════════════════════════ */
-function chartBankroll(hist, init) {
-  if (!hist || hist.length < 2) return;
-  const labels = hist.map(h => fd(h.date));
-  const vals   = hist.map(h => h.bankroll);
-  const ctx    = document.getElementById('cBankroll').getContext('2d');
-  const grad   = ctx.createLinearGradient(0, 0, 0, 240);
-  grad.addColorStop(0, 'rgba(63,185,80,.30)');
-  grad.addColorStop(1, 'rgba(63,185,80,.00)');
-
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        data:            vals,
-        borderColor:     C.green,
-        backgroundColor: grad,
-        borderWidth:     2.5,
-        pointRadius:     hist.length > 20 ? 0 : 4,
-        pointHoverRadius:5,
-        pointBackgroundColor: C.green,
-        fill:            true,
-        tension:         0.35,
-      }],
-    },
-    options: {
-      ...BASE_OPTS(),
-      plugins: {
-        ...BASE_OPTS().plugins,
-        tooltip: {
-          ...BASE_OPTS().plugins.tooltip,
-          callbacks: {
-            title: ([ctx]) => `${ctx.label}`,
-            label: ctx => {
-              const v   = ctx.parsed.y;
-              const roi = ((v - init) / init * 100).toFixed(1);
-              return ` Bankroll : ${eur(v)}  (ROI ${roi > 0 ? '+' : ''}${roi}%)`;
-            },
-          },
-        },
-      },
-      scales: {
-        x: { grid: { color: C.border }, ticks: { maxTicksLimit: 9, color: C.muted } },
-        y: {
-          grid: { color: C.border },
-          ticks: { color: C.muted, maxTicksLimit: 6,
-                   callback: v => eur(v, 0) },
-        },
-      },
-    },
-  });
-}
-
-/* ═══════════════════════════════════════════════════════════
-   ROI CHART
-═══════════════════════════════════════════════════════════ */
-function chartRoi(roi) {
-  if (!roi || roi.length < 2) return;
-  const labels = roi.map(r => fd(r.date));
-  const vals   = roi.map(r => r.roi);
-  const ctx    = document.getElementById('cRoi').getContext('2d');
-  const grad   = ctx.createLinearGradient(0, 0, 0, 220);
-  grad.addColorStop(0, 'rgba(88,166,255,.20)');
-  grad.addColorStop(1, 'rgba(88,166,255,.00)');
-
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        data:            vals,
-        borderColor:     C.blue,
-        backgroundColor: grad,
-        borderWidth:     2,
-        pointRadius:     roi.length > 20 ? 0 : 3,
-        pointHoverRadius:5,
-        pointBackgroundColor: C.blue,
-        fill:            true,
-        tension:         0.3,
-      }],
-    },
-    options: {
-      ...BASE_OPTS(),
-      plugins: {
-        ...BASE_OPTS().plugins,
-        tooltip: {
-          ...BASE_OPTS().plugins.tooltip,
-          callbacks: {
-            label: ctx => ` ROI : ${pct(ctx.parsed.y)}`,
-          },
-        },
-      },
-      scales: {
-        x: { grid: { color: C.border }, ticks: { maxTicksLimit: 7, color: C.muted } },
-        y: {
-          grid: { color: C.border },
-          ticks: { color: C.muted, maxTicksLimit: 6,
-                   callback: v => (v >= 0 ? '+' : '') + v.toFixed(0) + '%' },
-        },
-      },
-    },
-  });
-}
-
-/* ═══════════════════════════════════════════════════════════
-   PIE CHART
-═══════════════════════════════════════════════════════════ */
-function chartPie(s) {
-  const total = s.paris_gagnes + s.paris_perdus + s.paris_en_cours;
-  if (total === 0) return;
-  const ctx = document.getElementById('cPie').getContext('2d');
-
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels:   ['Gagnés', 'Perdus', 'En cours'],
-      datasets: [{
-        data:            [s.paris_gagnes, s.paris_perdus, s.paris_en_cours],
-        backgroundColor: [C.green, C.red, C.orange],
-        hoverBackgroundColor: ['#4dcc5f', '#ff6b63', '#e5aa3a'],
-        borderColor:     '#161b22',
-        borderWidth:     3,
-        hoverOffset:     8,
-      }],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '62%',
-      plugins: {
-        legend: {
-          display: true,
-          position: 'bottom',
-          labels: { boxWidth: 12, padding: 16, color: C.text, font: { size: 12 } },
-        },
-        tooltip: {
-          backgroundColor: '#1c2128',
-          borderColor: C.border,
-          borderWidth: 1,
-          titleColor: C.muted,
-          bodyColor: C.text,
-          padding: 10,
-          callbacks: {
-            label: ctx => {
-              const v   = ctx.parsed;
-              const pct_ = total > 0 ? (v / total * 100).toFixed(1) : '0.0';
-              return `  ${ctx.label} : ${v} (${pct_}%)`;
-            },
-          },
-        },
-      },
-    },
-  });
-}
-
-/* ═══════════════════════════════════════════════════════════
-   EV BAR CHART
-═══════════════════════════════════════════════════════════ */
-function chartEv(evData) {
-  if (!evData || evData.length === 0) return;
-  const labels = evData.map(e => e.semaine);
-  const vals   = evData.map(e => e.ev_moyen);
-  const cols   = vals.map(v => v >= 10 ? C.green : v >= 5 ? C.blue : C.orange);
-  const ctx    = document.getElementById('cEv').getContext('2d');
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{
-        data:            vals,
-        backgroundColor: cols,
-        borderRadius:    5,
-        borderSkipped:   false,
-      }],
-    },
-    options: {
-      ...BASE_OPTS(),
-      plugins: {
-        ...BASE_OPTS().plugins,
-        tooltip: {
-          ...BASE_OPTS().plugins.tooltip,
-          callbacks: {
-            label: ctx => {
-              const e = evData[ctx.dataIndex];
-              return ` EV moyen : +${ctx.parsed.y.toFixed(1)}%  (${e.nb_paris} paris)`;
-            },
-          },
-        },
-      },
-      scales: {
-        x: { grid: { display: false }, ticks: { maxTicksLimit: 14, color: C.muted } },
-        y: {
-          grid: { color: C.border },
-          min: 0,
-          ticks: { color: C.muted, maxTicksLimit: 5,
-                   callback: v => '+' + v.toFixed(0) + '%' },
-        },
-      },
-    },
-  });
-}
-
-/* ═══════════════════════════════════════════════════════════
-   BOOTSTRAP
-═══════════════════════════════════════════════════════════ */
-(async function init() {
-  const app = document.getElementById('app');
-  try {
-    const resp = await fetch('data.json?t=' + Date.now());
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    const data = await resp.json();
-    render(data);
-  } catch (e) {
-    document.getElementById('ts').textContent = 'Données non disponibles';
-    app.innerHTML = `
-      <div style="margin-top:40px">
-        <div class="err-box">
-          ❌ Impossible de charger <code>data.json</code><br>
-          <small style="opacity:.75">${e.message}</small><br><br>
-          <small>
-            Lance <code>python -X utf8 tennis_auto.py --analyse</code>
-            pour générer les données, puis pousse sur GitHub Pages.
-          </small>
-        </div>
-      </div>`;
-  }
-})();
+  <div class="card"><div class="table-wrap"><table id="betsTable"><thead><tr><th>Date</th><th>Match</th><th>Pari</th><th>Book.</th><th>Cote</th><th>Mise</th><th>EV</th><th>Résultat</th><th>Gain</th><th>Bankroll</th></tr></thead><tbody id="betsBody"></tbody></table></div></div>
+</div>
+<div class="tab-pane" id="tab-perf">
+  <div class="card" style="margin-bottom:20px"><div class="card-title">📈 ROI Cumulé dans le temps</div><div class="chart-wrap"><canvas id="roiChart"></canvas></div></div>
+  <div class="grid-3">
+    <div class="card"><div class="card-title">🏟️ Stats par Surface</div><table class="stats-tbl"><thead><tr><th>Surface</th><th>Paris</th><th>Taux</th><th>ROI</th></tr></thead><tbody id="surfaceBody"></tbody></table></div>
+    <div class="card"><div class="card-title">🏦 Stats par Bookmaker</div><table class="stats-tbl"><thead><tr><th>Book.</th><th>Paris</th><th>Taux</th><th>ROI</th></tr></thead><tbody id="bookBody"></tbody></table></div>
+    <div class="card"><div class="card-title">🎲 Stats par Type</div><table class="stats-tbl"><thead><tr><th>Type</th><th>Paris</th><th>Taux</th><th>ROI</th></tr></thead><tbody id="typeBody"></tbody></table></div>
+  </div>
+  <div class="card"><div class="card-title">🔬 EV Prédit vs ROI Réel</div><div class="chart-wrap"><canvas id="evRoiChart"></canvas></div></div>
+</div>
+<div class="tab-pane" id="tab-model">
+  <div class="model-grid">
+    <div class="kpi"><div class="kpi-label">Précision</div><div class="kpi-val pos">63.4%</div><div class="kpi-sub">vs 58.7% baseline</div></div>
+    <div class="kpi"><div class="kpi-label">Score de Brier</div><div class="kpi-val neu">0.214</div><div class="kpi-sub">↓ meilleur = plus bas</div></div>
+    <div class="kpi"><div class="kpi-label">Log-Loss</div><div class="kpi-val pos">0.589</div><div class="kpi-sub">Modèle calibré</div></div>
+    <div class="kpi"><div class="kpi-label">AUC-ROC</div><div class="kpi-val pos">0.718</div><div class="kpi-sub">Bonne discrimination</div></div>
+  </div>
+  <div class="update-tag" style="margin-bottom:24px"><span>🔄</span> Dernière mise à jour : <strong>15 mars 2026, 23:47</strong> — 4 nouveaux matchs analysés</div>
+  <div class="section-title">Performance par Tranche EV</div>
+  <div class="ev-bands" id="evBands"></div>
+  <div style="height:20px"></div>
+  <div class="grid-2">
+    <div class="card"><div class="card-title">📉 Calibration du Modèle</div><div class="chart-wrap-sm"><canvas id="calibChart"></canvas></div></div>
+    <div class="card"><div class="card-title">🎯 Métriques Détaillées</div><div id="metricsDetail"></div></div>
+  </div>
+</div>
+</main>
+<script>
+const BETS=[{date:'2026-03-15',match:'Djokovic vs Alcaraz',pari:'Vainqueur Alcaraz',book:'Unibet',cote:2.10,mise:100,ev:8.4,result:'Gagné',gain:110,br:2847},{date:'2026-03-14',match:'Sinner vs Medvedev',pari:'Total >22.5 games',book:'Bet365',cote:1.85,mise:80,ev:6.1,result:'Perdu',gain:-80,br:2737},{date:'2026-03-14',match:'Ruud vs Tsitsipas',pari:'Handicap -1.5 sets Ruud',book:'Winamax',cote:2.40,mise:60,ev:11.2,result:'Gagné',gain:84,br:2817},{date:'2026-03-13',match:'Nadal vs Zverev',pari:'Vainqueur Nadal',book:'PMU',cote:1.75,mise:120,ev:5.3,result:'Gagné',gain:90,br:2733},{date:'2026-03-13',match:'Kyrgios vs Shapovalov',pari:'Total <20.5 games',book:'Unibet',cote:2.05,mise:50,ev:9.8,result:'En cours',gain:0,br:2643},{date:'2026-03-12',match:'Auger vs Norrie',pari:'Vainqueur Auger',book:'Bet365',cote:1.60,mise:150,ev:4.2,result:'Gagné',gain:90,br:2693},{date:'2026-03-12',match:'Hurkacz vs Dimitrov',pari:'Sets 2-0 Hurkacz',book:'Winamax',cote:3.20,mise:40,ev:15.6,result:'Perdu',gain:-40,br:2543},{date:'2026-03-11',match:'Fritz vs Paul',pari:'Handicap +1.5 Paul',book:'PMU',cote:1.90,mise:80,ev:7.1,result:'Gagné',gain:72,br:2583},{date:'2026-03-11',match:'Rublev vs Khachanov',pari:'Vainqueur Rublev',book:'Unibet',cote:1.55,mise:100,ev:3.8,result:'En cours',gain:0,br:2511},{date:'2026-03-10',match:'Tiafoe vs Musetti',pari:'Total >21.5 games',book:'Bet365',cote:1.95,mise:70,ev:6.7,result:'Perdu',gain:-70,br:2511},{date:'2026-03-10',match:'Shelton vs Cerundolo',pari:'Vainqueur Shelton',book:'Winamax',cote:1.70,mise:90,ev:5.9,result:'Gagné',gain:63,br:2581},{date:'2026-03-09',match:'Sonego vs Baez',pari:'Sets 2-1',book:'PMU',cote:2.80,mise:50,ev:12.3,result:'Gagné',gain:90,br:2518},{date:'2026-03-08',match:'Struff vs Griekspoor',pari:'Vainqueur Griekspoor',book:'Unibet',cote:2.25,mise:60,ev:8.8,result:'Perdu',gain:-60,br:2428},{date:'2026-03-07',match:'De Minaur vs Draper',pari:'Vainqueur De Minaur',book:'Bet365',cote:1.80,mise:110,ev:6.4,result:'Gagné',gain:88,br:2488},{date:'2026-03-07',match:'Bublik vs McDonald',pari:'Handicap -3.5 games',book:'Winamax',cote:2.10,mise:55,ev:9.2,result:'En cours',gain:0,br:2400}];
+Chart.defaults.color='#7070a0';Chart.defaults.borderColor='rgba(108,99,255,0.1)';Chart.defaults.font.family="'Space Grotesk',sans-serif";
+const gV=(ctx)=>{const g=ctx.chart.ctx.createLinearGradient(0,0,0,ctx.chart.height);g.addColorStop(0,'rgba(108,99,255,0.3)');g.addColorStop(1,'rgba(108,99,255,0)');return g;};
+const gE=(ctx)=>{const g=ctx.chart.ctx.createLinearGradient(0,0,0,ctx.chart.height);g.addColorStop(0,'rgba(0,212,170,0.25)');g.addColorStop(1,'rgba(0,212,170,0)');return g;};
+new Chart(document.getElementById('bankrollChart'),{type:'line',data:{labels:['Jan','Fév','Mar 1','Mar 5','Mar 8','Mar 10','Mar 12','Mar 15'],datasets:[{label:'Bankroll (€)',data:[2000,2120,2250,2310,2428,2511,2693,2847],borderColor:'#6c63ff',backgroundColor:function(ctx){return gV(ctx);},borderWidth:2.5,fill:true,tension:0.4,pointBackgroundColor:'#6c63ff',pointRadius:4,pointHoverRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` €${c.raw.toLocaleString()}`}}},scales:{x:{grid:{color:'rgba(108,99,255,0.08)'}},y:{grid:{color:'rgba(108,99,255,0.08)'},ticks:{callback:v=>`€${v}`}}}}});
+new Chart(document.getElementById('pieChart'),{type:'doughnut',data:{labels:['Gagnés','Perdus','En cours'],datasets:[{data:[81,45,12],backgroundColor:['rgba(0,212,170,0.8)','rgba(255,77,109,0.8)','rgba(255,184,48,0.8)'],borderColor:['#00d4aa','#ff4d6d','#ffb830'],borderWidth:2,hoverOffset:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:20,usePointStyle:true}},tooltip:{callbacks:{label:c=>` ${c.label}: ${c.raw} paris`}}}}});
+new Chart(document.getElementById('roiChart'),{type:'line',data:{labels:['Jan','Fév','Mar 1','Mar 5','Mar 8','Mar 10','Mar 12','Mar 15'],datasets:[{label:'ROI Cumulé (%)',data:[0,3.2,6.8,8.1,9.4,11.2,12.8,14.2],borderColor:'#00d4aa',backgroundColor:function(ctx){return gE(ctx);},borderWidth:2.5,fill:true,tension:0.4,pointBackgroundColor:'#00d4aa',pointRadius:4,pointHoverRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` +${c.raw}%`}}},scales:{x:{grid:{color:'rgba(0,212,170,0.08)'}},y:{grid:{color:'rgba(0,212,170,0.08)'},ticks:{callback:v=>`${v}%`}}}}});
+new Chart(document.getElementById('evRoiChart'),{type:'scatter',data:{datasets:[{label:'Paris',data:[{x:2.1,y:1.8},{x:4.5,y:3.9},{x:6.2,y:7.1},{x:8.4,y:9.2},{x:10.1,y:11.8},{x:12.3,y:14.1},{x:15.6,y:13.2},{x:5.3,y:4.8},{x:7.1,y:8.3},{x:9.8,y:10.4},{x:3.8,y:2.9},{x:11.2,y:12.7},{x:6.7,y:5.8},{x:8.8,y:9.6},{x:14.0,y:15.2}],backgroundColor:'rgba(108,99,255,0.6)',borderColor:'#6c63ff',borderWidth:1,pointRadius:6},{label:'Ligne parfaite',data:[{x:0,y:0},{x:16,y:16}],type:'line',borderColor:'rgba(0,212,170,0.4)',borderDash:[6,3],borderWidth:1.5,pointRadius:0,backgroundColor:'transparent'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{x:{title:{display:true,text:'EV Prédit (%)',color:'#7070a0'},grid:{color:'rgba(108,99,255,0.08)'}},y:{title:{display:true,text:'ROI Réel (%)',color:'#7070a0'},grid:{color:'rgba(108,99,255,0.08)'}}}}}});
+new Chart(document.getElementById('calibChart'),{type:'bar',data:{labels:['0–20%','20–40%','40–60%','60–80%','80–100%'],datasets:[{label:'Prédit',data:[10,22,38,61,85],backgroundColor:'rgba(108,99,255,0.6)',borderColor:'#6c63ff',borderWidth:1},{label:'Réel',data:[12,20,41,58,82],backgroundColor:'rgba(0,212,170,0.5)',borderColor:'#00d4aa',borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(108,99,255,0.08)'},ticks:{callback:v=>`${v}%`}}}}});
+const surf=[{name:'🟫 Terre',paris:62,taux:'61.3%',roi:'+16.8%'},{name:'🔵 Dur',paris:59,taux:'57.6%',roi:'+12.1%'},{name:'🟢 Gazon',paris:17,taux:'52.9%',roi:'+8.4%'}];
+const books=[{name:'Unibet',paris:38,taux:'60.5%',roi:'+15.2%'},{name:'Bet365',paris:42,taux:'57.1%',roi:'+13.6%'},{name:'Winamax',paris:33,taux:'58.1%',roi:'+14.8%'},{name:'PMU',paris:25,taux:'56.0%',roi:'+11.3%'}];
+const types=[{name:'Vainqueur',paris:72,taux:'62.5%',roi:'+15.4%'},{name:'Handicap',paris:31,taux:'54.8%',roi:'+10.7%'},{name:'Total',paris:25,taux:'52.0%',roi:'+9.2%'},{name:'Sets',paris:10,taux:'50.0%',roi:'+6.8%'}];
+const cR=r=>r.startsWith('+')?`<span class="pos">${r}</span>`:`<span class="neg">${r}</span>`;
+document.getElementById('surfaceBody').innerHTML=surf.map(r=>`<tr><td>${r.name}</td><td>${r.paris}</td><td>${r.taux}</td><td>${cR(r.roi)}</td></tr>`).join('');
+document.getElementById('bookBody').innerHTML=books.map(r=>`<tr><td>${r.name}</td><td>${r.paris}</td><td>${r.taux}</td><td>${cR(r.roi)}</td></tr>`).join('');
+document.getElementById('typeBody').innerHTML=types.map(r=>`<tr><td>${r.name}</td><td>${r.paris}</td><td>${r.taux}</td><td>${cR(r.roi)}</td></tr>`).join('');
+const evB=[{label:'EV 0–5%',paris:38,taux:'52.6%',roi:'+4.8%',pct:32},{label:'EV 5–10%',paris:61,taux:'57.4%',roi:'+11.3%',pct:58},{label:'EV 10–15%',paris:28,taux:'64.3%',roi:'+18.9%',pct:74},{label:'EV >15%',paris:11,taux:'72.7%',roi:'+29.4%',pct:92}];
+document.getElementById('evBands').innerHTML=evB.map(b=>`<div class="ev-band"><div class="ev-band-header"><span class="ev-band-label">${b.label}</span><div style="display:flex;gap:20px;font-size:.78rem"><span style="color:var(--muted)">${b.paris} paris</span><span style="color:var(--muted)">${b.taux}</span><span class="ev-band-roi pos">${b.roi}</span></div></div><div class="progress-bar"><div class="progress-fill" style="width:${b.pct}%"></div></div></div>`).join('');
+document.getElementById('metricsDetail').innerHTML=[{l:'Entraîné sur',v:'14 280 matchs'},{l:'Dernière epoch',v:'Epoch 247'},{l:'Features',v:'38 variables'},{l:'Validation Loss',v:'0.201'},{l:'Sharpe Ratio',v:'1.84'},{l:'Max Drawdown',v:'-8.3%'}].map(m=>`<div class="metric-row"><span class="metric-label">${m.l}</span><span class="metric-val">${m.v}</span></div>`).join('');
+let aR='all',aP='all';
+function dS(d){return Math.floor((new Date('2026-03-16')-new Date(d))/86400000);}
+function rB(){document.getElementById('betsBody').innerHTML=BETS.filter(b=>(aR==='all'||b.result===aR)&&(aP==='all'||dS(b.date)<=parseInt(aP))).map(b=>{const eC=b.ev>=10?'pos':b.ev>=5?'neu':'';const bg=b.result==='Gagné'?'badge-win':b.result==='Perdu'?'badge-loss':'badge-live';const gS=b.result==='En cours'?'—':(b.gain>0?`<span class="pos">+€${b.gain}</span>`:`<span class="neg">-€${Math.abs(b.gain)}</span>`);return `<tr><td style="font-family:var(--mono);font-size:.76rem;color:var(--muted)">${b.date.slice(5)}</td><td>${b.match}</td><td>${b.pari}</td><td style="color:var(--muted)">${b.book}</td><td style="font-family:var(--mono)">${b.cote.toFixed(2)}</td><td style="font-family:var(--mono)">€${b.mise}</td><td class="${eC}" style="font-family:var(--mono)">+${b.ev}%</td><td><span class="badge ${bg}">${b.result}</span></td><td>${gS}</td><td style="font-family:var(--mono);color:var(--muted)">€${b.br.toLocaleString()}</td></tr>`;}).join('');}
+rB();
+document.querySelectorAll('[data-filter-result]').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('[data-filter-result]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');aR=btn.dataset.filterResult;rB();});});
+document.querySelectorAll('[data-filter-period]').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('[data-filter-period]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');aP=btn.dataset.filterPeriod;rB();});});
+document.querySelectorAll('.tab-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById('tab-'+btn.dataset.tab).classList.add('active');});});
 </script>
 </body>
 </html>
