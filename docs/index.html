@@ -354,19 +354,6 @@ function render(D) {
     </div>
   </div>
 
-  <p class="section-title">Value Bets Actuels</p>
-  <div class="card" style="padding:0;overflow:hidden">
-    <div class="t-wrap">
-    <table>
-      <thead><tr>
-        <th>Date</th><th>Match</th><th>Joueur</th><th>Type</th>
-        <th>Cote</th><th>Bookmaker</th><th>Prob.</th><th>EV</th><th>Mise</th>
-      </tr></thead>
-      <tbody id="tbody_vb"></tbody>
-    </table>
-    </div>
-  </div>
-
   <p class="section-title">Matchs ATP/WTA à Venir</p>
   <div class="card" style="padding:0;overflow:hidden">
     <div class="t-wrap">
@@ -378,19 +365,6 @@ function render(D) {
         <th>Prob. J1</th><th>EV J1</th><th>EV J2</th>
       </tr></thead>
       <tbody id="tbody_mv"></tbody>
-    </table>
-    </div>
-  </div>
-
-  <p class="section-title">Classement Elo Joueurs</p>
-  <div class="card" style="padding:0;overflow:hidden">
-    <div class="t-wrap">
-    <table>
-      <thead><tr>
-        <th>Joueur</th><th>Circuit</th><th>Elo Global</th>
-        <th>Elo Dur</th><th>Forme 5M</th>
-      </tr></thead>
-      <tbody id="tbody_elo"></tbody>
     </table>
     </div>
   </div>
@@ -438,29 +412,6 @@ function render(D) {
     }).join('');
   }
 
-  /* ── Value Bets actuels ───────────────────────────────── */
-  const tbodyVb = document.getElementById('tbody_vb');
-  const vbets = D.value_bets || [];
-  if (!vbets.length) {
-    tbodyVb.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px">Aucun value bet détecté</td></tr>`;
-  } else {
-    tbodyVb.innerHTML = vbets.map(vb => {
-      const evClass = vb.ev >= 10 ? 'pos' : 'ora';
-      const evStr   = `+${vb.ev.toFixed(1)}%`;
-      return `<tr>
-        <td style="color:var(--muted)">${fd(vb.date)}</td>
-        <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis">${vb.match}</td>
-        <td><b>${vb.joueur}</b></td>
-        <td style="color:var(--muted);font-size:11px">${vb.type_pari}</td>
-        <td>${vb.cote ? vb.cote.toFixed(2) : '—'}</td>
-        <td style="color:var(--muted);font-size:11px">${vb.bookmaker}</td>
-        <td style="color:var(--blue)">${vb.prob ? vb.prob.toFixed(1) + '%' : '—'}</td>
-        <td style="color:var(--${evClass});font-weight:700">${evStr}</td>
-        <td style="color:var(--green)">${vb.mise ? eur(vb.mise) : '—'}</td>
-      </tr>`;
-    }).join('');
-  }
-
   /* ── Matchs à venir ───────────────────────────────────── */
   const tbodyMv = document.getElementById('tbody_mv');
   const matchs  = D.matchs_venir || [];
@@ -484,27 +435,6 @@ function render(D) {
         <td style="color:var(--blue)">${m.prob1 ? (m.prob1*100).toFixed(1)+'%' : '—'}</td>
         <td style="color:var(--${ev1Class});font-weight:600">${m.ev1 !== undefined ? (m.ev1*100 >= 0?'+':'')+(m.ev1*100).toFixed(1)+'%' : '—'}</td>
         <td style="color:var(--${ev2Class});font-weight:600">${m.ev2 !== undefined ? (m.ev2*100 >= 0?'+':'')+(m.ev2*100).toFixed(1)+'%' : '—'}</td>
-      </tr>`;
-    }).join('');
-  }
-
-  /* ── Classement Elo ───────────────────────────────────── */
-  const tbodyElo = document.getElementById('tbody_elo');
-  const joueurs  = D.top_joueurs || [];
-  if (!joueurs.length) {
-    tbodyElo.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px">Données Elo non disponibles</td></tr>`;
-  } else {
-    tbodyElo.innerHTML = joueurs.map((j, idx) => {
-      const badge = j.circuit === 'ATP'
-        ? `<span class="badge" style="background:var(--blue-d);color:var(--blue);border:1px solid rgba(88,166,255,.3)">ATP</span>`
-        : `<span class="badge" style="background:var(--orange-d);color:var(--orange);border:1px solid rgba(210,153,34,.3)">WTA</span>`;
-      const formeColor = j.forme >= 80 ? 'pos' : j.forme >= 50 ? 'neu' : 'neg';
-      return `<tr>
-        <td><b>${j.joueur}</b></td>
-        <td>${badge}</td>
-        <td style="font-weight:600">${j.elo_global}</td>
-        <td style="color:var(--muted)">${j.elo_surface}</td>
-        <td style="color:var(--${formeColor})">${j.forme !== null ? j.forme + '%' : 'n/a'}</td>
       </tr>`;
     }).join('');
   }

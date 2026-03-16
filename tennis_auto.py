@@ -2257,9 +2257,15 @@ def recuperer_resultats():
         import time; time.sleep(2)
         try:
             bk = sh.worksheet("Tableau de bord").acell("B7").value
-            print(f"\n  💰 Bankroll actuelle (D6) : {bk}")
+            print(f"\n  Bankroll actuelle : {bk}")
         except Exception:
             pass
+
+    # ── 6. Dashboard GitHub Pages — bankroll mise à jour en temps réel
+    if GSHEET_ACTIF and updates:
+        print("\n  Mise à jour dashboard GitHub Pages (bankroll)...")
+        generer_dashboard_json(sh)
+        git_push_dashboard()
 
     print()
 
@@ -2291,8 +2297,7 @@ BANKROLL_INIT_DASHBOARD = 100.0   # doit correspondre à D3 dans Tableau de bord
 DOCS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs")
 
 
-def generer_dashboard_json(sh, value_bets=None, matchs_analyses=None,
-                            elo_atp=None, elo_wta=None, forme=None):
+def generer_dashboard_json(sh, matchs_analyses=None):
     """
     Lit l'onglet Paris du Google Sheet et génère docs/data.json
     pour le dashboard GitHub Pages.
@@ -2304,9 +2309,7 @@ def generer_dashboard_json(sh, value_bets=None, matchs_analyses=None,
       roi_cumulatif        → [{date, roi}]
       ev_par_semaine       → [{semaine, ev_moyen, nb_paris}]
       paris_recents        → 20 derniers paris (ordre anti-chrono)
-      value_bets           → value bets actuels
-      matchs_venir         → tous les matchs analysés
-      top_joueurs          → top 15 ATP + 15 WTA par Elo
+      matchs_venir         → matchs ATP/WTA à venir avec cotes et proba
     """
     if not sh:
         return
@@ -2491,55 +2494,8 @@ def generer_dashboard_json(sh, value_bets=None, matchs_analyses=None,
             "paris_recents":       paris_recents,
         }
 
-        # ── Value bets actuels ────────────────────────────────────
-        output["value_bets"] = [
-            {
-                "date":       vb.get("date", ""),
-                "match":      vb.get("match", ""),
-                "joueur":     vb.get("joueur", ""),
-                "adversaire": vb.get("adversaire", ""),
-                "type_pari":  vb.get("type_pari", "Vainqueur"),
-                "cote":       vb.get("cote", 0),
-                "bookmaker":  vb.get("bookmaker", ""),
-                "prob":       round(vb.get("prob_modele", 0) * 100, 1),
-                "ev":         round(vb.get("ev", 0) * 100, 1),
-                "mise":       vb.get("mise", 0),
-                "circuit":    vb.get("circuit", ""),
-                "tournoi":    vb.get("tournoi", ""),
-            }
-            for vb in (value_bets or [])
-        ]
-
         # ── Matchs à venir ────────────────────────────────────────
         output["matchs_venir"] = matchs_analyses or []
-
-        # ── Top joueurs Elo ───────────────────────────────────────
-        top_joueurs = []
-        if elo_atp:
-            for j, d in sorted(elo_atp.items(),
-                                key=lambda x: x[1].get("elo_global", 0),
-                                reverse=True)[:15]:
-                f = forme.get(j) if forme else None
-                top_joueurs.append({
-                    "joueur":       j,
-                    "circuit":      "ATP",
-                    "elo_global":   round(d.get("elo_global", 0)),
-                    "elo_surface":  round(d.get("elo_dur", 0)),
-                    "forme":        round(f * 100) if f is not None else None,
-                })
-        if elo_wta:
-            for j, d in sorted(elo_wta.items(),
-                                key=lambda x: x[1].get("elo_global", 0),
-                                reverse=True)[:15]:
-                f = forme.get(j) if forme else None
-                top_joueurs.append({
-                    "joueur":      j,
-                    "circuit":     "WTA",
-                    "elo_global":  round(d.get("elo_global", 0)),
-                    "elo_surface": round(d.get("elo_dur", 0)),
-                    "forme":       round(f * 100) if f is not None else None,
-                })
-        output["top_joueurs"] = top_joueurs
 
         os.makedirs(DOCS_DIR, exist_ok=True)
         json_path = os.path.join(DOCS_DIR, "data.json")
@@ -2602,42 +2558,6 @@ def _get_or_create_ws(sh, title, rows=500, cols=20):
         return sh.add_worksheet(title=title, rows=rows, cols=cols)
 
 
-def exporter_value_bets_live_gsheet(sh, value_bets):
-    """Écrit les value bets actuels dans l'onglet 'Value_Bets'."""
-    if not sh:
-        return
-    try:
-        ws = _get_or_create_ws(sh, "Value_Bets")
-        ts = datetime.now().strftime("%d/%m/%Y %H:%M")
-        header = [
-            "Date", "Tournoi", "Circuit", "Surface", "Match",
-            "Joueur", "Adversaire", "Type Pari", "Cote", "Bookmaker",
-            "Prob. Modèle", "EV%", "Mise Kelly", "Analysé le",
-        ]
-        rows = [header]
-        for vb in value_bets:
-            ev_pct = vb.get("ev", 0) * 100
-            rows.append([
-                vb.get("date", ""),
-                vb.get("tournoi", ""),
-                vb.get("circuit", ""),
-                vb.get("surface", ""),
-                vb.get("match", ""),
-                vb.get("joueur", ""),
-                vb.get("adversaire", ""),
-                vb.get("type_pari", "Vainqueur"),
-                vb.get("cote", 0),
-                vb.get("bookmaker", ""),
-                f"{vb.get('prob_modele', 0)*100:.1f}%",
-                f"+{ev_pct:.1f}%",
-                f"{vb.get('mise', 0):.2f}€",
-                ts,
-            ])
-        ws.clear()
-        ws.update("A1", rows)
-        print(f"  GSheets Value_Bets : {len(value_bets)} paris exportés")
-    except Exception as e:
-        print(f"  GSheets Value_Bets : erreur ({e})")
 
 
 def exporter_matchs_venir_gsheet(sh, matchs_analyses):
@@ -2680,53 +2600,6 @@ def exporter_matchs_venir_gsheet(sh, matchs_analyses):
         print(f"  GSheets Matchs_Venir : erreur ({e})")
 
 
-def exporter_elo_forme_gsheet(sh, elo_atp, elo_wta, forme):
-    """Écrit le classement Elo + forme dans l'onglet 'Elo_Forme'."""
-    if not sh:
-        return
-    try:
-        ws = _get_or_create_ws(sh, "Elo_Forme")
-        ts = datetime.now().strftime("%d/%m/%Y %H:%M")
-        header = [
-            "Joueur", "Circuit", "Elo Global", "Elo Dur",
-            "Elo Terre", "Elo Gazon", "Forme 5M", "MAJ",
-        ]
-        rows = [header]
-        top_atp = sorted(
-            elo_atp.items(),
-            key=lambda x: x[1].get("elo_global", 0), reverse=True
-        )[:30]
-        for joueur, data in top_atp:
-            f = forme.get(joueur) if forme else None
-            rows.append([
-                joueur, "ATP",
-                round(data.get("elo_global", 0)),
-                round(data.get("elo_dur", 0)),
-                round(data.get("elo_terre", 0)),
-                round(data.get("elo_gazon", 0)),
-                f"{f*100:.0f}%" if f is not None else "n/a",
-                ts,
-            ])
-        top_wta = sorted(
-            elo_wta.items(),
-            key=lambda x: x[1].get("elo_global", 0), reverse=True
-        )[:20] if elo_wta else []
-        for joueur, data in top_wta:
-            f = forme.get(joueur) if forme else None
-            rows.append([
-                joueur, "WTA",
-                round(data.get("elo_global", 0)),
-                round(data.get("elo_dur", 0)),
-                round(data.get("elo_terre", 0)),
-                round(data.get("elo_gazon", 0)),
-                f"{f*100:.0f}%" if f is not None else "n/a",
-                ts,
-            ])
-        ws.clear()
-        ws.update("A1", rows)
-        print(f"  GSheets Elo_Forme : {len(rows)-1} joueurs exportés")
-    except Exception as e:
-        print(f"  GSheets Elo_Forme : erreur ({e})")
 
 
 # ─────────────────────────────────────────────────────────────
@@ -3098,9 +2971,7 @@ def analyser_semaine():
             mettre_a_jour_resultats_gsheet(sh)
             enregistrer_paris_gsheet(sh, value_bets)
             mettre_a_jour_tableau_bord(sh)
-            exporter_value_bets_live_gsheet(sh, value_bets)
             exporter_matchs_venir_gsheet(sh, matchs_analyses)
-            exporter_elo_forme_gsheet(sh, elo_atp, elo_wta, forme)
 
     # Email déclenché si au moins 1 bet EV > SEUIL_ALERTE,
     # mais le tableau contient TOUS les value bets (EV > SEUIL_VALUE)
@@ -3118,14 +2989,7 @@ def analyser_semaine():
         print("\n  Génération dashboard GitHub Pages...")
         sh_dash = sh_early or init_gsheet()
         if sh_dash:
-            generer_dashboard_json(
-                sh_dash,
-                value_bets=value_bets,
-                matchs_analyses=matchs_analyses,
-                elo_atp=elo_atp,
-                elo_wta=elo_wta,
-                forme=forme,
-            )
+            generer_dashboard_json(sh_dash, matchs_analyses=matchs_analyses)
             git_push_dashboard()
 
 
