@@ -1,21 +1,21 @@
 name: Tennis Auto
 
 # ──────────────────────────────────────────────────────────────
-# Cron unique UTC couvrant 07h-23h Europe/Paris (hiver ET été)
-#   Hiver UTC+1 : 05h-22h UTC = 06h-23h Paris  → valide 07h-23h
-#   Été   UTC+2 : 05h-22h UTC = 07h-00h Paris  → valide 07h-23h
+# Deux schedules :
+#   1. Lundi 06h UTC = 07h Paris (hiver) → pipeline complet
+#      data + Elo + modèle + analyse
+#   2. Mar-Dim 7h,12h,18h UTC → resultats + analyse
 #
-# Chaque run exécute les deux étapes en séquence :
-#   1. --resultats  (met à jour Gagné/Perdu dès qu'un match est fini)
-#   2. --analyse    (détecte les nouveaux value bets)
-#
-# Runs hors fenêtre 07h-23h Paris → ignorés silencieusement (skip)
+# Le timecheck détecte automatiquement si c'est un run pipeline
+# ou un run analyse classique.
 # ──────────────────────────────────────────────────────────────
 
 on:
   schedule:
-    # 3x/jour : 7h, 12h, 18h UTC = 8h, 13h, 19h Paris (hiver UTC+1)
-    - cron: '0 7,12,18 * * *'
+    # Pipeline complet : lundi 6h UTC = 7h Paris (hiver UTC+1)
+    - cron: '0 6 * * 1'
+    # Analyse 3x/jour (mar-dim) : 7h, 12h, 18h UTC
+    - cron: '0 7,12,18 * * 2-7'
 
   # Déclenchement manuel depuis l'onglet Actions de GitHub
   workflow_dispatch:
@@ -71,22 +71,40 @@ jobs:
           mkdir -p tennis_data
           printf '%s' "$GOOGLE_CREDENTIALS" > tennis_data/gsheet_credentials.json
 
-      # ── 6. Vérifier la fenêtre horaire Europe/Paris ─────────
-      - name: Check Paris time window
+      # ── 6. Détecter le type de run et vérifier la fenêtre ──────
+      - name: Check run type and time window
         id: timecheck
         run: |
-          PARIS_HOUR=$(TZ="Europe/Paris" date +%H)
           PARIS_TIME="$(TZ='Europe/Paris' date '+%H:%M') Europe/Paris"
-          echo "Heure actuelle : $PARIS_TIME"
+          UTC_HOUR=$(date -u +%H)
+          UTC_DOW=$(date -u +%u)   # 1=lundi … 7=dimanche
+          PARIS_HOUR=$(TZ="Europe/Paris" date +%H)
+          echo "Heure UTC : $(date -u '+%H:%M') | Paris : $PARIS_TIME | DOW : $UTC_DOW"
 
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            MODE="${{ inputs.mode }}"
+            if [ "$MODE" = "pipeline" ]; then
+              echo "is_pipeline=true" >> $GITHUB_OUTPUT
+            else
+              echo "is_pipeline=false" >> $GITHUB_OUTPUT
+            fi
             echo "skip=false" >> $GITHUB_OUTPUT
-            echo "  → Déclenchement manuel, pas de vérification horaire"
+            echo "  → Déclenchement manuel (mode=$MODE)"
+
+          elif [ "$UTC_DOW" = "1" ] && [ "$UTC_HOUR" = "06" ]; then
+            # Lundi 06h UTC = pipeline hebdomadaire automatique
+            echo "is_pipeline=true"  >> $GITHUB_OUTPUT
+            echo "skip=false"        >> $GITHUB_OUTPUT
+            echo "  → Pipeline hebdomadaire (lundi 07h Paris) ✓"
+
           elif [ "$PARIS_HOUR" -ge 7 ] && [ "$PARIS_HOUR" -le 23 ]; then
-            echo "skip=false" >> $GITHUB_OUTPUT
-            echo "  → Dans la fenêtre 07h-23h ✓"
+            echo "is_pipeline=false" >> $GITHUB_OUTPUT
+            echo "skip=false"        >> $GITHUB_OUTPUT
+            echo "  → Run analyse dans la fenêtre 07h-23h ✓"
+
           else
-            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "is_pipeline=false" >> $GITHUB_OUTPUT
+            echo "skip=true"         >> $GITHUB_OUTPUT
             echo "  → Hors fenêtre 07h-23h ($PARIS_TIME) — run ignoré"
           fi
 
@@ -102,34 +120,32 @@ jobs:
           echo "⚠  Cache absent — exécution du pipeline complet..."
           python tennis_auto.py --pipeline
 
-      # ── 8a. Pipeline complet (manuel uniquement) ────────────
+      # ── 8a. Pipeline complet (lundi auto OU manuel) ─────────
       - name: Run pipeline
         if: |
           steps.timecheck.outputs.skip == 'false' &&
-          (github.event_name == 'workflow_dispatch' && inputs.mode == 'pipeline')
+          steps.timecheck.outputs.is_pipeline == 'true'
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: python tennis_auto.py --pipeline
 
-      # ── 8b. Résultats ────────────────────────────────────────
-      #   Toutes les heures (hourly) OU mode resultats manuel
+      # ── 8b. Résultats (runs analyse classiques uniquement) ───
       - name: Run resultats
         if: |
           steps.timecheck.outputs.skip == 'false' &&
-          inputs.mode != 'pipeline' &&
+          steps.timecheck.outputs.is_pipeline == 'false' &&
           inputs.mode != 'analyse'
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: python tennis_auto.py --resultats
 
-      # ── 8c. Analyse ──────────────────────────────────────────
-      #   Toutes les heures (hourly) OU mode analyse manuel
+      # ── 8c. Analyse (runs analyse classiques uniquement) ─────
       - name: Run analyse
         if: |
           steps.timecheck.outputs.skip == 'false' &&
-          inputs.mode != 'pipeline' &&
+          steps.timecheck.outputs.is_pipeline == 'false' &&
           inputs.mode != 'resultats'
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
