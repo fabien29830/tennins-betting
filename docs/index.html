@@ -244,7 +244,10 @@
     <span>Tennis Betting</span>
     <span class="pill">LIVE</span>
   </div>
-  <div class="h-ts" id="ts">Chargement…</div>
+  <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <span id="refresh-indicator" style="font-size:11px;color:var(--muted)">Auto-refresh actif</span>
+    <div class="h-ts" id="ts">Chargement…</div>
+  </div>
 </header>
 
 <div class="wrap" id="app">
@@ -677,29 +680,66 @@ function chartEv(evData) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   BOOTSTRAP
+   BOOTSTRAP + AUTO-REFRESH (toutes les 5 minutes)
 ═══════════════════════════════════════════════════════════ */
-(async function init() {
-  const app = document.getElementById('app');
+const REFRESH_MS   = 5 * 60 * 1000;   // 5 minutes
+let   _lastUpdated = null;             // timestamp du dernier data.json chargé
+
+async function fetchData() {
+  const resp = await fetch('data.json?t=' + Date.now());
+  if (!resp.ok) throw new Error('HTTP ' + resp.status);
+  return resp.json();
+}
+
+function showIndicator(msg, color) {
+  const el = document.getElementById('refresh-indicator');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.color = color || 'var(--muted)';
+}
+
+async function loadAndRender(firstLoad) {
   try {
-    const resp = await fetch('data.json?t=' + Date.now());
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    const data = await resp.json();
+    const data = await fetchData();
+    const ts   = data?.meta?.updated_at;
+
+    if (!firstLoad && ts === _lastUpdated) {
+      // Pas de nouvelles données — on indique juste la vérification
+      const now = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+      showIndicator('Vérifié à ' + now, 'var(--muted)');
+      return;
+    }
+
+    _lastUpdated = ts;
     render(data);
+
+    if (!firstLoad) {
+      const now = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+      showIndicator('Mis à jour à ' + now, 'var(--green)');
+      // Repasse en muted après 10s
+      setTimeout(() => showIndicator('Auto-refresh actif', 'var(--muted)'), 10000);
+    }
   } catch (e) {
-    document.getElementById('ts').textContent = 'Données non disponibles';
-    app.innerHTML = `
-      <div style="margin-top:40px">
-        <div class="err-box">
-          ❌ Impossible de charger <code>data.json</code><br>
-          <small style="opacity:.75">${e.message}</small><br><br>
-          <small>
-            Lance <code>python -X utf8 tennis_auto.py --analyse</code>
-            pour générer les données, puis pousse sur GitHub Pages.
-          </small>
-        </div>
-      </div>`;
+    if (firstLoad) {
+      document.getElementById('ts').textContent = 'Données non disponibles';
+      document.getElementById('app').innerHTML = `
+        <div style="margin-top:40px">
+          <div class="err-box">
+            Impossible de charger <code>data.json</code><br>
+            <small style="opacity:.75">${e.message}</small><br><br>
+            <small>Lance <code>python -X utf8 tennis_auto.py --analyse</code>
+            pour générer les données, puis pousse sur GitHub Pages.</small>
+          </div>
+        </div>`;
+    } else {
+      showIndicator('Erreur réseau', 'var(--red)');
+    }
   }
+}
+
+(async function init() {
+  await loadAndRender(true);
+  setInterval(() => loadAndRender(false), REFRESH_MS);
 })();
 </script>
 </body>
