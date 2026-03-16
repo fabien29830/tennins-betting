@@ -52,7 +52,11 @@ MISE_MIN       = 5.0      # mise minimum en €
 MISE_MAX       = 50.0     # mise maximum en €
 
 # Bookmakers à comparer en priorité (dans l'ordre de préférence)
-BOOKMAKERS_CIBLES = ["betclic_fr", "unibet_fr", "winamax_fr"]
+BOOKMAKERS_CIBLES = [
+    "betclic_fr", "unibet_fr", "winamax_fr",
+    "pmu_fr", "parionssport", "bwin_fr",
+    "zebet", "netbet_fr", "vbet_fr", "france_pari",
+]
 
 # ── Email (laisser vide pour désactiver) ──────────────────────
 EMAIL_ACTIF    = True             # True pour activer
@@ -685,16 +689,23 @@ def meilleure_cote(event, idx, bookmakers_prioritaires=None):
 
 def tableau_cotes(event, nom1, nom2):
     """
-    Génère les lignes du tableau de comparaison Betclic/Unibet/Winamax.
+    Génère les lignes du tableau de comparaison des bookmakers ANJ.
     """
     lignes = []
     cotes0 = cotes_par_bookmaker(event, 0)
     cotes1 = cotes_par_bookmaker(event, 1)
 
     labels = {
-        "betclic_fr": "Betclic  ",
-        "unibet_fr":  "Unibet   ",
-        "winamax_fr": "Winamax  ",
+        "betclic_fr":   "Betclic    ",
+        "unibet_fr":    "Unibet     ",
+        "winamax_fr":   "Winamax    ",
+        "pmu_fr":       "PMU        ",
+        "parionssport": "ParionsSport",
+        "bwin_fr":      "Bwin       ",
+        "zebet":        "ZEbet      ",
+        "netbet_fr":    "NetBet     ",
+        "vbet_fr":      "VBet       ",
+        "france_pari":  "France Pari",
     }
 
     for bm_key, bm_label in labels.items():
@@ -842,28 +853,56 @@ def mettre_a_jour_tableau_bord(sh):
             {"range": "B30", "values": [['=COUNTIF(Paris!H2:H;"winamax_fr")']]},
             {"range": "C30", "values": [['=IFERROR(COUNTIFS(Paris!H2:H;"winamax_fr";Paris!M2:M;"Gagné")/(COUNTIFS(Paris!H2:H;"winamax_fr";Paris!M2:M;"Gagné")+COUNTIFS(Paris!H2:H;"winamax_fr";Paris!M2:M;"Perdu"));"-")']]},
             {"range": "D30", "values": [['=IFERROR(SUMIFS(Paris!N2:N;Paris!H2:H;"winamax_fr")/SUMIFS(Paris!J2:J;Paris!H2:H;"winamax_fr");"-")']]},
+            {"range": "A31", "values": [["PMU"]]},
+            {"range": "B31", "values": [['=COUNTIF(Paris!H2:H;"pmu_fr")']]},
+            {"range": "C31", "values": [['=IFERROR(COUNTIFS(Paris!H2:H;"pmu_fr";Paris!M2:M;"Gagné")/(COUNTIFS(Paris!H2:H;"pmu_fr";Paris!M2:M;"Gagné")+COUNTIFS(Paris!H2:H;"pmu_fr";Paris!M2:M;"Perdu"));"-")']]},
+            {"range": "D31", "values": [['=IFERROR(SUMIFS(Paris!N2:N;Paris!H2:H;"pmu_fr")/SUMIFS(Paris!J2:J;Paris!H2:H;"pmu_fr");"-")']]},
+            {"range": "A32", "values": [["ParionsSport"]]},
+            {"range": "B32", "values": [['=COUNTIF(Paris!H2:H;"parionssport")']]},
+            {"range": "C32", "values": [['=IFERROR(COUNTIFS(Paris!H2:H;"parionssport";Paris!M2:M;"Gagné")/(COUNTIFS(Paris!H2:H;"parionssport";Paris!M2:M;"Gagné")+COUNTIFS(Paris!H2:H;"parionssport";Paris!M2:M;"Perdu"));"-")']]},
+            {"range": "D32", "values": [['=IFERROR(SUMIFS(Paris!N2:N;Paris!H2:H;"parionssport")/SUMIFS(Paris!J2:J;Paris!H2:H;"parionssport");"-")']]},
+            {"range": "A33", "values": [["Bwin"]]},
+            {"range": "B33", "values": [['=COUNTIF(Paris!H2:H;"bwin_fr")']]},
+            {"range": "C33", "values": [['=IFERROR(COUNTIFS(Paris!H2:H;"bwin_fr";Paris!M2:M;"Gagné")/(COUNTIFS(Paris!H2:H;"bwin_fr";Paris!M2:M;"Gagné")+COUNTIFS(Paris!H2:H;"bwin_fr";Paris!M2:M;"Perdu"));"-")']]},
+            {"range": "D33", "values": [['=IFERROR(SUMIFS(Paris!N2:N;Paris!H2:H;"bwin_fr")/SUMIFS(Paris!J2:J;Paris!H2:H;"bwin_fr");"-")']]},
+            {"range": "A34", "values": [["ZEbet"]]},
+            {"range": "B34", "values": [['=COUNTIF(Paris!H2:H;"zebet")']]},
+            {"range": "C34", "values": [['=IFERROR(COUNTIFS(Paris!H2:H;"zebet";Paris!M2:M;"Gagné")/(COUNTIFS(Paris!H2:H;"zebet";Paris!M2:M;"Gagné")+COUNTIFS(Paris!H2:H;"zebet";Paris!M2:M;"Perdu"));"-")']]},
+            {"range": "D34", "values": [['=IFERROR(SUMIFS(Paris!N2:N;Paris!H2:H;"zebet")/SUMIFS(Paris!J2:J;Paris!H2:H;"zebet");"-")']]},
+            {"range": "A35", "values": [["NetBet"]]},
+            {"range": "B35", "values": [['=COUNTIF(Paris!H2:H;"netbet_fr")']]},
+            {"range": "C35", "values": [['=IFERROR(COUNTIFS(Paris!H2:H;"netbet_fr";Paris!M2:M;"Gagné")/(COUNTIFS(Paris!H2:H;"netbet_fr";Paris!M2:M;"Gagné")+COUNTIFS(Paris!H2:H;"netbet_fr";Paris!M2:M;"Perdu"));"-")']]},
+            {"range": "D35", "values": [['=IFERROR(SUMIFS(Paris!N2:N;Paris!H2:H;"netbet_fr")/SUMIFS(Paris!J2:J;Paris!H2:H;"netbet_fr");"-")']]},
+            {"range": "A36", "values": [["VBet"]]},
+            {"range": "B36", "values": [['=COUNTIF(Paris!H2:H;"vbet_fr")']]},
+            {"range": "C36", "values": [['=IFERROR(COUNTIFS(Paris!H2:H;"vbet_fr";Paris!M2:M;"Gagné")/(COUNTIFS(Paris!H2:H;"vbet_fr";Paris!M2:M;"Gagné")+COUNTIFS(Paris!H2:H;"vbet_fr";Paris!M2:M;"Perdu"));"-")']]},
+            {"range": "D36", "values": [['=IFERROR(SUMIFS(Paris!N2:N;Paris!H2:H;"vbet_fr")/SUMIFS(Paris!J2:J;Paris!H2:H;"vbet_fr");"-")']]},
+            {"range": "A37", "values": [["France Pari"]]},
+            {"range": "B37", "values": [['=COUNTIF(Paris!H2:H;"france_pari")']]},
+            {"range": "C37", "values": [['=IFERROR(COUNTIFS(Paris!H2:H;"france_pari";Paris!M2:M;"Gagné")/(COUNTIFS(Paris!H2:H;"france_pari";Paris!M2:M;"Gagné")+COUNTIFS(Paris!H2:H;"france_pari";Paris!M2:M;"Perdu"));"-")']]},
+            {"range": "D37", "values": [['=IFERROR(SUMIFS(Paris!N2:N;Paris!H2:H;"france_pari")/SUMIFS(Paris!J2:J;Paris!H2:H;"france_pari");"-")']]},
             # ── PAR TRANCHE EV ───────────────────────────────────────────
-            {"range": "A32",    "values": [["PAR TRANCHE EV"]]},
-            {"range": "A33:D33","values": [["Tranche", "Paris", "Taux", "ROI"]]},
-            {"range": "A34", "values": [["EV 5–10 %"]]},
-            {"range": "B34", "values": [['=COUNTIFS(Paris!K2:K;">=5";Paris!K2:K;"<10";Paris!M2:M;"<>En cours")']]},
-            {"range": "C34", "values": [['=IFERROR(COUNTIFS(Paris!K2:K;">=5";Paris!K2:K;"<10";Paris!M2:M;"Gagné")/B34;"-")']]},
-            {"range": "D34", "values": [['=IFERROR(SUMIFS(Paris!N2:N;Paris!K2:K;">=5";Paris!K2:K;"<10")/SUMIFS(Paris!J2:J;Paris!K2:K;">=5";Paris!K2:K;"<10");"-")']]},
-            {"range": "A35", "values": [["EV 10–15 %"]]},
-            {"range": "B35", "values": [['=COUNTIFS(Paris!K2:K;">=10";Paris!K2:K;"<15";Paris!M2:M;"<>En cours")']]},
-            {"range": "C35", "values": [['=IFERROR(COUNTIFS(Paris!K2:K;">=10";Paris!K2:K;"<15";Paris!M2:M;"Gagné")/B35;"-")']]},
-            {"range": "D35", "values": [['=IFERROR(SUMIFS(Paris!N2:N;Paris!K2:K;">=10";Paris!K2:K;"<15")/SUMIFS(Paris!J2:J;Paris!K2:K;">=10";Paris!K2:K;"<15");"-")']]},
-            {"range": "A36", "values": [["EV > 15 %"]]},
-            {"range": "B36", "values": [['=COUNTIFS(Paris!K2:K;">=15";Paris!M2:M;"<>En cours")']]},
-            {"range": "C36", "values": [['=IFERROR(COUNTIFS(Paris!K2:K;">=15";Paris!M2:M;"Gagné")/B36;"-")']]},
-            {"range": "D36", "values": [['=IFERROR(SUMIFS(Paris!N2:N;Paris!K2:K;">=15")/SUMIFS(Paris!J2:J;Paris!K2:K;">=15");"-")']]},
-            {"range": "A37", "values": [["EV > 5 % (tous)"]]},
-            {"range": "B37", "values": [['=COUNTIFS(Paris!K2:K;">=5";Paris!M2:M;"<>En cours")']]},
-            {"range": "C37", "values": [['=IFERROR(COUNTIFS(Paris!K2:K;">=5";Paris!M2:M;"Gagné")/B37;"-")']]},
-            {"range": "D37", "values": [['=IFERROR(SUMIFS(Paris!N2:N;Paris!K2:K;">=5")/SUMIFS(Paris!J2:J;Paris!K2:K;">=5");"-")']]},
+            {"range": "A39",    "values": [["PAR TRANCHE EV"]]},
+            {"range": "A40:D40","values": [["Tranche", "Paris", "Taux", "ROI"]]},
+            {"range": "A41", "values": [["EV 5–10 %"]]},
+            {"range": "B41", "values": [['=COUNTIFS(Paris!K2:K;">=5";Paris!K2:K;"<10";Paris!M2:M;"<>En cours")']]},
+            {"range": "C41", "values": [['=IFERROR(COUNTIFS(Paris!K2:K;">=5";Paris!K2:K;"<10";Paris!M2:M;"Gagné")/B41;"-")']]},
+            {"range": "D41", "values": [['=IFERROR(SUMIFS(Paris!N2:N;Paris!K2:K;">=5";Paris!K2:K;"<10")/SUMIFS(Paris!J2:J;Paris!K2:K;">=5";Paris!K2:K;"<10");"-")']]},
+            {"range": "A42", "values": [["EV 10–15 %"]]},
+            {"range": "B42", "values": [['=COUNTIFS(Paris!K2:K;">=10";Paris!K2:K;"<15";Paris!M2:M;"<>En cours")']]},
+            {"range": "C42", "values": [['=IFERROR(COUNTIFS(Paris!K2:K;">=10";Paris!K2:K;"<15";Paris!M2:M;"Gagné")/B42;"-")']]},
+            {"range": "D42", "values": [['=IFERROR(SUMIFS(Paris!N2:N;Paris!K2:K;">=10";Paris!K2:K;"<15")/SUMIFS(Paris!J2:J;Paris!K2:K;">=10";Paris!K2:K;"<15");"-")']]},
+            {"range": "A43", "values": [["EV > 15 %"]]},
+            {"range": "B43", "values": [['=COUNTIFS(Paris!K2:K;">=15";Paris!M2:M;"<>En cours")']]},
+            {"range": "C43", "values": [['=IFERROR(COUNTIFS(Paris!K2:K;">=15";Paris!M2:M;"Gagné")/B43;"-")']]},
+            {"range": "D43", "values": [['=IFERROR(SUMIFS(Paris!N2:N;Paris!K2:K;">=15")/SUMIFS(Paris!J2:J;Paris!K2:K;">=15");"-")']]},
+            {"range": "A44", "values": [["EV > 5 % (tous)"]]},
+            {"range": "B44", "values": [['=COUNTIFS(Paris!K2:K;">=5";Paris!M2:M;"<>En cours")']]},
+            {"range": "C44", "values": [['=IFERROR(COUNTIFS(Paris!K2:K;">=5";Paris!M2:M;"Gagné")/B44;"-")']]},
+            {"range": "D44", "values": [['=IFERROR(SUMIFS(Paris!N2:N;Paris!K2:K;">=5")/SUMIFS(Paris!J2:J;Paris!K2:K;">=5");"-")']]},
             # ── Timestamp ────────────────────────────────────────────────
-            {"range": "A39", "values": [["Dernière mise à jour :"]]},
-            {"range": "B39", "values": [[ts]]},
+            {"range": "A46", "values": [["Dernière mise à jour :"]]},
+            {"range": "B46", "values": [[ts]]},
         ], value_input_option="USER_ENTERED")
         # 3. Formatage visuel (couleurs, polices, alignement, formats nombres)
         sid = ws_bord.id
@@ -892,7 +931,7 @@ def mettre_a_jour_tableau_bord(sh):
 
         # Merges
         for (r1,c1,r2,c2) in [(1,1,1,4),(2,2,2,4),(5,1,5,4),(12,1,12,4),
-                               (20,1,20,4),(26,1,26,4),(32,1,32,4)]:
+                               (20,1,20,4),(26,1,26,4),(39,1,39,4)]:
             reqs.append({"mergeCells": {"range": rng(r1,c1,r2,c2),
                                         "mergeType": "MERGE_ALL"}})
         # Titre row 1
@@ -906,22 +945,22 @@ def mettre_a_jour_tableau_bord(sh):
             "backgroundColor": C["gris_clair"],
             "textFormat": {"italic": True, "fontSize": 9, "foregroundColor": C["gris_texte"]},
         }))
-        # Section headers (rows 5,12,20,26,32)
-        for row in [5, 12, 20, 26, 32]:
+        # Section headers (rows 5,12,20,26,39)
+        for row in [5, 12, 20, 26, 39]:
             reqs.append(rep(row,1,row,4, {
                 "backgroundColor": C["bleu_med"],
                 "textFormat": {"bold": True, "fontSize": 10, "foregroundColor": C["blanc"]},
                 "horizontalAlignment": "LEFT", "verticalAlignment": "MIDDLE",
             }))
-        # Column headers in tables (rows 21,27,33)
-        for row in [21, 27, 33]:
+        # Column headers in tables (rows 21,27,40)
+        for row in [21, 27, 40]:
             reqs.append(rep(row,1,row,4, {
                 "backgroundColor": C["bleu_clair"],
                 "textFormat": {"bold": True, "fontSize": 9},
                 "horizontalAlignment": "CENTER",
             }))
         # Alternating row colors + alignment
-        for (r1, r2) in [(6,10), (13,18), (22,24), (28,30), (34,37)]:
+        for (r1, r2) in [(6,10), (13,18), (22,24), (28,37), (41,44)]:
             for r in range(r1, r2+1):
                 bg = C["gris_clair"] if r % 2 == 0 else C["blanc"]
                 reqs.append(rep(r,1,r,1, {"backgroundColor": bg,
@@ -930,8 +969,8 @@ def mettre_a_jour_tableau_bord(sh):
                 reqs.append(rep(r,2,r,4, {"backgroundColor": bg,
                                            "horizontalAlignment": "RIGHT",
                                            "textFormat": {"fontSize": 10}}))
-        # EV "tous" row (37) légèrement différente
-        reqs.append(rep(37,1,37,4, {"backgroundColor": C["indigo_pale"],
+        # EV "tous" row (44) légèrement différente
+        reqs.append(rep(44,1,44,4, {"backgroundColor": C["indigo_pale"],
                                      "textFormat": {"bold": True, "fontSize": 10}}))
         # Number formats — € (B6:B8, B17, B18)
         money = {"numberFormat": {"type": "NUMBER", "pattern": "#,##0.00 \"€\""}}
@@ -945,12 +984,12 @@ def mettre_a_jour_tableau_bord(sh):
             reqs.append(rep(r,2,r,2, ints, "userEnteredFormat.numberFormat"))
         reqs.append(rep(22,2,24,2, ints,  "userEnteredFormat.numberFormat"))
         reqs.append(rep(22,3,24,4, pct,   "userEnteredFormat.numberFormat"))
-        reqs.append(rep(28,2,30,2, ints,  "userEnteredFormat.numberFormat"))
-        reqs.append(rep(28,3,30,4, pct,   "userEnteredFormat.numberFormat"))
-        reqs.append(rep(34,2,37,2, ints,  "userEnteredFormat.numberFormat"))
-        reqs.append(rep(34,3,37,4, pct,   "userEnteredFormat.numberFormat"))
+        reqs.append(rep(28,2,37,2, ints,  "userEnteredFormat.numberFormat"))
+        reqs.append(rep(28,3,37,4, pct,   "userEnteredFormat.numberFormat"))
+        reqs.append(rep(41,2,44,2, ints,  "userEnteredFormat.numberFormat"))
+        reqs.append(rep(41,3,44,4, pct,   "userEnteredFormat.numberFormat"))
         # Conditional formatting: rouge si <0, vert si >0
-        for (r1,c1,r2,c2) in [(8,2,8,2),(9,2,9,2),(22,4,24,4),(28,4,30,4),(34,4,37,4)]:
+        for (r1,c1,r2,c2) in [(8,2,8,2),(9,2,9,2),(22,4,24,4),(28,4,37,4),(41,4,44,4)]:
             reqs.append({"addConditionalFormatRule": {"rule": {
                 "ranges": [rng(r1,c1,r2,c2)],
                 "booleanRule": {
