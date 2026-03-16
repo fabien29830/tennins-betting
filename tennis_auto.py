@@ -2335,26 +2335,12 @@ def recuperer_resultats():
                   f"  ->  {u['resultat']}  [{u['source']}]")
         print(f"\n  Bilan : {gagnes} gagne(s) · {perdus} perdu(s)")
 
-        # ── Notifications push + email résultats ──────────────────
+        # ── Email résultats ────────────────────────────────────────
         try:
             bk_notif = sh.worksheet("Tableau de bord").acell("B7").value
         except Exception:
             bk_notif = None
         envoyer_email_resultats(updates, bk_notif)
-        if NTFY_TOPIC:
-            lignes_notif = [
-                f"{'✅' if u['resultat']=='Gagné' else '❌'} {u['joueur']} vs {u['adversaire']} → {u['resultat']}"
-                for u in updates
-            ]
-            bilan_txt = f"{gagnes} gagné · {perdus} perdu"
-            if bk_notif:
-                bilan_txt += f" | Bankroll : {bk_notif}"
-            envoyer_notification(
-                titre=f"Tennis : {bilan_txt}",
-                message="\n".join(lignes_notif),
-                priorite=4 if gagnes > perdus else 3,
-                tags=["tennis", "tada" if gagnes > perdus else "x"],
-            )
 
     else:
         print("  Aucun résultat disponible pour le moment "
@@ -3098,29 +3084,8 @@ def analyser_semaine():
         print(f"\n  {nb_alerte} value bet(s) EV>{SEUIL_ALERTE*100:.0f}% → envoi email "
               f"({nb_total} paris au total)...")
         envoyer_email_alerte(value_bets, chemin, bankroll=bankroll)
-        # ── Notification push value bets ──────────────────────────
-        if NTFY_TOPIC:
-            lignes_vb = [
-                f"• {vb['joueur']} vs {vb['adversaire']} | EV {vb['ev']*100:+.0f}% | cote {vb['cote']:.2f} | mise {vb['mise']:.0f}€"
-                for vb in sorted(value_bets_email, key=lambda x: -x["ev"])
-            ]
-            envoyer_notification(
-                titre=f"Tennis : {nb_alerte} value bet{'s' if nb_alerte>1 else ''} detecte{'s' if nb_alerte>1 else ''}",
-                message="\n".join(lignes_vb),
-                priorite=4,
-                tags=["tennis", "moneybag"],
-            )
     elif EMAIL_ACTIF:
         print(f"  Aucun value bet >{SEUIL_ALERTE*100:.0f}% → pas d'email")
-        # ── Notification push résumé quotidien (aucun bet) ────────
-        if NTFY_TOPIC:
-            nb_matchs = len([m for m in matchs_analyses if m]) if matchs_analyses else 0
-            envoyer_notification(
-                titre="Tennis : analyse terminee",
-                message=f"{nb_matchs} match(s) analyse(s) — aucun value bet cette session.",
-                priorite=2,
-                tags=["tennis", "eyes"],
-            )
 
     # ── Dashboard GitHub Pages ──────────────────────────────────
     if GSHEET_ACTIF:
