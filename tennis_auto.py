@@ -2171,6 +2171,12 @@ def recuperer_resultats():
 
     if not paris:
         print("  Aucun pari passé marqué 'En cours' — tout est à jour.")
+        # Recalcule quand même la cascade N/O pour corriger d'éventuelles incohérences
+        _reparer_colonnes_no(ws)
+        mettre_a_jour_tableau_bord(sh)
+        if GSHEET_ACTIF:
+            generer_dashboard_json(sh)
+            git_push_dashboard()
         return
 
     print(f"  {len(paris)} pari(s) à résoudre :\n")
@@ -2238,10 +2244,11 @@ def recuperer_resultats():
         perdus = len(updates) - gagnes
         print(f"  {len(updates)} résultat(s) enregistré(s) :")
         for u in updates:
-            icone = "✅" if u["resultat"] == "Gagné" else "❌"
+            icone = "OK" if u["resultat"] == "Gagné" else "X"
             print(f"    {icone}  {u['joueur']} vs {u['adversaire']}"
-                  f"  →  {u['resultat']}  [{u['source']}]")
-        print(f"\n  Bilan : {gagnes} gagné(s) · {perdus} perdu(s)")
+                  f"  ->  {u['resultat']}  [{u['source']}]")
+        print(f"\n  Bilan : {gagnes} gagne(s) · {perdus} perdu(s)")
+
     else:
         print("  Aucun résultat disponible pour le moment "
               "(matchs peut-être encore en cours).")
@@ -2251,7 +2258,10 @@ def recuperer_resultats():
         for p in non_trouves:
             print(f"    ?  {p['joueur']} vs {p['adversaire']}  ({p['date']})")
 
-    # ── 5. Mettre à jour tableau de bord + afficher bankroll ─────
+    # ── 5. Recalculer Gain/Perte (N) + Bankroll (O) en cascade ──
+    _reparer_colonnes_no(ws)
+
+    # ── 6. Mettre à jour tableau de bord + afficher bankroll ─────
     mettre_a_jour_tableau_bord(sh)
     if updates:
         import time; time.sleep(2)
