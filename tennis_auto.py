@@ -37,6 +37,14 @@ from collections import defaultdict
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+# ── Supabase sync (push value bets vers le SaaS) ──────────
+try:
+    from supabase_sync import push_value_bets, clear_expired_bets, format_bet_for_supabase
+    SUPABASE_SYNC_OK = True
+except ImportError:
+    SUPABASE_SYNC_OK = False
+    print("[Supabase] supabase_sync.py non trouvé — sync désactivée.")
+
 # ─────────────────────────────────────────────────────────────
 # CONFIGURATION — à modifier avant utilisation
 # ─────────────────────────────────────────────────────────────
@@ -44,12 +52,12 @@ from email.mime.multipart import MIMEMultipart
 # Secrets : lus depuis l'environnement si présents (GitHub Actions),
 # sinon valeurs locales en fallback.
 ODDS_API_KEY   = os.environ.get("ODDS_API_KEY",    "71fdf5d253189e041ca3f314458bffe6")
-BANKROLL       = 100      # bankroll en euros
+BANKROLL       = 1000     # bankroll de référence (écrasée par Google Sheets si dispo)
 SEUIL_VALUE    = 0.05     # EV minimum pour recommander un pari (+5%)
 SEUIL_ALERTE   = 0.10     # EV minimum pour alerte email (+10%)
 FRACTION_KELLY = 0.5      # demi-Kelly
 MISE_MIN       = 5.0      # mise minimum en €
-MISE_MAX       = 50.0     # mise maximum en €
+MISE_MAX_PCT   = 0.05     # mise maximum = 5% de la bankroll
 
 # Bookmakers à comparer en priorité (dans l'ordre de préférence)
 BOOKMAKERS_CIBLES = [
@@ -647,28 +655,57 @@ def recuperer_matchs_et_cotes():
         return []
 
 
-def cotes_par_bookmaker(event, idx):
+def _norm_nom_api(n):
+    """Normalise un nom pour comparaison souple (accents, casse, ordre prénom/nom)."""
+    import unicodedata
+    n = unicodedata.normalize("NFD", n.lower())
+    n = "".join(c for c in n if unicodedata.category(c) != "Mn")
+    return set(p for p in n.split() if len(p) > 1 and not (len(p) == 2 and p[1] == "."))
+
+
+def cotes_par_bookmaker(event, player_name, idx_fallback=None):
     """
-    Retourne un dict {bookmaker_key: cote} pour le joueur idx.
-    Met en évidence les bookmakers cibles (Betclic/Unibet/Winamax).
+    Retourne un dict {bookmaker_key: cote} pour le joueur désigné par son nom.
+    Cherche par correspondance de nom dans les outcomes de chaque bookmaker
+    (robuste aux ordres différents selon le bookmaker).
+    idx_fallback est utilisé comme position de repli si aucun nom ne correspond.
     """
     cotes = {}
+    parts_target = _norm_nom_api(player_name) if isinstance(player_name, str) else set()
+
     for bm in event.get("bookmakers", []):
         for mkt in bm.get("markets", []):
             if mkt["key"] == "h2h":
                 outcomes = mkt.get("outcomes", [])
-                if idx < len(outcomes):
-                    cotes[bm["key"]] = outcomes[idx]["price"]
+                matched = False
+                # Chercher par nom en priorité
+                if parts_target:
+                    for outcome in outcomes:
+                        parts_oc = _norm_nom_api(outcome.get("name", ""))
+                        # Correspondance : le token le plus long du nom cible doit matcher
+                        best_token = max(parts_target, key=len, default="")
+                        if len(best_token) >= 3 and best_token in parts_oc:
+                            cotes[bm["key"]] = outcome["price"]
+                            matched = True
+                            break
+                # Repli sur idx si aucun nom trouvé
+                if not matched and idx_fallback is not None and idx_fallback < len(outcomes):
+                    cotes[bm["key"]] = outcomes[idx_fallback]["price"]
     return cotes
 
 
-def meilleure_cote(event, idx, bookmakers_prioritaires=None):
+def meilleure_cote(event, player_name_or_idx, bookmakers_prioritaires=None):
     """
     Retourne (meilleure_cote, nom_bookmaker).
+    player_name_or_idx : str (nom du joueur) ou int (idx fallback rétrocompat).
     Si bookmakers_prioritaires est défini, cherche d'abord parmi eux.
-    Sinon, prend la meilleure cote globale.
     """
-    cotes = cotes_par_bookmaker(event, idx)
+    if isinstance(player_name_or_idx, int):
+        # Rétrocompatibilité : idx entier → pas de recherche par nom
+        cotes = cotes_par_bookmaker(event, "", idx_fallback=player_name_or_idx)
+    else:
+        cotes = cotes_par_bookmaker(event, player_name_or_idx,
+                                    idx_fallback=None)
     if not cotes:
         return 0.0, "?"
 
@@ -680,9 +717,8 @@ def meilleure_cote(event, idx, bookmakers_prioritaires=None):
         if cotes_cibles:
             best_bm = max(cotes_cibles, key=cotes_cibles.get)
             return cotes_cibles[best_bm], best_bm
-        return 0.0, "?"  # aucun bookmaker cible disponible
+        return 0.0, "?"
 
-    # Sans filtre : meilleure cote globale
     best_bm = max(cotes, key=cotes.get)
     return cotes[best_bm], best_bm
 
@@ -692,8 +728,8 @@ def tableau_cotes(event, nom1, nom2):
     Génère les lignes du tableau de comparaison des bookmakers ANJ.
     """
     lignes = []
-    cotes0 = cotes_par_bookmaker(event, 0)
-    cotes1 = cotes_par_bookmaker(event, 1)
+    cotes0 = cotes_par_bookmaker(event, nom1, idx_fallback=0)
+    cotes1 = cotes_par_bookmaker(event, nom2, idx_fallback=1)
 
     labels = {
         "betclic_fr":   "Betclic    ",
@@ -2812,8 +2848,8 @@ def analyser_semaine():
         circuit  = event.get("_circuit", "atp")
 
         # Cotes h2h : meilleure parmi Betclic/Unibet/Winamax, sinon meilleure globale
-        cote1, bm1 = meilleure_cote(event, 0, BOOKMAKERS_CIBLES)
-        cote2, bm2 = meilleure_cote(event, 1, BOOKMAKERS_CIBLES)
+        cote1, bm1 = meilleure_cote(event, nom1_api, BOOKMAKERS_CIBLES)
+        cote2, bm2 = meilleure_cote(event, nom2_api, BOOKMAKERS_CIBLES)
         if cote1 <= 1.0 or cote2 <= 1.0:
             circuit_label_tmp = "WTA" if circuit == "wta" else "ATP"
             lignes.append(f"[{circuit_label_tmp}] {nom1_api} vs {nom2_api} [{date_str}]")
@@ -2924,8 +2960,11 @@ def analyser_semaine():
             ev = prob * cote - 1
             if ev <= 0:
                 return 0.0
+            # Demi-Kelly : f = EV / (cote - 1) * 0.5
             mise = bankroll * (ev / (cote - 1)) * FRACTION_KELLY
-            return max(MISE_MIN, min(mise, MISE_MAX))  # min 5€ / max 50€
+            # Plafond dynamique : max 5% de la bankroll
+            mise_max = bankroll * MISE_MAX_PCT
+            return max(MISE_MIN, min(mise, mise_max))
 
         def _vb_dict(type_pari, label_joueur, adversaire, prob, cote, bm_used, ev):
             mise = _kelly_mise(prob, cote)
@@ -3114,6 +3153,29 @@ def analyser_semaine():
             enregistrer_paris_gsheet(sh, value_bets)
             mettre_a_jour_tableau_bord(sh)
             exporter_matchs_venir_gsheet(sh, matchs_analyses)
+
+    # ── Supabase SaaS — push value bets ───────────────────────
+    if SUPABASE_SYNC_OK and value_bets:
+        print("\n  Synchronisation Supabase...")
+        clear_expired_bets()
+        supabase_bets = []
+        for vb in value_bets:
+            match_parts = vb.get("match", "vs").split(" vs ", 1)
+            player1 = match_parts[0].strip() if len(match_parts) > 0 else vb.get("joueur", "")
+            player2 = match_parts[1].strip() if len(match_parts) > 1 else vb.get("adversaire", "")
+            supabase_bets.append(format_bet_for_supabase(
+                player1    = player1,
+                player2    = player2,
+                surface    = vb.get("surface", "Dur"),
+                tournament = vb.get("tournoi", ""),
+                ev_pct     = round(vb["ev"] * 100, 2),
+                bookmaker  = vb.get("bookmaker", ""),
+                cote       = vb.get("cote", 0),
+                prob_model = round(vb.get("prob_modele", 0.5) * 100, 2),
+                kelly_pct  = round(vb.get("mise", 0) / max(bankroll, 1) * 100, 2),
+                round_     = "",
+            ))
+        push_value_bets(supabase_bets)
 
     # Email déclenché si au moins 1 bet EV > SEUIL_ALERTE,
     # mais le tableau contient TOUS les value bets (EV > SEUIL_VALUE)
