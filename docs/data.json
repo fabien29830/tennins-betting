@@ -1,19 +1,19 @@
 {
   "meta": {
-    "updated_at": "2026-03-16T14:01:24",
+    "updated_at": "2026-03-24T18:26:02",
     "bankroll_initiale": 100.0
   },
   "stats": {
-    "bankroll_actuelle": 96.17,
-    "roi_global": -3.83,
-    "total_paris": 3,
-    "paris_gagnes": 1,
-    "paris_perdus": 2,
+    "bankroll_actuelle": 1236.14,
+    "roi_global": 1136.14,
+    "total_paris": 69,
+    "paris_gagnes": 34,
+    "paris_perdus": 35,
     "paris_en_cours": 0,
-    "taux_reussite": 33.3,
-    "total_mise": 39.01,
-    "gain_perte_total": -3.83,
-    "ev_moyen_global": 31.1
+    "taux_reussite": 49.3,
+    "total_mise": 1596.19,
+    "gain_perte_total": 1136.14,
+    "ev_moyen_global": 89.9
   },
   "bankroll_historique": [
     {
@@ -47,6 +47,534 @@
       "joueur": "Jannik Sinner",
       "resultat": "Gagné",
       "gain_perte": 8.73
+    },
+    {
+      "date": "2026-03-17",
+      "bankroll": 116.87,
+      "match": "Yannick Hanfmann vs Luca Van Assche",
+      "joueur": "Yannick Hanfmann",
+      "resultat": "Gagné",
+      "gain_perte": 20.7
+    },
+    {
+      "date": "2026-03-17",
+      "bankroll": 139.9,
+      "match": "Rafael Jodar vs Benjamin Bonzi",
+      "joueur": "Rafael Jodar",
+      "resultat": "Gagné",
+      "gain_perte": 23.03
+    },
+    {
+      "date": "2026-03-18",
+      "bankroll": 151.25,
+      "match": "Marin Cilic vs Alexei Popyrin",
+      "joueur": "Marin Cilic",
+      "resultat": "Gagné",
+      "gain_perte": 11.35
+    },
+    {
+      "date": "2026-03-18",
+      "bankroll": 137.32,
+      "match": "Denis Shapovalov vs Botic van de Zandschulp",
+      "joueur": "Denis Shapovalov",
+      "resultat": "Perdu",
+      "gain_perte": -13.93
+    },
+    {
+      "date": "2026-03-18",
+      "bankroll": 111.41,
+      "match": "Giovanni Mpetshi Perricard vs Camilo Ugo Carabelli",
+      "joueur": "Giovanni Mpetshi Perricard",
+      "resultat": "Perdu",
+      "gain_perte": -25.91
+    },
+    {
+      "date": "2026-03-18",
+      "bankroll": 117.03,
+      "match": "Emilio Nava vs Tomas Machac",
+      "joueur": "Tomas Machac",
+      "resultat": "Gagné",
+      "gain_perte": 5.62
+    },
+    {
+      "date": "2026-03-18",
+      "bankroll": 92.94,
+      "match": "Ethan Quinn vs Hubert Hurkacz",
+      "joueur": "Hubert Hurkacz",
+      "resultat": "Perdu",
+      "gain_perte": -24.09
+    },
+    {
+      "date": "2026-03-18",
+      "bankroll": 82.29,
+      "match": "Fabian Marozsan vs Joao Fonseca",
+      "joueur": "Fabian Marozsan",
+      "resultat": "Perdu",
+      "gain_perte": -10.65
+    },
+    {
+      "date": "2026-03-18",
+      "bankroll": 33.55,
+      "match": "Raphael Collignon vs Grigor Dimitrov",
+      "joueur": "Grigor Dimitrov",
+      "resultat": "Perdu",
+      "gain_perte": -48.74
+    },
+    {
+      "date": "2026-03-18",
+      "bankroll": 45.57,
+      "match": "Zizou Bergs vs Jenson Brooksby",
+      "joueur": "Jenson Brooksby",
+      "resultat": "Gagné",
+      "gain_perte": 12.02
+    },
+    {
+      "date": "2026-03-18",
+      "bankroll": 52.48,
+      "match": "Rafael Jodar vs Yannick Hanfmann",
+      "joueur": "Rafael Jodar",
+      "resultat": "Gagné",
+      "gain_perte": 6.91
+    },
+    {
+      "date": "2026-03-18",
+      "bankroll": 44.02,
+      "match": "Marcos Giron vs Martin Landaluce",
+      "joueur": "Marcos Giron",
+      "resultat": "Perdu",
+      "gain_perte": -8.46
+    },
+    {
+      "date": "2026-03-18",
+      "bankroll": 37.77,
+      "match": "Darwin Blanch vs Jan-Lennard Struff",
+      "joueur": "Jan-Lennard Struff",
+      "resultat": "Perdu",
+      "gain_perte": -6.25
+    },
+    {
+      "date": "2026-03-18",
+      "bankroll": 132.16,
+      "match": "Stefanos Tsitsipas vs Arthur Fery",
+      "joueur": "Stefanos Tsitsipas",
+      "resultat": "Gagné",
+      "gain_perte": 94.39
+    },
+    {
+      "date": "2026-03-19",
+      "bankroll": 149.7,
+      "match": "Marin Cilic vs Alexei Popyrin",
+      "joueur": "Marin Cilic",
+      "resultat": "Gagné",
+      "gain_perte": 17.54
+    },
+    {
+      "date": "2026-03-19",
+      "bankroll": 160.71,
+      "match": "Emilio Nava vs Tomas Machac",
+      "joueur": "Tomas Machac",
+      "resultat": "Gagné",
+      "gain_perte": 11.01
+    },
+    {
+      "date": "2026-03-19",
+      "bankroll": 143.44,
+      "match": "Fabian Marozsan vs Joao Fonseca",
+      "joueur": "Fabian Marozsan",
+      "resultat": "Perdu",
+      "gain_perte": -17.27
+    },
+    {
+      "date": "2026-03-19",
+      "bankroll": 138.44,
+      "match": "Alexandre Muller vs Matteo Berrettini",
+      "joueur": "Alexandre Muller",
+      "resultat": "Perdu",
+      "gain_perte": -5.0
+    },
+    {
+      "date": "2026-03-19",
+      "bankroll": 232.8,
+      "match": "Stefanos Tsitsipas vs Arthur Fery",
+      "joueur": "Stefanos Tsitsipas",
+      "resultat": "Gagné",
+      "gain_perte": 94.36
+    },
+    {
+      "date": "2026-03-19",
+      "bankroll": 222.97,
+      "match": "Darwin Blanch vs Jan-Lennard Struff",
+      "joueur": "Jan-Lennard Struff",
+      "resultat": "Perdu",
+      "gain_perte": -9.83
+    },
+    {
+      "date": "2026-03-19",
+      "bankroll": 187.65,
+      "match": "Ethan Quinn vs Hubert Hurkacz",
+      "joueur": "Hubert Hurkacz",
+      "resultat": "Perdu",
+      "gain_perte": -35.32
+    },
+    {
+      "date": "2026-03-19",
+      "bankroll": 196.7,
+      "match": "Rafael Jodar vs Yannick Hanfmann",
+      "joueur": "Rafael Jodar",
+      "resultat": "Gagné",
+      "gain_perte": 9.05
+    },
+    {
+      "date": "2026-03-19",
+      "bankroll": 189.4,
+      "match": "Zizou Bergs vs Jenson Brooksby",
+      "joueur": "Jenson Brooksby",
+      "resultat": "Perdu",
+      "gain_perte": -7.3
+    },
+    {
+      "date": "2026-03-19",
+      "bankroll": 175.76,
+      "match": "Marcos Giron vs Martin Landaluce",
+      "joueur": "Marcos Giron",
+      "resultat": "Perdu",
+      "gain_perte": -13.64
+    },
+    {
+      "date": "2026-03-19",
+      "bankroll": 156.18,
+      "match": "Denis Shapovalov vs Botic van de Zandschulp",
+      "joueur": "Denis Shapovalov",
+      "resultat": "Perdu",
+      "gain_perte": -19.58
+    },
+    {
+      "date": "2026-03-19",
+      "bankroll": 118.09,
+      "match": "Giovanni Mpetshi Perricard vs Camilo Ugo Carabelli",
+      "joueur": "Giovanni Mpetshi Perricard",
+      "resultat": "Perdu",
+      "gain_perte": -38.09
+    },
+    {
+      "date": "2026-03-19",
+      "bankroll": 68.09,
+      "match": "Raphael Collignon vs Grigor Dimitrov",
+      "joueur": "Grigor Dimitrov",
+      "resultat": "Perdu",
+      "gain_perte": -50.0
+    },
+    {
+      "date": "2026-03-20",
+      "bankroll": 183.74,
+      "match": "Moise Kouame vs Jiri Lehecka",
+      "joueur": "Jiri Lehecka",
+      "resultat": "Gagné",
+      "gain_perte": 115.65
+    },
+    {
+      "date": "2026-03-20",
+      "bankroll": 271.41,
+      "match": "Roberto Bautista Agut vs Karen Khachanov",
+      "joueur": "Karen Khachanov",
+      "resultat": "Gagné",
+      "gain_perte": 87.67
+    },
+    {
+      "date": "2026-03-20",
+      "bankroll": 286.94,
+      "match": "Mariano Navone vs Valentin Vacherot",
+      "joueur": "Valentin Vacherot",
+      "resultat": "Gagné",
+      "gain_perte": 15.53
+    },
+    {
+      "date": "2026-03-20",
+      "bankroll": 264.34,
+      "match": "Casper Ruud vs Ethan Quinn",
+      "joueur": "Casper Ruud",
+      "resultat": "Perdu",
+      "gain_perte": -22.6
+    },
+    {
+      "date": "2026-03-20",
+      "bankroll": 355.89,
+      "match": "Tommy Paul vs Adrian Mannarino",
+      "joueur": "Tommy Paul",
+      "resultat": "Gagné",
+      "gain_perte": 91.55
+    },
+    {
+      "date": "2026-03-20",
+      "bankroll": 371.53,
+      "match": "Alexander Bublik vs Matteo Berrettini",
+      "joueur": "Matteo Berrettini",
+      "resultat": "Gagné",
+      "gain_perte": 15.64
+    },
+    {
+      "date": "2026-03-20",
+      "bankroll": 366.53,
+      "match": "Botic van de Zandschulp vs Taylor Fritz",
+      "joueur": "Botic van de Zandschulp",
+      "resultat": "Perdu",
+      "gain_perte": -5.0
+    },
+    {
+      "date": "2026-03-20",
+      "bankroll": 354.68,
+      "match": "Raphael Collignon vs Flavio Cobolli",
+      "joueur": "Flavio Cobolli",
+      "resultat": "Perdu",
+      "gain_perte": -11.85
+    },
+    {
+      "date": "2026-03-20",
+      "bankroll": 333.73,
+      "match": "Stefanos Tsitsipas vs Alex de Minaur",
+      "joueur": "Alex de Minaur",
+      "resultat": "Perdu",
+      "gain_perte": -20.95
+    },
+    {
+      "date": "2026-03-20",
+      "bankroll": 328.73,
+      "match": "Camilo Ugo Carabelli vs Sebastian Korda",
+      "joueur": "Camilo Ugo Carabelli",
+      "resultat": "Perdu",
+      "gain_perte": -5.0
+    },
+    {
+      "date": "2026-03-20",
+      "bankroll": 321.29,
+      "match": "Zizou Bergs vs Tomas Martin Etcheverry",
+      "joueur": "Zizou Bergs",
+      "resultat": "Perdu",
+      "gain_perte": -7.44
+    },
+    {
+      "date": "2026-03-20",
+      "bankroll": 324.93,
+      "match": "Carlos Alcaraz vs Joao Fonseca",
+      "joueur": "Carlos Alcaraz",
+      "resultat": "Gagné",
+      "gain_perte": 3.64
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 336.68,
+      "match": "Alejandro Davidovich Fokina vs Quentin Halys",
+      "joueur": "Quentin Halys",
+      "resultat": "Gagné",
+      "gain_perte": 11.75
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 286.68,
+      "match": "Alex Michelsen vs Cameron Norrie",
+      "joueur": "Cameron Norrie",
+      "resultat": "Perdu",
+      "gain_perte": -50.0
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 297.51,
+      "match": "Brandon Nakashima vs Marin Cilic",
+      "joueur": "Marin Cilic",
+      "resultat": "Gagné",
+      "gain_perte": 10.83
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 270.19,
+      "match": "Andrey Rublev vs Alejandro Tabilo",
+      "joueur": "Andrey Rublev",
+      "resultat": "Perdu",
+      "gain_perte": -27.32
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 582.31,
+      "match": "Martin Damm Jr. vs Alexander Zverev",
+      "joueur": "Alexander Zverev",
+      "resultat": "Gagné",
+      "gain_perte": 312.12
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 542.38,
+      "match": "Corentin Moutet vs Tomas Machac",
+      "joueur": "Tomas Machac",
+      "resultat": "Perdu",
+      "gain_perte": -39.93
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 556.38,
+      "match": "Kamil Majchrzak vs Learner Tien",
+      "joueur": "Kamil Majchrzak",
+      "resultat": "Gagné",
+      "gain_perte": 14.0
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 550.0,
+      "match": "Zizou Bergs vs Tomas Martin Etcheverry",
+      "joueur": "Zizou Bergs",
+      "resultat": "Perdu",
+      "gain_perte": -6.38
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 556.19,
+      "match": "Mariano Navone vs Valentin Vacherot",
+      "joueur": "Valentin Vacherot",
+      "resultat": "Gagné",
+      "gain_perte": 6.19
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 558.67,
+      "match": "Carlos Alcaraz vs Joao Fonseca",
+      "joueur": "Carlos Alcaraz",
+      "resultat": "Gagné",
+      "gain_perte": 2.48
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 544.88,
+      "match": "Terence Atmane vs Arthur Rinderknech",
+      "joueur": "Arthur Rinderknech",
+      "resultat": "Perdu",
+      "gain_perte": -13.79
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 551.11,
+      "match": "Felix Auger-Aliassime vs Marton Fucsovics",
+      "joueur": "Felix Auger-Aliassime",
+      "resultat": "Gagné",
+      "gain_perte": 6.23
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 556.02,
+      "match": "Gabriel Diallo vs Ugo Humbert",
+      "joueur": "Ugo Humbert",
+      "resultat": "Gagné",
+      "gain_perte": 4.91
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 842.62,
+      "match": "Rei Sakamoto vs Daniil Medvedev",
+      "joueur": "Daniil Medvedev",
+      "resultat": "Gagné",
+      "gain_perte": 286.6
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 845.98,
+      "match": "Adam Walton vs Jakub Mensik",
+      "joueur": "Jakub Mensik",
+      "resultat": "Gagné",
+      "gain_perte": 3.36
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 840.98,
+      "match": "Francisco Cerundolo vs Thiago Agustin Tirante",
+      "joueur": "Thiago Agustin Tirante",
+      "resultat": "Perdu",
+      "gain_perte": -5.0
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 939.98,
+      "match": "Frances Tiafoe vs Arthur Cazaux",
+      "joueur": "Frances Tiafoe",
+      "resultat": "Gagné",
+      "gain_perte": 99.0
+    },
+    {
+      "date": "2026-03-21",
+      "bankroll": 889.98,
+      "match": "Ben Shelton vs Alexander Shevchenko",
+      "joueur": "Ben Shelton",
+      "resultat": "Perdu",
+      "gain_perte": -50.0
+    },
+    {
+      "date": "2026-03-22",
+      "bankroll": 1264.98,
+      "match": "Martin Damm Jr. vs Alexander Zverev",
+      "joueur": "Alexander Zverev",
+      "resultat": "Gagné",
+      "gain_perte": 375.0
+    },
+    {
+      "date": "2026-03-22",
+      "bankroll": 1298.98,
+      "match": "Ethan Quinn vs Jiri Lehecka",
+      "joueur": "Jiri Lehecka",
+      "resultat": "Gagné",
+      "gain_perte": 34.0
+    },
+    {
+      "date": "2026-03-22",
+      "bankroll": 1248.98,
+      "match": "Martin Landaluce vs Karen Khachanov",
+      "joueur": "Karen Khachanov",
+      "resultat": "Perdu",
+      "gain_perte": -50.0
+    },
+    {
+      "date": "2026-03-22",
+      "bankroll": 1348.98,
+      "match": "Tommy Paul vs Raphael Collignon",
+      "joueur": "Tommy Paul",
+      "resultat": "Gagné",
+      "gain_perte": 100.0
+    },
+    {
+      "date": "2026-03-22",
+      "bankroll": 1364.47,
+      "match": "Reilly Opelka vs Taylor Fritz",
+      "joueur": "Taylor Fritz",
+      "resultat": "Gagné",
+      "gain_perte": 15.49
+    },
+    {
+      "date": "2026-03-22",
+      "bankroll": 1314.47,
+      "match": "Carlos Alcaraz vs Sebastian Korda",
+      "joueur": "Carlos Alcaraz",
+      "resultat": "Perdu",
+      "gain_perte": -50.0
+    },
+    {
+      "date": "2026-03-22",
+      "bankroll": 1277.42,
+      "match": "Rafael Jodar vs Tomas Martin Etcheverry",
+      "joueur": "Rafael Jodar",
+      "resultat": "Perdu",
+      "gain_perte": -37.05
+    },
+    {
+      "date": "2026-03-23",
+      "bankroll": 1286.14,
+      "match": "Arthur Fils vs Stefanos Tsitsipas",
+      "joueur": "Arthur Fils",
+      "resultat": "Gagné",
+      "gain_perte": 8.72
+    },
+    {
+      "date": "2026-03-23",
+      "bankroll": 1236.14,
+      "match": "Francisco Cerundolo vs Daniil Medvedev",
+      "joueur": "Daniil Medvedev",
+      "resultat": "Perdu",
+      "gain_perte": -50.0
     }
   ],
   "roi_cumulatif": [
@@ -65,6 +593,270 @@
     {
       "date": "2026-03-15",
       "roi": -3.83
+    },
+    {
+      "date": "2026-03-17",
+      "roi": 16.87
+    },
+    {
+      "date": "2026-03-17",
+      "roi": 39.9
+    },
+    {
+      "date": "2026-03-18",
+      "roi": 51.25
+    },
+    {
+      "date": "2026-03-18",
+      "roi": 37.32
+    },
+    {
+      "date": "2026-03-18",
+      "roi": 11.41
+    },
+    {
+      "date": "2026-03-18",
+      "roi": 17.03
+    },
+    {
+      "date": "2026-03-18",
+      "roi": -7.06
+    },
+    {
+      "date": "2026-03-18",
+      "roi": -17.71
+    },
+    {
+      "date": "2026-03-18",
+      "roi": -66.45
+    },
+    {
+      "date": "2026-03-18",
+      "roi": -54.43
+    },
+    {
+      "date": "2026-03-18",
+      "roi": -47.52
+    },
+    {
+      "date": "2026-03-18",
+      "roi": -55.98
+    },
+    {
+      "date": "2026-03-18",
+      "roi": -62.23
+    },
+    {
+      "date": "2026-03-18",
+      "roi": 32.16
+    },
+    {
+      "date": "2026-03-19",
+      "roi": 49.7
+    },
+    {
+      "date": "2026-03-19",
+      "roi": 60.71
+    },
+    {
+      "date": "2026-03-19",
+      "roi": 43.44
+    },
+    {
+      "date": "2026-03-19",
+      "roi": 38.44
+    },
+    {
+      "date": "2026-03-19",
+      "roi": 132.8
+    },
+    {
+      "date": "2026-03-19",
+      "roi": 122.97
+    },
+    {
+      "date": "2026-03-19",
+      "roi": 87.65
+    },
+    {
+      "date": "2026-03-19",
+      "roi": 96.7
+    },
+    {
+      "date": "2026-03-19",
+      "roi": 89.4
+    },
+    {
+      "date": "2026-03-19",
+      "roi": 75.76
+    },
+    {
+      "date": "2026-03-19",
+      "roi": 56.18
+    },
+    {
+      "date": "2026-03-19",
+      "roi": 18.09
+    },
+    {
+      "date": "2026-03-19",
+      "roi": -31.91
+    },
+    {
+      "date": "2026-03-20",
+      "roi": 83.74
+    },
+    {
+      "date": "2026-03-20",
+      "roi": 171.41
+    },
+    {
+      "date": "2026-03-20",
+      "roi": 186.94
+    },
+    {
+      "date": "2026-03-20",
+      "roi": 164.34
+    },
+    {
+      "date": "2026-03-20",
+      "roi": 255.89
+    },
+    {
+      "date": "2026-03-20",
+      "roi": 271.53
+    },
+    {
+      "date": "2026-03-20",
+      "roi": 266.53
+    },
+    {
+      "date": "2026-03-20",
+      "roi": 254.68
+    },
+    {
+      "date": "2026-03-20",
+      "roi": 233.73
+    },
+    {
+      "date": "2026-03-20",
+      "roi": 228.73
+    },
+    {
+      "date": "2026-03-20",
+      "roi": 221.29
+    },
+    {
+      "date": "2026-03-20",
+      "roi": 224.93
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 236.68
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 186.68
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 197.51
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 170.19
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 482.31
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 442.38
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 456.38
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 450.0
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 456.19
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 458.67
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 444.88
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 451.11
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 456.02
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 742.62
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 745.98
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 740.98
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 839.98
+    },
+    {
+      "date": "2026-03-21",
+      "roi": 789.98
+    },
+    {
+      "date": "2026-03-22",
+      "roi": 1164.98
+    },
+    {
+      "date": "2026-03-22",
+      "roi": 1198.98
+    },
+    {
+      "date": "2026-03-22",
+      "roi": 1148.98
+    },
+    {
+      "date": "2026-03-22",
+      "roi": 1248.98
+    },
+    {
+      "date": "2026-03-22",
+      "roi": 1264.47
+    },
+    {
+      "date": "2026-03-22",
+      "roi": 1214.47
+    },
+    {
+      "date": "2026-03-22",
+      "roi": 1177.42
+    },
+    {
+      "date": "2026-03-23",
+      "roi": 1186.14
+    },
+    {
+      "date": "2026-03-23",
+      "roi": 1136.14
     }
   ],
   "ev_par_semaine": [
@@ -72,44 +864,258 @@
       "semaine": "2026-S11",
       "ev_moyen": 31.1,
       "nb_paris": 3
+    },
+    {
+      "semaine": "2026-S12",
+      "ev_moyen": 93.1,
+      "nb_paris": 64
+    },
+    {
+      "semaine": "2026-S13",
+      "ev_moyen": 75.5,
+      "nb_paris": 2
     }
   ],
   "paris_recents": [
     {
-      "date": "2026-03-15",
-      "match": "Daniil Medvedev vs Jannik Sinner",
-      "joueur": "Jannik Sinner",
-      "bookmaker": "betclic_fr",
-      "cote": 1.33,
-      "mise": 26.45,
-      "ev": 17.5,
-      "resultat": "Gagné",
-      "gain_perte": 8.73,
-      "bankroll": 96.17
-    },
-    {
-      "date": "2026-03-15",
-      "match": "Aryna Sabalenka vs Elena Rybakina",
-      "joueur": "Elena Rybakina",
-      "bookmaker": "betclic_fr",
-      "cote": 4.5,
-      "mise": 7.56,
-      "ev": 52.9,
+      "date": "2026-03-23",
+      "match": "Francisco Cerundolo vs Daniil Medvedev",
+      "joueur": "Daniil Medvedev",
+      "bookmaker": "pmu_fr",
+      "cote": 4.0,
+      "mise": 50.0,
+      "ev": 145.5,
       "resultat": "Perdu",
-      "gain_perte": -7.56,
-      "bankroll": 87.44
+      "gain_perte": -50.0,
+      "bankroll": 1236.14
     },
     {
-      "date": "2026-03-14",
-      "match": "Alexander Zverev vs Jannik Sinner",
+      "date": "2026-03-23",
+      "match": "Arthur Fils vs Stefanos Tsitsipas",
+      "joueur": "Arthur Fils",
+      "bookmaker": "unibet_fr",
+      "cote": 1.63,
+      "mise": 13.84,
+      "ev": 5.4,
+      "resultat": "Gagné",
+      "gain_perte": 8.72,
+      "bankroll": 1286.14
+    },
+    {
+      "date": "2026-03-22",
+      "match": "Rafael Jodar vs Tomas Martin Etcheverry",
+      "joueur": "Rafael Jodar",
+      "bookmaker": "parionssport_fr",
+      "cote": 1.71,
+      "mise": 37.05,
+      "ev": 16.2,
+      "resultat": "Perdu",
+      "gain_perte": -37.05,
+      "bankroll": 1277.42
+    },
+    {
+      "date": "2026-03-22",
+      "match": "Carlos Alcaraz vs Sebastian Korda",
+      "joueur": "Carlos Alcaraz",
+      "bookmaker": "unibet_fr",
+      "cote": 1.13,
+      "mise": 50.0,
+      "ev": 6.1,
+      "resultat": "Perdu",
+      "gain_perte": -50.0,
+      "bankroll": 1314.47
+    },
+    {
+      "date": "2026-03-22",
+      "match": "Reilly Opelka vs Taylor Fritz",
+      "joueur": "Taylor Fritz",
+      "bookmaker": "parionssport_fr",
+      "cote": 1.4,
+      "mise": 38.72,
+      "ev": 9.5,
+      "resultat": "Gagné",
+      "gain_perte": 15.49,
+      "bankroll": 1364.47
+    },
+    {
+      "date": "2026-03-22",
+      "match": "Tommy Paul vs Raphael Collignon",
+      "joueur": "Tommy Paul",
+      "bookmaker": "parionssport_fr",
+      "cote": 3.0,
+      "mise": 50.0,
+      "ev": 152.7,
+      "resultat": "Gagné",
+      "gain_perte": 100.0,
+      "bankroll": 1348.98
+    },
+    {
+      "date": "2026-03-22",
+      "match": "Martin Landaluce vs Karen Khachanov",
+      "joueur": "Karen Khachanov",
+      "bookmaker": "pmu_fr",
+      "cote": 3.0,
+      "mise": 50.0,
+      "ev": 151.4,
+      "resultat": "Perdu",
+      "gain_perte": -50.0,
+      "bankroll": 1248.98
+    },
+    {
+      "date": "2026-03-22",
+      "match": "Ethan Quinn vs Jiri Lehecka",
+      "joueur": "Jiri Lehecka",
+      "bookmaker": "winamax_fr",
+      "cote": 1.68,
+      "mise": 50.0,
+      "ev": 34.8,
+      "resultat": "Gagné",
+      "gain_perte": 34.0,
+      "bankroll": 1298.98
+    },
+    {
+      "date": "2026-03-22",
+      "match": "Martin Damm Jr. vs Alexander Zverev",
       "joueur": "Alexander Zverev",
-      "bookmaker": "betclic_fr",
-      "cote": 5.5,
+      "bookmaker": "parionssport_fr",
+      "cote": 8.5,
+      "mise": 50.0,
+      "ev": 646.7,
+      "resultat": "Gagné",
+      "gain_perte": 375.0,
+      "bankroll": 1264.98
+    },
+    {
+      "date": "2026-03-21",
+      "match": "Ben Shelton vs Alexander Shevchenko",
+      "joueur": "Ben Shelton",
+      "bookmaker": "unibet_fr",
+      "cote": 7.1,
+      "mise": 50.0,
+      "ev": 525.9,
+      "resultat": "Perdu",
+      "gain_perte": -50.0,
+      "bankroll": 889.98
+    },
+    {
+      "date": "2026-03-21",
+      "match": "Frances Tiafoe vs Arthur Cazaux",
+      "joueur": "Frances Tiafoe",
+      "bookmaker": "unibet_fr",
+      "cote": 2.98,
+      "mise": 50.0,
+      "ev": 115.7,
+      "resultat": "Gagné",
+      "gain_perte": 99.0,
+      "bankroll": 939.98
+    },
+    {
+      "date": "2026-03-21",
+      "match": "Francisco Cerundolo vs Thiago Agustin Tirante",
+      "joueur": "Thiago Agustin Tirante",
+      "bookmaker": "pmu_fr",
+      "cote": 4.5,
       "mise": 5.0,
-      "ev": 22.9,
+      "ev": 31.2,
       "resultat": "Perdu",
       "gain_perte": -5.0,
-      "bankroll": 95.0
+      "bankroll": 840.98
+    },
+    {
+      "date": "2026-03-21",
+      "match": "Adam Walton vs Jakub Mensik",
+      "joueur": "Jakub Mensik",
+      "bookmaker": "parionssport_fr",
+      "cote": 1.31,
+      "mise": 10.83,
+      "ev": 9.9,
+      "resultat": "Gagné",
+      "gain_perte": 3.36,
+      "bankroll": 845.98
+    },
+    {
+      "date": "2026-03-21",
+      "match": "Rei Sakamoto vs Daniil Medvedev",
+      "joueur": "Daniil Medvedev",
+      "bookmaker": "pmu_fr",
+      "cote": 11.0,
+      "mise": 28.66,
+      "ev": 841.8,
+      "resultat": "Gagné",
+      "gain_perte": 286.6,
+      "bankroll": 842.62
+    },
+    {
+      "date": "2026-03-21",
+      "match": "Gabriel Diallo vs Ugo Humbert",
+      "joueur": "Ugo Humbert",
+      "bookmaker": "unibet_fr",
+      "cote": 1.85,
+      "mise": 5.78,
+      "ev": 14.4,
+      "resultat": "Gagné",
+      "gain_perte": 4.91,
+      "bankroll": 556.02
+    },
+    {
+      "date": "2026-03-21",
+      "match": "Felix Auger-Aliassime vs Marton Fucsovics",
+      "joueur": "Felix Auger-Aliassime",
+      "bookmaker": "winamax_fr",
+      "cote": 1.39,
+      "mise": 15.98,
+      "ev": 18.3,
+      "resultat": "Gagné",
+      "gain_perte": 6.23,
+      "bankroll": 551.11
+    },
+    {
+      "date": "2026-03-21",
+      "match": "Terence Atmane vs Arthur Rinderknech",
+      "joueur": "Arthur Rinderknech",
+      "bookmaker": "pmu_fr",
+      "cote": 2.25,
+      "mise": 13.79,
+      "ev": 50.6,
+      "resultat": "Perdu",
+      "gain_perte": -13.79,
+      "bankroll": 544.88
+    },
+    {
+      "date": "2026-03-21",
+      "match": "Carlos Alcaraz vs Joao Fonseca",
+      "joueur": "Carlos Alcaraz",
+      "bookmaker": "parionssport_fr",
+      "cote": 1.13,
+      "mise": 19.09,
+      "ev": 7.3,
+      "resultat": "Gagné",
+      "gain_perte": 2.48,
+      "bankroll": 558.67
+    },
+    {
+      "date": "2026-03-21",
+      "match": "Mariano Navone vs Valentin Vacherot",
+      "joueur": "Valentin Vacherot",
+      "bookmaker": "parionssport_fr",
+      "cote": 1.45,
+      "mise": 13.75,
+      "ev": 18.2,
+      "resultat": "Gagné",
+      "gain_perte": 6.19,
+      "bankroll": 556.19
+    },
+    {
+      "date": "2026-03-21",
+      "match": "Zizou Bergs vs Tomas Martin Etcheverry",
+      "joueur": "Zizou Bergs",
+      "bookmaker": "winamax_fr",
+      "cote": 2.1,
+      "mise": 6.38,
+      "ev": 20.6,
+      "resultat": "Perdu",
+      "gain_perte": -6.38,
+      "bankroll": 550.0
     }
   ],
   "matchs_venir": []
