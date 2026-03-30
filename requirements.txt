@@ -18,3 +18,6 @@ xgboost>=2.0.0
 
 # HTTP
 requests>=2.28.0
+
+# Supabase
+supabase>=2.0.0

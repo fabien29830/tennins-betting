@@ -103,8 +103,42 @@ DOSSIER_DATA = os.path.join(DOSSIER, "tennis_data")
 RAPPORT_DIR  = os.path.join(DOSSIER_DATA, "rapports")
 os.makedirs(RAPPORT_DIR, exist_ok=True)
 
-CACHE_COTES_FILE = os.path.join(DOSSIER_DATA, "cache_cotes.json")
-CACHE_COTES_TTL  = 90   # minutes avant expiration du cache
+CACHE_COTES_FILE  = os.path.join(DOSSIER_DATA, "cache_cotes.json")
+CACHE_SPORTS_FILE = os.path.join(DOSSIER_DATA, "cache_sports.json")
+CACHE_COTES_TTL   = 1440  # minutes avant expiration du cache (24h)
+                          # → 1 appel API/jour max = ~90 req/mois (budget 500/mois)
+CACHE_SPORTS_TTL  = 1440  # liste des sports : cache 24h
+
+# ── Compteur mensuel d'appels API (protection budget 500 req/mois) ──────────
+API_BUDGET_FILE = os.path.join(DOSSIER_DATA, "api_budget.json")
+API_MAX_CALLS_MONTH = 30   # max appels réels /mois (30 * ~6 req = ~180 req/mois, bien sous 400)
+
+def _api_budget_check():
+    """Retourne True si on peut encore appeler l'API ce mois-ci."""
+    month = datetime.now(timezone.utc).strftime("%Y-%m")
+    try:
+        with open(API_BUDGET_FILE) as f:
+            data = json.load(f)
+    except Exception:
+        data = {}
+    calls = data.get(month, 0)
+    if calls >= API_MAX_CALLS_MONTH:
+        print(f"  ⚠  Budget API épuisé ce mois ({calls}/{API_MAX_CALLS_MONTH} appels)."
+              f" Cache forcé jusqu'au 1er du mois prochain.")
+        return False
+    return True
+
+def _api_budget_increment():
+    """Incrémente le compteur d'appels du mois courant."""
+    month = datetime.now(timezone.utc).strftime("%Y-%m")
+    try:
+        with open(API_BUDGET_FILE) as f:
+            data = json.load(f)
+    except Exception:
+        data = {}
+    data[month] = data.get(month, 0) + 1
+    with open(API_BUDGET_FILE, "w") as f:
+        json.dump(data, f)
 
 # ─────────────────────────────────────────────────────────────
 # UTILITAIRES
@@ -137,7 +171,9 @@ def normaliser(nom):
 def _charger_cache_cotes():
     """
     Retourne (events, restantes, age_min) si le cache est frais
-    (< CACHE_COTES_TTL min ET même jour UTC), sinon (None, None, None).
+    (< CACHE_COTES_TTL min), sinon (None, None, None).
+    Si le cache a été sauvegardé avec quota_exceeded=True et qu'on est
+    dans un nouveau mois, le cache est automatiquement invalidé.
     """
     if not os.path.exists(CACHE_COTES_FILE):
         return None, None, None
@@ -146,23 +182,58 @@ def _charger_cache_cotes():
             data = json.load(f)
         ts      = datetime.fromisoformat(data["timestamp"])
         age_min = (datetime.now(timezone.utc) - ts).total_seconds() / 60
-        # Cache valide uniquement si < TTL et même jour calendaire
-        if (age_min < CACHE_COTES_TTL
-                and ts.date() == datetime.now(timezone.utc).date()):
+        # Auto-reset si quota dépassé le mois dernier et nouveau mois détecté
+        if data.get("quota_exceeded"):
+            mois_cache = ts.strftime("%Y-%m")
+            mois_actuel = datetime.now(timezone.utc).strftime("%Y-%m")
+            if mois_cache != mois_actuel:
+                os.remove(CACHE_COTES_FILE)
+                if os.path.exists(CACHE_SPORTS_FILE):
+                    os.remove(CACHE_SPORTS_FILE)
+                print("  Nouveau mois détecté — cache vidé automatiquement (quota rechargé).")
+                return None, None, None
+        if age_min < CACHE_COTES_TTL:
             return data["events"], data.get("restantes", "?"), int(age_min)
     except Exception:
         pass
     return None, None, None
 
 
-def _sauvegarder_cache_cotes(events, restantes):
+def _sauvegarder_cache_cotes(events, restantes, quota_exceeded=False):
     """Persiste les cotes et le compteur restant dans le cache JSON."""
     try:
         with open(CACHE_COTES_FILE, "w", encoding="utf-8") as f:
             json.dump({
+                "timestamp":     datetime.now(timezone.utc).isoformat(),
+                "restantes":     str(restantes),
+                "events":        events,
+                "quota_exceeded": quota_exceeded,
+            }, f)
+    except Exception:
+        pass
+
+
+def _charger_cache_sports():
+    """Retourne la liste des sport keys si le cache est valide (< 24h), sinon None."""
+    try:
+        with open(CACHE_SPORTS_FILE, encoding="utf-8") as f:
+            data = json.load(f)
+        ts = datetime.fromisoformat(data["timestamp"])
+        age_min = (datetime.now(timezone.utc) - ts).total_seconds() / 60
+        if age_min < CACHE_SPORTS_TTL:
+            return data["sports"]
+    except Exception:
+        pass
+    return None
+
+
+def _sauvegarder_cache_sports(sports):
+    """Persiste la liste des sport keys dans le cache JSON."""
+    try:
+        with open(CACHE_SPORTS_FILE, "w", encoding="utf-8") as f:
+            json.dump({
                 "timestamp": datetime.now(timezone.utc).isoformat(),
-                "restantes": str(restantes),
-                "events":    events,
+                "sports": sports,
             }, f)
     except Exception:
         pass
@@ -559,6 +630,11 @@ def recuperer_matchs_et_cotes():
               f"| Requêtes restantes : {restantes_cache}")
         return events_cache
 
+    # ── Vérification budget mensuel ───────────────────────────
+    if not _api_budget_check():
+        return []
+    _api_budget_increment()
+
     # Fenêtre : aujourd'hui 00h00 UTC → après-demain 00h00 UTC
     maintenant = datetime.now(timezone.utc)
     debut_utc  = maintenant.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -572,15 +648,24 @@ def recuperer_matchs_et_cotes():
     params_base = {"apiKey": ODDS_API_KEY}
 
     try:
-        # ── 1. Sports tennis actifs ───────────────────────────────
-        r = requests.get(f"{base}/sports/", params=params_base, timeout=15)
-        r.raise_for_status()
-        sports_tennis = [
-            s["key"] for s in r.json()
-            if s.get("active") and (
-                "tennis_atp" in s["key"] or "tennis_wta" in s["key"]
-            )
-        ]
+        quota_depasse = False
+
+        # ── 1. Sports tennis actifs (avec cache 24h) ──────────────
+        sports_tennis = _charger_cache_sports()
+        if sports_tennis is None:
+            r = requests.get(f"{base}/sports/", params=params_base, timeout=15)
+            if r.status_code in (401, 422, 429) or "OUT_OF_USAGE" in r.text:
+                print("  Quota API dépassé — réessai automatique le 1er du mois prochain.")
+                _sauvegarder_cache_cotes([], "0", quota_exceeded=True)
+                return []
+            r.raise_for_status()
+            sports_tennis = [
+                s["key"] for s in r.json()
+                if s.get("active") and (
+                    "tennis_atp" in s["key"] or "tennis_wta" in s["key"]
+                )
+            ]
+            _sauvegarder_cache_sports(sports_tennis)
         print(f"  Tournois actifs : {sports_tennis}")
         if not sports_tennis:
             print("  Aucun tournoi tennis actif détecté.")
@@ -592,32 +677,16 @@ def recuperer_matchs_et_cotes():
         for sport_key in sports_tennis:
             circuit = "wta" if "wta" in sport_key else "atp"
 
-            # ── Passe 1 : tous les matchs (sans cotes) ────────────
+            # ── Cotes + matchs en un seul appel /odds ─────────────
+            # (l'endpoint /odds retourne déjà tous les matchs avec cotes ;
+            #  on supprime l'appel /events séparé pour économiser des requêtes)
             events_par_id = {}
-            try:
-                r_ev = requests.get(
-                    f"{base}/sports/{sport_key}/events/",
-                    params={**params_base, "dateFormat": "iso",
-                            "commenceTimeFrom": from_iso,
-                            "commenceTimeTo":   to_iso},
-                    timeout=15,
-                )
-                if r_ev.status_code == 200:
-                    for e in r_ev.json():
-                        e["_tournament"] = sport_key
-                        e["_circuit"]    = circuit
-                        e["bookmakers"]  = []   # sera rempli en passe 2
-                        events_par_id[e["id"]] = e
-            except Exception:
-                pass  # /events optionnel, on continue quand même
-
-            # ── Passe 2 : cotes (enrichit les events déjà connus) ─
             try:
                 r_odds = requests.get(
                     f"{base}/sports/{sport_key}/odds/",
                     params={**params_base,
                             "regions": "eu",
-                            "markets": "h2h,spreads,totals",
+                            "markets": "h2h",
                             "oddsFormat": "decimal", "dateFormat": "iso",
                             "commenceTimeFrom": from_iso,
                             "commenceTimeTo":   to_iso},
@@ -626,15 +695,13 @@ def recuperer_matchs_et_cotes():
                 if r_odds.status_code == 200:
                     restantes = r_odds.headers.get("x-requests-remaining", "?")
                     for e in r_odds.json():
-                        eid = e["id"]
-                        if eid in events_par_id:
-                            # Enrichir l'event déjà connu avec ses cotes
-                            events_par_id[eid]["bookmakers"] = e.get("bookmakers", [])
-                        else:
-                            # Match présent dans /odds mais absent de /events
-                            e["_tournament"] = sport_key
-                            e["_circuit"]    = circuit
-                            events_par_id[eid] = e
+                        e["_tournament"] = sport_key
+                        e["_circuit"]    = circuit
+                        events_par_id[e["id"]] = e
+                elif r_odds.status_code in (401, 422, 429) or "OUT_OF_USAGE" in r_odds.text:
+                    print("  Quota API dépassé — réessai automatique le 1er du mois prochain.")
+                    quota_depasse = True
+                    break
             except Exception as err:
                 print(f"  Erreur /odds {sport_key} : {err}")
 
@@ -647,7 +714,7 @@ def recuperer_matchs_et_cotes():
             tous_events.extend(events_par_id.values())
 
         print(f"  Total : {len(tous_events)} matchs | Requêtes restantes : {restantes}")
-        _sauvegarder_cache_cotes(tous_events, restantes)
+        _sauvegarder_cache_cotes(tous_events, restantes, quota_exceeded=quota_depasse)
         return tous_events
 
     except Exception as e:
@@ -1579,7 +1646,7 @@ def _reparer_colonnes_no(ws):
         if len(data) <= 1:
             return
 
-        bankroll = 100.0
+        bankroll = BANKROLL_INIT_DASHBOARD
         updates = []
         for ri, row in enumerate(data[1:], start=2):
             if not row or not str(row[0]).strip():   # ligne vide
@@ -1797,6 +1864,73 @@ def enregistrer_paris_gsheet(sh, value_bets):
 
     except Exception as e:
         print(f"  Erreur Google Sheets (enregistrement) : {e}")
+
+
+def mettre_a_jour_resultats_supabase():
+    """
+    Met à jour win/loss dans Supabase bet_history via ESPN (sans appel Odds API).
+    Appelée automatiquement depuis analyser_semaine().
+    Parcourt tous les paris pending de tous les users et résout ceux dont
+    le match est terminé (date passée + résultat ESPN disponible).
+    """
+    if not SUPABASE_SYNC_OK:
+        return
+    try:
+        from supabase_sync import get_pending_bets, update_bet_result
+    except ImportError:
+        return
+
+    pending = get_pending_bets()
+    if not pending:
+        return
+
+    aujourd_hui = datetime.now(timezone.utc).date()
+
+    paris_a_verifier = []
+    for bet in pending:
+        try:
+            created = datetime.fromisoformat(bet["created_at"].replace("Z", "+00:00"))
+            if created.date() < aujourd_hui:
+                paris_a_verifier.append(bet)
+        except Exception:
+            pass
+
+    if not paris_a_verifier:
+        return
+
+    print(f"\n[Supabase] Résolution résultats — {len(paris_a_verifier)} paris en attente...")
+
+    dates = set()
+    for bet in paris_a_verifier:
+        try:
+            d = datetime.fromisoformat(bet["created_at"].replace("Z", "+00:00")).date()
+            dates.add(d)
+        except Exception:
+            pass
+
+    tous_resultats = {}
+    for circuit in ["atp", "wta"]:
+        tous_resultats.update(_resultats_espn(circuit, dates))
+
+    updated = 0
+    for bet in paris_a_verifier:
+        joueur = bet.get("player", "")
+        if not joueur:
+            continue
+        resultat = None
+        for key, winner in tous_resultats.items():
+            noms = list(key)
+            if any(_noms_correspondent(joueur, n) for n in noms):
+                resultat = "win" if _noms_correspondent(joueur, winner) else "loss"
+                break
+        if resultat:
+            cote   = float(bet.get("cote", 1))
+            amount = float(bet.get("amount", 0))
+            profit = round(amount * (cote - 1), 2) if resultat == "win" else round(-amount, 2)
+            if update_bet_result(bet["id"], resultat, profit):
+                updated += 1
+
+    print(f"[Supabase] ✅ {updated}/{len(paris_a_verifier)} paris résolus automatiquement.")
 
 
 def mettre_a_jour_resultats_gsheet(sh):
@@ -2165,6 +2299,113 @@ def envoyer_email_alerte(value_bets, rapport_chemin=None, bankroll=None):
         print("  → Vérifier SMTP_HOST, SMTP_PORT, EMAIL_FROM, SMTP_PASS")
 
 
+def envoyer_email_abonnes(value_bets):
+    """
+    Envoie un email d'alerte à tous les abonnés actifs quand de nouveaux
+    value bets sont disponibles. Email simplifié avec lien vers le dashboard.
+    """
+    if not SUPABASE_SYNC_OK or not value_bets:
+        return
+    if not EMAIL_ACTIF or not SMTP_PASS:
+        return
+    try:
+        from supabase_sync import get_active_subscriber_emails
+    except ImportError:
+        return
+
+    emails = get_active_subscriber_emails()
+    if not emails:
+        print("[Email abonnés] Aucun abonné actif — envoi annulé.")
+        return
+
+    print(f"[Email abonnés] Envoi à {len(emails)} abonné(s)...")
+
+    nb       = len(value_bets)
+    best     = max(value_bets, key=lambda x: x["ev"])
+    date_str = datetime.now().strftime("%d/%m/%Y %H:%M")
+
+    rows_html = ""
+    for i, vb in enumerate(sorted(value_bets, key=lambda x: -x["ev"])[:10]):
+        ev_pc  = vb["ev"] * 100
+        bg_row = "#f9f9f9" if i % 2 == 0 else "#ffffff"
+        ec     = "#1e8449" if vb["ev"] >= 0.15 else "#b7950b"
+        rows_html += f"""
+        <tr style="background:{bg_row};">
+          <td style="padding:10px 12px;border-bottom:1px solid #eee;">
+            <b style="color:#1a5276">{vb['match']}</b><br>
+            <span style="font-size:11px;color:#888;">{vb.get('type_pari','Vainqueur')} &middot; {vb['date']}</span>
+          </td>
+          <td style="padding:10px 8px;border-bottom:1px solid #eee;"><b>{vb['joueur']}</b></td>
+          <td style="padding:10px 8px;border-bottom:1px solid #eee;text-align:center;font-weight:bold;">{vb['cote']:.2f}</td>
+          <td style="padding:10px 8px;border-bottom:1px solid #eee;white-space:nowrap;font-size:12px;">{vb.get('bookmaker','?')}</td>
+          <td style="padding:10px 8px;border-bottom:1px solid #eee;text-align:center;font-weight:bold;color:{ec};">+{ev_pc:.1f}%</td>
+        </tr>"""
+
+    html = f"""<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#ecf0f1;font-family:Arial,sans-serif;">
+<div style="max-width:600px;margin:20px auto;">
+  <div style="background:#1a5276;color:white;padding:24px 22px;border-radius:8px 8px 0 0;">
+    <div style="font-size:20px;font-weight:bold;">🎾 TennisValue — {nb} nouveau{'x' if nb > 1 else ''} value bet{'s' if nb > 1 else ''}</div>
+    <div style="margin-top:5px;opacity:.8;font-size:13px;">{date_str}</div>
+  </div>
+  <div style="background:#eaf4fb;border-left:5px solid #1a5276;padding:14px 18px;margin:0;">
+    <div style="font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">⭐ Meilleur pari</div>
+    <div style="font-size:15px;font-weight:bold;color:#1a5276;">{best['match']}</div>
+    <div style="margin-top:4px;font-size:14px;color:#222;">
+      <b>{best['joueur']}</b> @ <b>{best['cote']:.2f}</b>
+      &nbsp;·&nbsp; {best.get('bookmaker','?')}
+      &nbsp;·&nbsp; EV <b style="color:#1e8449;">+{best['ev']*100:.1f}%</b>
+    </div>
+  </div>
+  <div style="background:white;overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead>
+        <tr style="background:#1a5276;color:white;">
+          <th style="padding:9px 12px;text-align:left;">Match</th>
+          <th style="padding:9px 8px;text-align:left;">Pari</th>
+          <th style="padding:9px 8px;text-align:center;">Cote</th>
+          <th style="padding:9px 8px;text-align:left;">Book.</th>
+          <th style="padding:9px 8px;text-align:center;">EV</th>
+        </tr>
+      </thead>
+      <tbody>{rows_html}</tbody>
+    </table>
+  </div>
+  <div style="background:white;padding:18px 22px;border-top:2px solid #ecf0f1;text-align:center;">
+    <a href="https://tennis-value-saas.pages.dev/dashboard/bets"
+       style="background:#1a5276;color:white;padding:12px 28px;border-radius:6px;
+              text-decoration:none;font-weight:bold;font-size:14px;display:inline-block;">
+      Voir tous les value bets →
+    </a>
+    <p style="margin-top:14px;font-size:11px;color:#aaa;">
+      TennisValue · Vous recevez cet email car vous êtes abonné(e).
+    </p>
+  </div>
+</div>
+</body></html>"""
+
+    try:
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = f"🎾 {nb} value bet{'s' if nb > 1 else ''} détecté{'s' if nb > 1 else ''} — {best['joueur']} @ {best['cote']:.2f} (EV +{best['ev']*100:.1f}%)"
+        msg["From"]    = EMAIL_FROM
+        msg["To"]      = EMAIL_FROM   # expéditeur en To, abonnés en Bcc
+        msg["Bcc"]     = ", ".join(emails)
+        msg.attach(MIMEText(html, "html", "utf-8"))
+
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+            server.ehlo()
+            server.starttls()
+            server.login(SMTP_USER or EMAIL_FROM, SMTP_PASS)
+            all_recipients = [EMAIL_FROM] + emails
+            server.sendmail(EMAIL_FROM, all_recipients, msg.as_string())
+
+        print(f"[Email abonnés] ✅ Envoyé à {len(emails)} abonné(s).")
+    except Exception as e:
+        print(f"[Email abonnés] ❌ Erreur envoi : {e}")
+
+
 # ─────────────────────────────────────────────────────────────
 # RÉCUPÉRATION DES RÉSULTATS  (--resultats)
 # ─────────────────────────────────────────────────────────────
@@ -2471,7 +2712,7 @@ def mise_a_jour_pipeline():
 # GITHUB PAGES DASHBOARD
 # ─────────────────────────────────────────────────────────────
 
-BANKROLL_INIT_DASHBOARD = 100.0   # doit correspondre à D3 dans Tableau de bord
+BANKROLL_INIT_DASHBOARD = 1000.0  # doit correspondre à D3 dans Tableau de bord
 DOCS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs")
 
 
@@ -3144,6 +3385,9 @@ def analyser_semaine():
         f.write(rapport)
     print(f"\n  Rapport sauvegardé : {chemin}")
 
+    # ── Résultats Supabase (bet_history users) ─────────────────
+    mettre_a_jour_resultats_supabase()
+
     # ── Google Sheets ──────────────────────────────────────────
     if GSHEET_ACTIF:
         print("\n  Mise à jour Google Sheets...")
@@ -3176,6 +3420,7 @@ def analyser_semaine():
                 round_     = "",
             ))
         push_value_bets(supabase_bets)
+        envoyer_email_abonnes(value_bets)
 
     # Email déclenché si au moins 1 bet EV > SEUIL_ALERTE,
     # mais le tableau contient TOUS les value bets (EV > SEUIL_VALUE)
