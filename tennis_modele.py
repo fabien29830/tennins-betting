@@ -48,6 +48,26 @@ FEATURES = [
 ]
 
 
+class ModeleTemperature:
+    """Wrapper qui applique Temperature Scaling sur les logits du modèle."""
+    def __init__(self, modele_base, T):
+        self.modele_base = modele_base
+        self.T = T
+
+    def predict_proba(self, X):
+        from scipy.special import expit as _expit
+        p = self.modele_base.predict_proba(X)[:, 1]
+        logits = np.log(np.clip(p, 1e-7, 1-1e-7) / (1 - np.clip(p, 1e-7, 1-1e-7)))
+        p_cal = _expit(logits / self.T)
+        return np.column_stack([1 - p_cal, p_cal])
+
+    def predict(self, X):
+        return (self.predict_proba(X)[:, 1] > 0.5).astype(int)
+
+    def __repr__(self):
+        return f"ModeleTemperature(base={type(self.modele_base).__name__}, T={self.T:.4f})"
+
+
 def charger_modele():
     """
     Charge le modèle calibré s'il existe, sinon le modèle original.

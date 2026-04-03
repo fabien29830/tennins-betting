@@ -15,7 +15,11 @@ from scipy.optimize import minimize_scalar
 from scipy.special import expit  # sigmoid
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.normpath(os.path.join(BASE, "..", "..", "..", "tennis_data"))
+# Cherche tennis_data depuis le script, remonte si besoin
+_candidate = os.path.join(BASE, "tennis_data")
+if not os.path.exists(_candidate):
+    _candidate = os.path.normpath(os.path.join(BASE, "..", "..", "..", "tennis_data"))
+DATA_DIR = _candidate
 
 FICHIER_MODELE    = os.path.join(DATA_DIR, "modele_tennis.pkl")
 FICHIER_MODELE_CAL = os.path.join(DATA_DIR, "modele_tennis_calibre.pkl")
@@ -121,25 +125,7 @@ T_optimal = res.x
 print(f"   Temperature optimale: T = {T_optimal:.4f}")
 print(f"   (T=1.0 = pas de changement, T>1 = plus conservateur)")
 
-# Wrapper modèle calibré
-class ModeleTemperature:
-    """Wrapper qui applique Temperature Scaling sur les logits du modèle."""
-    def __init__(self, modele_base, T):
-        self.modele_base = modele_base
-        self.T = T
-
-    def predict_proba(self, X):
-        p = self.modele_base.predict_proba(X)[:, 1]
-        logits = np.log(np.clip(p, 1e-7, 1-1e-7) / (1 - np.clip(p, 1e-7, 1-1e-7)))
-        p_cal = expit(logits / self.T)
-        return np.column_stack([1 - p_cal, p_cal])
-
-    def predict(self, X):
-        return (self.predict_proba(X)[:, 1] > 0.5).astype(int)
-
-    def __repr__(self):
-        return f"ModeleTemperature(base={type(self.modele_base).__name__}, T={self.T:.4f})"
-
+from tennis_modele import ModeleTemperature
 calibrateur = ModeleTemperature(modele, T_optimal)
 
 # 5. Vérification après calibration
