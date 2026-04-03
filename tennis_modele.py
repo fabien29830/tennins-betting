@@ -23,11 +23,12 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
-DOSSIER_DATA   = "tennis_data"
-FICHIER_ELO    = os.path.join(DOSSIER_DATA, "atp_elo.csv")
-FICHIER_MODELE = os.path.join(DOSSIER_DATA, "modele_tennis.pkl")
-FICHIER_SCALER = os.path.join(DOSSIER_DATA, "scaler.pkl")
-FICHIER_COLS   = os.path.join(DOSSIER_DATA, "colonnes.pkl")
+DOSSIER_DATA        = "tennis_data"
+FICHIER_ELO         = os.path.join(DOSSIER_DATA, "atp_elo.csv")
+FICHIER_MODELE      = os.path.join(DOSSIER_DATA, "modele_tennis.pkl")
+FICHIER_MODELE_CAL  = os.path.join(DOSSIER_DATA, "modele_tennis_calibre.pkl")
+FICHIER_SCALER      = os.path.join(DOSSIER_DATA, "scaler.pkl")
+FICHIER_COLS        = os.path.join(DOSSIER_DATA, "colonnes.pkl")
 
 # Toutes les features disponibles
 FEATURES = [
@@ -45,6 +46,28 @@ FEATURES = [
     "diff_bp_saved_pct",  # diff % balles de break sauvées
     "diff_ace_rate",      # diff taux d'aces
 ]
+
+
+def charger_modele():
+    """
+    Charge le modèle calibré s'il existe, sinon le modèle original.
+    Retourne (modele, scaler, colonnes).
+    """
+    if os.path.exists(FICHIER_MODELE_CAL):
+        with open(FICHIER_MODELE_CAL, "rb") as f:
+            modele = pickle.load(f)
+        print(f"✅ Modèle calibré chargé: {FICHIER_MODELE_CAL}")
+    else:
+        with open(FICHIER_MODELE, "rb") as f:
+            modele = pickle.load(f)
+        print(f"⚠️  Modèle original chargé (pas de calibré): {FICHIER_MODELE}")
+
+    with open(FICHIER_SCALER, "rb") as f:
+        scaler = pickle.load(f)
+    with open(FICHIER_COLS, "rb") as f:
+        colonnes = pickle.load(f)
+
+    return modele, scaler, colonnes
 
 
 def preparer_donnees(df_elo):
