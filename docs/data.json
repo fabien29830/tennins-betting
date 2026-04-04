@@ -1,19 +1,19 @@
 {
   "meta": {
-    "updated_at": "2026-04-04T02:46:58",
+    "updated_at": "2026-04-04T02:57:08",
     "bankroll_initiale": 1000.0
   },
   "stats": {
     "bankroll_actuelle": 1026.19,
     "roi_global": 2.62,
-    "total_paris": 55,
+    "total_paris": 56,
     "paris_gagnes": 27,
     "paris_perdus": 28,
-    "paris_en_cours": 0,
+    "paris_en_cours": 1,
     "taux_reussite": 49.1,
-    "total_mise": 2787.51,
+    "total_mise": 2793.82,
     "gain_perte_total": 26.19,
-    "ev_moyen_global": 1.6
+    "ev_moyen_global": 2.4
   },
   "bankroll_historique": [
     {
@@ -709,11 +709,23 @@
     },
     {
       "semaine": "2026-S14",
-      "ev_moyen": 31.9,
-      "nb_paris": 2
+      "ev_moyen": 36.9,
+      "nb_paris": 3
     }
   ],
   "paris_recents": [
+    {
+      "date": "2026-04-03",
+      "match": "Iva Jović vs Anna Kalinskaya",
+      "joueur": "Anna Kalinskaya",
+      "bookmaker": "pmu_fr",
+      "cote": 1.96,
+      "mise": 6.31,
+      "ev": 46.7,
+      "resultat": "En cours",
+      "gain_perte": null,
+      "bankroll": 1026.19
+    },
     {
       "date": "2026-04-03",
       "match": "Anna Kalinskaya vs Iva Jović",
@@ -941,18 +953,6 @@
       "resultat": "Gagné",
       "gain_perte": 93.04,
       "bankroll": 1116.62
-    },
-    {
-      "date": "2026-03-21",
-      "match": "Corentin Moutet vs Tomas Machac",
-      "joueur": "Tomas Machac",
-      "bookmaker": "winamax_fr",
-      "cote": 1.78,
-      "mise": 53.87,
-      "ev": 0.2,
-      "resultat": "Perdu",
-      "gain_perte": -53.87,
-      "bankroll": 1023.58
     }
   ],
   "matchs_venir": [
@@ -969,10 +969,10 @@
       "cote2": 3.2,
       "bm1": "unibet_fr",
       "bm2": "pmu_fr",
-      "prob1": 0.625,
-      "prob2": 0.375,
-      "ev1": -0.181,
-      "ev2": 0.199
+      "prob1": 0.601,
+      "prob2": 0.399,
+      "ev1": -0.213,
+      "ev2": 0.278
     },
     {
       "date": "2026-04-03",
@@ -987,10 +987,10 @@
       "cote2": 1.81,
       "bm1": "pmu_fr",
       "bm2": "unibet_fr",
-      "prob1": 0.489,
-      "prob2": 0.511,
-      "ev1": -0.051,
-      "ev2": -0.075
+      "prob1": 0.514,
+      "prob2": 0.486,
+      "ev1": -0.003,
+      "ev2": -0.12
     },
     {
       "date": "2026-04-03",
@@ -1005,10 +1005,10 @@
       "cote2": 1.96,
       "bm1": "pmu_fr",
       "bm2": "pmu_fr",
-      "prob1": 0.265,
-      "prob2": 0.735,
-      "ev1": -0.533,
-      "ev2": 0.44
+      "prob1": 0.252,
+      "prob2": 0.748,
+      "ev1": -0.557,
+      "ev2": 0.467
     }
   ]
 }
