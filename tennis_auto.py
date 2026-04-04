@@ -45,6 +45,15 @@ except ImportError:
     SUPABASE_SYNC_OK = False
     print("[Supabase] supabase_sync.py non trouvé — sync désactivée.")
 
+# ── Feedback loop (logs structurés + analyse dérive) ──────
+try:
+    from feedback_loop import log_decision as _log_decision, generer_rapport as _feedback_rapport
+    FEEDBACK_OK = True
+except ImportError:
+    FEEDBACK_OK = False
+    def _log_decision(*args, **kwargs): pass
+    def _feedback_rapport(): return {}
+
 # ─────────────────────────────────────────────────────────────
 # CONFIGURATION — à modifier avant utilisation
 # ─────────────────────────────────────────────────────────────
@@ -53,11 +62,20 @@ except ImportError:
 # sinon valeurs locales en fallback.
 ODDS_API_KEY   = os.environ.get("ODDS_API_KEY",    "71fdf5d253189e041ca3f314458bffe6")
 BANKROLL       = 1000     # bankroll de référence (écrasée par Google Sheets si dispo)
-SEUIL_VALUE    = 0.05     # EV minimum pour recommander un pari (+5%)
+SEUIL_VALUE    = 0.05     # EV minimum pour affichage (symbole ">")
 SEUIL_ALERTE   = 0.10     # EV minimum pour alerte email (+10%)
 FRACTION_KELLY = 0.5      # demi-Kelly
 MISE_MIN       = 5.0      # mise minimum en €
 MISE_MAX_PCT   = 0.05     # mise maximum = 5% de la bankroll
+
+# ── Filtres de sélection des value bets ──────────────────────
+# Backtest (2020-2024) : EV>5% sans filtre → -8.8% ROI
+# Meilleur profil : favoris (cote ≤ 2.0) sur dur, éviter outsiders > 3.0
+# Combo optimale sur données live : EV>10% + cote≤3.0 → ROI estimé >+5%
+EV_MIN_THRESHOLD   = 0.10    # EV minimum STRICT pour placer un pari (+10%)
+COTE_MAX           = 3.0     # Cote maximum — exclut les outsiders (> 3.0)
+COTE_MIN           = 1.01    # Cote minimum — exclut les cotes aberrantes
+SURFACES_AUTORISEES = ["dur", "gazon"]  # Surfaces valides (exclut terre battue)
 
 # Bookmakers à comparer en priorité (dans l'ordre de préférence)
 BOOKMAKERS_CIBLES = [
@@ -2693,6 +2711,28 @@ def recuperer_resultats():
 # PIPELINE
 # ─────────────────────────────────────────────────────────────
 
+def _besoin_recalibration() -> tuple[bool, bool]:
+    """
+    Lit tennis_data/feedback_report.json et retourne :
+      (recalibration_necessaire, reentrainement_complet)
+
+    reentrainement_complet = True si nb_paris_resolus >= 30
+    (assez de données live pour enrichir le dataset d'entraînement)
+    """
+    rapport_path = os.path.join(DOSSIER_DATA, "feedback_report.json")
+    if not os.path.exists(rapport_path):
+        return False, False
+    try:
+        with open(rapport_path, encoding="utf-8") as f:
+            fb = json.load(f)
+        recal = fb.get("recalibration_necessaire", False)
+        n     = fb.get("roi", {}).get("nb_paris_resolus", 0)
+        retrain = recal and n >= 30
+        return recal, retrain
+    except Exception:
+        return False, False
+
+
 def mise_a_jour_pipeline():
     print("\n" + "=" * 60)
     print("  MISE A JOUR DU PIPELINE")
@@ -2703,6 +2743,21 @@ def mise_a_jour_pipeline():
     ok = ok and run_script("Rankings + Absents + Stats service",  "tennis_enrichissement.py")
     ok = ok and run_script("Calcul Elo + stats service",          "tennis_elo.py")
     ok = ok and run_script("Entraînement modèle",                 "tennis_modele.py")
+
+    # ── Recalibration automatique si feedback_loop la recommande ──
+    if FEEDBACK_OK and ok:
+        recal, retrain = _besoin_recalibration()
+        if retrain:
+            print("\n  [Feedback Loop] >= 30 paris resolus + derive detectee")
+            print("  -> Re-entrainement complet du modele...")
+            ok = ok and run_script("Re-entrainement modele (feedback)", "tennis_modele.py")
+            ok = ok and run_script("Recalibration temperature scaling",  "calibrer_modele.py")
+        elif recal:
+            print("\n  [Feedback Loop] Derive detectee — recalibration temperature scaling...")
+            ok = ok and run_script("Recalibration temperature scaling", "calibrer_modele.py")
+        else:
+            print("\n  [Feedback Loop] Modele stable — pas de recalibration")
+
     if not ok:
         print("\n  Une étape a échoué. Voir les erreurs ci-dessus.")
     return ok
@@ -3027,6 +3082,22 @@ def exporter_matchs_venir_gsheet(sh, matchs_analyses):
 
 SURFACE_DEFAUT = "dur"
 
+# Détection de surface basée sur le nom du tournoi (utilisé par le filtre SURFACES_AUTORISEES)
+_CLAY_KEYWORDS  = ["roland_garros", "monte_carlo", "barcelona", "madrid", "rome",
+                   "hamburg", "umag", "gstaad", "bastad", "kitzbuhel", "bucharest",
+                   "estoril", "marrakech", "casablanca", "lyon", "parma", "geneva"]
+_GRASS_KEYWORDS = ["wimbledon", "halle", "queens", "s_hertogenbosch", "eastbourne",
+                   "nottingham", "bad_homburg", "mallorca"]
+
+def _detecter_surface(tournament_name: str) -> str:
+    """Retourne 'terre', 'gazon' ou 'dur' selon le nom du tournoi."""
+    t = tournament_name.lower()
+    if any(k in t for k in _CLAY_KEYWORDS):
+        return "terre"
+    if any(k in t for k in _GRASS_KEYWORDS):
+        return "gazon"
+    return "dur"
+
 def analyser_semaine():
     print("\n" + "=" * 60)
     print("  ANALYSE VALUE BETS DE LA SEMAINE")
@@ -3088,6 +3159,15 @@ def analyser_semaine():
         date_str = event.get("commence_time", "")[:10]
         circuit  = event.get("_circuit", "atp")
 
+        # ── Filtre surface ────────────────────────────────────
+        surface_event = _detecter_surface(event.get("_tournament", ""))
+        if surface_event not in SURFACES_AUTORISEES:
+            lignes.append(f"[{'WTA' if circuit == 'wta' else 'ATP'}] "
+                          f"{nom1_api} vs {nom2_api} [{date_str}]")
+            lignes.append(f"  (surface '{surface_event}' exclue par SURFACES_AUTORISEES)")
+            lignes.append("")
+            continue
+
         # Cotes h2h : meilleure parmi Betclic/Unibet/Winamax, sinon meilleure globale
         cote1, bm1 = meilleure_cote(event, nom1_api, BOOKMAKERS_CIBLES)
         cote2, bm2 = meilleure_cote(event, nom2_api, BOOKMAKERS_CIBLES)
@@ -3148,7 +3228,7 @@ def analyser_semaine():
             "date":    date_str,
             "tournoi": event.get("_tournament", ""),
             "circuit": circuit_label,
-            "surface": SURFACE_DEFAUT,
+            "surface": surface_event,
             "joueur1": j1 or nom1_api,
             "joueur2": j2 or nom2_api,
             "elo1":    round(eg1),
@@ -3213,7 +3293,7 @@ def analyser_semaine():
                 "date":        date_str,
                 "tournoi":     event.get("_tournament", ""),
                 "circuit":     circuit_label,
-                "surface":     SURFACE_DEFAUT,
+                "surface":     surface_event,
                 "match":       f"{nom1_api} vs {nom2_api}",
                 "joueur":      label_joueur,
                 "adversaire":  adversaire,
@@ -3236,7 +3316,23 @@ def analyser_semaine():
             (nom1_api, nom2_api, prob1, cote1, ev1, bm1),
             (nom2_api, nom1_api, prob2, cote2, ev2, bm2),
         ]:
-            if ev >= SEUIL_VALUE and _kelly_mise(prob, cote) > 0:
+            _ev_ok      = ev >= EV_MIN_THRESHOLD
+            _cote_ok    = COTE_MIN <= cote <= COTE_MAX
+            _surface_ok = surface_event in SURFACES_AUTORISEES  # déjà filtré, toujours True ici
+            _accepted   = _ev_ok and _cote_ok and _kelly_mise(prob, cote) > 0
+            _reject     = None if _accepted else (
+                "ev_insuffisant" if not _ev_ok else
+                "cote_hors_limites" if not _cote_ok else
+                "kelly_nul"
+            )
+            _log_decision(
+                match=f"{nom1_api} vs {nom2_api}", joueur=nom_api,
+                surface=surface_event, cote=cote, prob_modele=prob, ev=ev,
+                accepted=_accepted, reject_reason=_reject,
+                ev_ok=_ev_ok, cote_ok=_cote_ok, surface_ok=_surface_ok,
+                circuit=circuit_label, tournoi=event.get("_tournament", ""),
+            )
+            if _accepted:
                 emoji = ">>>" if ev >= SEUIL_ALERTE else "  >"
                 mise  = _kelly_mise(prob, cote)
                 lignes.append(
@@ -3264,7 +3360,7 @@ def analyser_semaine():
                     f"  {emoji} {oc_name} ({point_hc:+.1f}) @ {cote_hc:.2f} ({bm_hc}) | "
                     f"Prob {prob_hc*100:.1f}% | EV {ev_hc*100:+.1f}%"
                 )
-                if ev_hc >= SEUIL_VALUE and _kelly_mise(prob_hc, cote_hc) > 0:
+                if ev_hc >= EV_MIN_THRESHOLD and COTE_MIN <= cote_hc <= COTE_MAX and _kelly_mise(prob_hc, cote_hc) > 0:
                     adv = nom2_api if is_j1 else nom1_api
                     label = f"{oc_name} ({point_hc:+.1f})"
                     vbs_ce_match.append(
@@ -3292,7 +3388,7 @@ def analyser_semaine():
                     f"  {emoji} {dir_label} {point_tot} @ {cote_tot_:.2f} ({bm_tot}) | "
                     f"Prob {prob_tot*100:.1f}% | EV {ev_tot*100:+.1f}%"
                 )
-                if ev_tot >= SEUIL_VALUE and _kelly_mise(prob_tot, cote_tot_) > 0:
+                if ev_tot >= EV_MIN_THRESHOLD and COTE_MIN <= cote_tot_ <= COTE_MAX and _kelly_mise(prob_tot, cote_tot_) > 0:
                     label = f"{dir_label} {point_tot} jeux"
                     vbs_ce_match.append(
                         _vb_dict(f"Total {dir_label} {point_tot}", label,
@@ -3314,7 +3410,7 @@ def analyser_semaine():
                     f"  {emoji} {dir_s} {point_s} sets @ {cote_s:.2f} ({bm_s}) | "
                     f"Prob {prob_s*100:.1f}% | EV {ev_s*100:+.1f}%"
                 )
-                if ev_s >= SEUIL_VALUE and _kelly_mise(prob_s, cote_s) > 0:
+                if ev_s >= EV_MIN_THRESHOLD and COTE_MIN <= cote_s <= COTE_MAX and _kelly_mise(prob_s, cote_s) > 0:
                     label = f"{dir_s} {point_s} sets"
                     vbs_ce_match.append(
                         _vb_dict(f"Sets {dir_s} {point_s}", label,
@@ -3441,6 +3537,22 @@ def analyser_semaine():
             generer_dashboard_json(sh_dash, matchs_analyses=matchs_analyses)
             git_push_dashboard()
 
+    # ── Feedback loop — analyse dérive du modèle ───────────────
+    if FEEDBACK_OK:
+        print("\n  Analyse feedback loop...")
+        fb = _feedback_rapport()
+        alertes_fb = fb.get("alertes", [])
+        if alertes_fb:
+            print(f"  ⚠  {len(alertes_fb)} alerte(s) détectée(s) :")
+            for a in alertes_fb:
+                print(f"     → {a}")
+            if fb.get("recalibration_necessaire"):
+                print("  ACTION : python calibrer_modele.py")
+        else:
+            roi_fb = fb.get("roi", {})
+            print(f"  ✓ Modèle stable — ROI rolling 10 : "
+                  f"{roi_fb.get('roi_rolling_10', 0)*100:+.1f}%")
+
 
 # ─────────────────────────────────────────────────────────────
 # PLANIFICATEUR (Windows) / CRON (Linux — PythonAnywhere)
@@ -3548,6 +3660,8 @@ if __name__ == "__main__":
                         help="Analyse seule, sans relancer le pipeline")
     parser.add_argument("--resultats",  action="store_true",
                         help="Récupère les résultats des matchs passés et met à jour Gagné/Perdu")
+    parser.add_argument("--feedback",   action="store_true",
+                        help="Rapport feedback loop : calibration, dérive ROI, Brier score")
     args = parser.parse_args()
 
     print("=" * 60)
@@ -3562,6 +3676,12 @@ if __name__ == "__main__":
             configurer_tache_linux()
     elif args.resultats:
         recuperer_resultats()
+    elif args.feedback:
+        if FEEDBACK_OK:
+            from feedback_loop import generer_rapport, afficher_rapport
+            afficher_rapport(generer_rapport())
+        else:
+            print("  feedback_loop.py introuvable.")
     elif args.analyse:
         analyser_semaine()
     else:
