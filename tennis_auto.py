@@ -122,6 +122,29 @@ RAPPORT_DIR  = os.path.join(DOSSIER_DATA, "rapports")
 os.makedirs(RAPPORT_DIR, exist_ok=True)
 
 CACHE_COTES_FILE  = os.path.join(DOSSIER_DATA, "cache_cotes.json")
+SYSTEM_LOG_FILE   = os.path.join(DOSSIER_DATA, "system.log")
+
+
+def _log_erreur(composant: str, message: str, niveau: str = "ERROR"):
+    """
+    Enregistre une erreur dans tennis_data/system.log (format JSON lines).
+    Affiche aussi en console pour visibilité immédiate.
+    Niveaux : ERROR, WARN, INFO
+    """
+    entree = {
+        "ts":         datetime.now().isoformat(timespec="seconds"),
+        "niveau":     niveau,
+        "composant":  composant,
+        "message":    message,
+    }
+    try:
+        os.makedirs(DOSSIER_DATA, exist_ok=True)
+        with open(SYSTEM_LOG_FILE, "a", encoding="utf-8") as f:
+            f.write(json.dumps(entree, ensure_ascii=False) + "\n")
+    except Exception:
+        pass  # ne jamais planter à cause du logger
+    prefix = {"ERROR": "[ERREUR]", "WARN": "[WARN]", "INFO": "[INFO]"}.get(niveau, "[LOG]")
+    print(f"  {prefix} {composant} : {message}")
 CACHE_SPORTS_FILE = os.path.join(DOSSIER_DATA, "cache_sports.json")
 CACHE_COTES_TTL   = 1440  # minutes avant expiration du cache (24h)
                           # → 1 appel API/jour max = ~90 req/mois (budget 500/mois)
@@ -286,19 +309,28 @@ def trouver_joueur(nom_api, noms_connus_norm):
 
 
 def charger_modele():
+    # Préférer le modèle calibré s'il existe
+    chemin_modele = os.path.join(DOSSIER_DATA, "modele_tennis_calibre.pkl")
+    if not os.path.exists(chemin_modele):
+        chemin_modele = os.path.join(DOSSIER_DATA, "modele_tennis.pkl")
+
     chemins = {
-        "modele": os.path.join(DOSSIER_DATA, "modele_tennis.pkl"),
+        "modele": chemin_modele,
         "scaler": os.path.join(DOSSIER_DATA, "scaler.pkl"),
         "cols":   os.path.join(DOSSIER_DATA, "colonnes.pkl"),
     }
     for k, p in chemins.items():
         if not os.path.exists(p):
-            print(f"  Fichier manquant : {p}")
+            _log_erreur("charger_modele", f"Fichier manquant : {p} — relance tennis_modele.py")
             return None, None, None
-    with open(chemins["modele"], "rb") as f: modele = pickle.load(f)
-    with open(chemins["scaler"], "rb") as f: scaler = pickle.load(f)
-    with open(chemins["cols"],   "rb") as f: cols   = pickle.load(f)
-    return modele, scaler, cols
+    try:
+        with open(chemins["modele"], "rb") as f: modele = pickle.load(f)
+        with open(chemins["scaler"], "rb") as f: scaler = pickle.load(f)
+        with open(chemins["cols"],   "rb") as f: cols   = pickle.load(f)
+        return modele, scaler, cols
+    except Exception as e:
+        _log_erreur("charger_modele", f"Fichier pkl corrompu : {e} — relance tennis_modele.py")
+        return None, None, None
 
 
 def charger_elo(circuit="atp"):
@@ -333,9 +365,14 @@ def charger_elo(circuit="atp"):
 def charger_stats():
     p = os.path.join(DOSSIER_DATA, "stats_joueurs.csv")
     if not os.path.exists(p):
+        _log_erreur("charger_stats", "stats_joueurs.csv absent — features service désactivées", "WARN")
         return {}
-    df = pd.read_csv(p).set_index("joueur")
-    return df.to_dict(orient="index")
+    try:
+        df = pd.read_csv(p).set_index("joueur")
+        return df.to_dict(orient="index")
+    except Exception as e:
+        _log_erreur("charger_stats", f"stats_joueurs.csv illisible : {e}")
+        return {}
 
 
 def charger_rankings():
@@ -699,29 +736,44 @@ def recuperer_matchs_et_cotes():
             # (l'endpoint /odds retourne déjà tous les matchs avec cotes ;
             #  on supprime l'appel /events séparé pour économiser des requêtes)
             events_par_id = {}
-            try:
-                r_odds = requests.get(
-                    f"{base}/sports/{sport_key}/odds/",
-                    params={**params_base,
-                            "regions": "eu",
-                            "markets": "h2h",
-                            "oddsFormat": "decimal", "dateFormat": "iso",
-                            "commenceTimeFrom": from_iso,
-                            "commenceTimeTo":   to_iso},
-                    timeout=15,
-                )
-                if r_odds.status_code == 200:
-                    restantes = r_odds.headers.get("x-requests-remaining", "?")
-                    for e in r_odds.json():
-                        e["_tournament"] = sport_key
-                        e["_circuit"]    = circuit
-                        events_par_id[e["id"]] = e
-                elif r_odds.status_code in (401, 422, 429) or "OUT_OF_USAGE" in r_odds.text:
-                    print("  Quota API dépassé — réessai automatique le 1er du mois prochain.")
-                    quota_depasse = True
-                    break
-            except Exception as err:
-                print(f"  Erreur /odds {sport_key} : {err}")
+            # Retry 3 fois avec délai croissant (1s, 3s, 7s)
+            _delais = [1, 3, 7]
+            for _tentative, _delai in enumerate(_delais, 1):
+                try:
+                    r_odds = requests.get(
+                        f"{base}/sports/{sport_key}/odds/",
+                        params={**params_base,
+                                "regions": "eu",
+                                "markets": "h2h",
+                                "oddsFormat": "decimal", "dateFormat": "iso",
+                                "commenceTimeFrom": from_iso,
+                                "commenceTimeTo":   to_iso},
+                        timeout=15,
+                    )
+                    if r_odds.status_code == 200:
+                        restantes = r_odds.headers.get("x-requests-remaining", "?")
+                        for e in r_odds.json():
+                            e["_tournament"] = sport_key
+                            e["_circuit"]    = circuit
+                            events_par_id[e["id"]] = e
+                        break  # succès — sortir du retry
+                    elif r_odds.status_code in (401, 422, 429) or "OUT_OF_USAGE" in r_odds.text:
+                        _log_erreur("API_odds", "Quota dépassé — réessai le 1er du mois", "WARN")
+                        quota_depasse = True
+                        break  # pas la peine de retry sur quota dépassé
+                    else:
+                        _log_erreur("API_odds",
+                            f"{sport_key} tentative {_tentative}/3 : HTTP {r_odds.status_code}", "WARN")
+                        if _tentative < len(_delais):
+                            import time; time.sleep(_delai)
+                except Exception as err:
+                    _log_erreur("API_odds",
+                        f"{sport_key} tentative {_tentative}/3 : {err}", "WARN")
+                    if _tentative < len(_delais):
+                        import time; time.sleep(_delai)
+                    else:
+                        _log_erreur("API_odds",
+                            f"{sport_key} abandonne après 3 tentatives", "ERROR")
 
             nb = len(events_par_id)
             nb_avec_cotes = sum(1 for e in events_par_id.values() if e.get("bookmakers"))
@@ -736,7 +788,7 @@ def recuperer_matchs_et_cotes():
         return tous_events
 
     except Exception as e:
-        print(f"  Erreur API : {e}")
+        _log_erreur("recuperer_matchs_et_cotes", f"Erreur inattendue : {e}")
         return []
 
 
@@ -1141,7 +1193,7 @@ def mettre_a_jour_tableau_bord(sh):
         sh.batch_update({"requests": reqs})
         print("  Tableau de bord : mis à jour et formaté")
     except Exception as e:
-        print(f"  Tableau de bord erreur : {e}")
+        _log_erreur("mettre_a_jour_tableau_bord", f"Erreur GSheet : {e}")
 
     # ── Onglet "Analyse Modèle" ───────────────────────────────────────
     # Layout :
@@ -1881,7 +1933,7 @@ def enregistrer_paris_gsheet(sh, value_bets):
         _reparer_colonnes_no(ws)
 
     except Exception as e:
-        print(f"  Erreur Google Sheets (enregistrement) : {e}")
+        _log_erreur("enregistrer_paris_gsheet", f"Erreur GSheet : {e}")
 
 
 def mettre_a_jour_resultats_supabase():
@@ -2313,8 +2365,8 @@ def envoyer_email_alerte(value_bets, rapport_chemin=None, bankroll=None):
         print(f"  Email HTML envoyé à {EMAIL_TO} ({nb} value bet(s))")
 
     except Exception as e:
-        print(f"  Email échec : {e}")
-        print("  → Vérifier SMTP_HOST, SMTP_PORT, EMAIL_FROM, SMTP_PASS")
+        _log_erreur("envoyer_email_alerte",
+                    f"{e} — verifier SMTP_HOST/PORT/PASS (mot de passe application Gmail)")
 
 
 def envoyer_email_abonnes(value_bets):
@@ -2421,7 +2473,7 @@ def envoyer_email_abonnes(value_bets):
 
         print(f"[Email abonnés] ✅ Envoyé à {len(emails)} abonné(s).")
     except Exception as e:
-        print(f"[Email abonnés] ❌ Erreur envoi : {e}")
+        _log_erreur("envoyer_email_abonnes", f"Erreur envoi abonnes : {e}")
 
 
 # ─────────────────────────────────────────────────────────────
