@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-04-03T19:00:16",
+    "updated_at": "2026-04-04T02:46:58",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 1121.5,
-    "roi_global": 12.15,
+    "bankroll_actuelle": 1026.19,
+    "roi_global": 2.62,
     "total_paris": 55,
     "paris_gagnes": 27,
-    "paris_perdus": 26,
-    "paris_en_cours": 2,
-    "taux_reussite": 50.9,
+    "paris_perdus": 28,
+    "paris_en_cours": 0,
+    "taux_reussite": 49.1,
     "total_mise": 2787.51,
-    "gain_perte_total": 121.5,
+    "gain_perte_total": 26.19,
     "ev_moyen_global": 1.6
   },
   "bankroll_historique": [
@@ -447,6 +447,22 @@
       "joueur": "Daniil Medvedev",
       "resultat": "Perdu",
       "gain_perte": -59.03
+    },
+    {
+      "date": "2026-04-03",
+      "bankroll": 1076.19,
+      "match": "Diana Shnaider vs Jessica Pegula",
+      "joueur": "Diana Shnaider",
+      "resultat": "Perdu",
+      "gain_perte": -45.31
+    },
+    {
+      "date": "2026-04-03",
+      "bankroll": 1026.19,
+      "match": "Anna Kalinskaya vs Iva Jović",
+      "joueur": "Anna Kalinskaya",
+      "resultat": "Perdu",
+      "gain_perte": -50.0
     }
   ],
   "roi_cumulatif": [
@@ -665,6 +681,14 @@
     {
       "date": "2026-03-23",
       "roi": 12.15
+    },
+    {
+      "date": "2026-04-03",
+      "roi": 7.62
+    },
+    {
+      "date": "2026-04-03",
+      "roi": 2.62
     }
   ],
   "ev_par_semaine": [
@@ -698,9 +722,9 @@
       "cote": 1.96,
       "mise": 50.0,
       "ev": 44.0,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 1121.5
+      "resultat": "Perdu",
+      "gain_perte": -50.0,
+      "bankroll": 1026.19
     },
     {
       "date": "2026-04-03",
@@ -710,9 +734,9 @@
       "cote": 3.2,
       "mise": 45.31,
       "ev": 19.9,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 1121.5
+      "resultat": "Perdu",
+      "gain_perte": -45.31,
+      "bankroll": 1076.19
     },
     {
       "date": "2026-03-23",
