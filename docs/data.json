@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updated_at": "2026-04-04T02:57:08",
+    "updated_at": "2026-04-08T15:47:25",
     "bankroll_initiale": 1000.0
   },
   "stats": {
@@ -8,9 +8,9 @@
     "roi_global": 2.62,
     "total_paris": 56,
     "paris_gagnes": 27,
-    "paris_perdus": 28,
-    "paris_en_cours": 1,
-    "taux_reussite": 49.1,
+    "paris_perdus": 29,
+    "paris_en_cours": 0,
+    "taux_reussite": 48.2,
     "total_mise": 2793.82,
     "gain_perte_total": 26.19,
     "ev_moyen_global": 2.4
@@ -463,6 +463,14 @@
       "joueur": "Anna Kalinskaya",
       "resultat": "Perdu",
       "gain_perte": -50.0
+    },
+    {
+      "date": "2026-04-03",
+      "bankroll": 1026.19,
+      "match": "Iva Jović vs Anna Kalinskaya",
+      "joueur": "Anna Kalinskaya",
+      "resultat": "Perdu",
+      "gain_perte": null
     }
   ],
   "roi_cumulatif": [
@@ -689,6 +697,10 @@
     {
       "date": "2026-04-03",
       "roi": 2.62
+    },
+    {
+      "date": "2026-04-03",
+      "roi": 2.62
     }
   ],
   "ev_par_semaine": [
@@ -722,7 +734,7 @@
       "cote": 1.96,
       "mise": 6.31,
       "ev": 46.7,
-      "resultat": "En cours",
+      "resultat": "Perdu",
       "gain_perte": null,
       "bankroll": 1026.19
     },
@@ -955,60 +967,5 @@
       "bankroll": 1116.62
     }
   ],
-  "matchs_venir": [
-    {
-      "date": "2026-04-03",
-      "tournoi": "tennis_wta_charleston_open",
-      "circuit": "WTA",
-      "surface": "dur",
-      "joueur1": "Jessica Pegula",
-      "joueur2": "Diana Shnaider",
-      "elo1": 1844,
-      "elo2": 1768,
-      "cote1": 1.31,
-      "cote2": 3.2,
-      "bm1": "unibet_fr",
-      "bm2": "pmu_fr",
-      "prob1": 0.601,
-      "prob2": 0.399,
-      "ev1": -0.213,
-      "ev2": 0.278
-    },
-    {
-      "date": "2026-04-03",
-      "tournoi": "tennis_wta_charleston_open",
-      "circuit": "WTA",
-      "surface": "dur",
-      "joueur1": "Madison Keys",
-      "joueur2": "Belinda Bencic",
-      "elo1": 1787,
-      "elo2": 1760,
-      "cote1": 1.94,
-      "cote2": 1.81,
-      "bm1": "pmu_fr",
-      "bm2": "unibet_fr",
-      "prob1": 0.514,
-      "prob2": 0.486,
-      "ev1": -0.003,
-      "ev2": -0.12
-    },
-    {
-      "date": "2026-04-03",
-      "tournoi": "tennis_wta_charleston_open",
-      "circuit": "WTA",
-      "surface": "dur",
-      "joueur1": "Iva Jovic",
-      "joueur2": "Anna Kalinskaya",
-      "elo1": 1512,
-      "elo2": 1720,
-      "cote1": 1.76,
-      "cote2": 1.96,
-      "bm1": "pmu_fr",
-      "bm2": "pmu_fr",
-      "prob1": 0.252,
-      "prob2": 0.748,
-      "ev1": -0.557,
-      "ev2": 0.467
-    }
-  ]
+  "matchs_venir": []
 }
