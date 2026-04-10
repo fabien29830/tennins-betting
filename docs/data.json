@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-04-09T19:00:21",
+    "updated_at": "2026-04-10T08:22:43",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 1019.88,
-    "roi_global": 1.99,
+    "bankroll_actuelle": 1022.21,
+    "roi_global": 2.22,
     "total_paris": 58,
-    "paris_gagnes": 27,
-    "paris_perdus": 29,
-    "paris_en_cours": 2,
-    "taux_reussite": 48.2,
+    "paris_gagnes": 28,
+    "paris_perdus": 30,
+    "paris_en_cours": 0,
+    "taux_reussite": 48.3,
     "total_mise": 2806.44,
-    "gain_perte_total": 19.88,
+    "gain_perte_total": 22.21,
     "ev_moyen_global": 3.6
   },
   "bankroll_historique": [
@@ -471,6 +471,22 @@
       "joueur": "Anna Kalinskaya",
       "resultat": "Perdu",
       "gain_perte": -6.31
+    },
+    {
+      "date": "2026-04-09",
+      "bankroll": 1013.57,
+      "match": "Matteo Berrettini vs Joao Fonseca",
+      "joueur": "Matteo Berrettini",
+      "resultat": "Perdu",
+      "gain_perte": -6.31
+    },
+    {
+      "date": "2026-04-09",
+      "bankroll": 1022.21,
+      "match": "Felix Auger-Aliassime vs Casper Ruud",
+      "joueur": "Felix Auger-Aliassime",
+      "resultat": "Gagné",
+      "gain_perte": 8.64
     }
   ],
   "roi_cumulatif": [
@@ -701,6 +717,14 @@
     {
       "date": "2026-04-03",
       "roi": 1.99
+    },
+    {
+      "date": "2026-04-09",
+      "roi": 1.36
+    },
+    {
+      "date": "2026-04-09",
+      "roi": 2.22
     }
   ],
   "ev_par_semaine": [
@@ -739,9 +763,9 @@
       "cote": 2.37,
       "mise": 6.31,
       "ev": 57.3,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 1019.88
+      "resultat": "Gagné",
+      "gain_perte": 8.64,
+      "bankroll": 1022.21
     },
     {
       "date": "2026-04-09",
@@ -751,9 +775,9 @@
       "cote": 2.3,
       "mise": 6.31,
       "ev": 18.6,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 1019.88
+      "resultat": "Perdu",
+      "gain_perte": -6.31,
+      "bankroll": 1013.57
     },
     {
       "date": "2026-04-03",
