@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updated_at": "2026-04-11T08:29:48",
+    "updated_at": "2026-04-11T13:29:42",
     "bankroll_initiale": 1000.0
   },
   "stats": {
@@ -1022,76 +1022,40 @@
   ],
   "matchs_venir": [
     {
-      "date": "2026-04-10",
+      "date": "2026-04-11",
       "tournoi": "tennis_atp_monte_carlo_masters",
       "circuit": "ATP",
       "surface": "terre",
-      "joueur1": "Joao Fonseca",
-      "joueur2": "Alexander Zverev",
-      "elo1": 1676,
-      "elo2": 1911,
-      "cote1": 2.25,
-      "cote2": 1.56,
-      "bm1": "betclic_fr",
-      "bm2": "winamax_fr",
-      "prob1": 0.261,
-      "prob2": 0.739,
-      "ev1": -0.412,
-      "ev2": 0.153
-    },
-    {
-      "date": "2026-04-10",
-      "tournoi": "tennis_atp_monte_carlo_masters",
-      "circuit": "ATP",
-      "surface": "terre",
-      "joueur1": "Felix Auger Aliassime",
+      "joueur1": "Alexander Zverev",
       "joueur2": "Jannik Sinner",
-      "elo1": 1794,
+      "elo1": 1911,
       "elo2": 2146,
-      "cote1": 6.75,
-      "cote2": 1.13,
+      "cote1": 5.2,
+      "cote2": 1.18,
       "bm1": "winamax_fr",
       "bm2": "unibet_fr",
-      "prob1": 0.171,
-      "prob2": 0.829,
-      "ev1": 0.152,
-      "ev2": -0.063
+      "prob1": 0.313,
+      "prob2": 0.687,
+      "ev1": 0.628,
+      "ev2": -0.19
     },
     {
-      "date": "2026-04-10",
+      "date": "2026-04-11",
       "tournoi": "tennis_atp_monte_carlo_masters",
       "circuit": "ATP",
       "surface": "terre",
       "joueur1": "Carlos Alcaraz",
-      "joueur2": "Alexander Bublik",
+      "joueur2": "Valentin Vacherot",
       "elo1": 2116,
-      "elo2": 1692,
-      "cote1": 1.07,
-      "cote2": 11.5,
+      "elo2": 1706,
+      "cote1": 1.06,
+      "cote2": 11.0,
       "bm1": "unibet_fr",
-      "bm2": "winamax_fr",
-      "prob1": 0.816,
-      "prob2": 0.184,
-      "ev1": -0.127,
-      "ev2": 1.121
-    },
-    {
-      "date": "2026-04-10",
-      "tournoi": "tennis_atp_monte_carlo_masters",
-      "circuit": "ATP",
-      "surface": "terre",
-      "joueur1": "Valentin Vacherot",
-      "joueur2": "Alex De Minaur",
-      "elo1": 1706,
-      "elo2": 1809,
-      "cote1": 2.75,
-      "cote2": 1.52,
-      "bm1": "winamax_fr",
       "bm2": "betclic_fr",
-      "prob1": 0.41,
-      "prob2": 0.59,
-      "ev1": 0.127,
-      "ev2": -0.103
+      "prob1": 0.811,
+      "prob2": 0.189,
+      "ev1": -0.141,
+      "ev2": 1.082
     }
   ]
 }
