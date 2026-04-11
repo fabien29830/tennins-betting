@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-04-10T19:00:24",
+    "updated_at": "2026-04-11T08:29:48",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 1022.21,
-    "roi_global": 2.22,
+    "bankroll_actuelle": 1113.51,
+    "roi_global": 11.35,
     "total_paris": 60,
-    "paris_gagnes": 28,
+    "paris_gagnes": 30,
     "paris_perdus": 30,
-    "paris_en_cours": 2,
-    "taux_reussite": 48.3,
+    "paris_en_cours": 0,
+    "taux_reussite": 50.0,
     "total_mise": 2892.61,
-    "gain_perte_total": 22.21,
+    "gain_perte_total": 113.51,
     "ev_moyen_global": 4.0
   },
   "bankroll_historique": [
@@ -487,6 +487,22 @@
       "joueur": "Felix Auger-Aliassime",
       "resultat": "Gagné",
       "gain_perte": 8.64
+    },
+    {
+      "date": "2026-04-10",
+      "bankroll": 1050.21,
+      "match": "Joao Fonseca vs Alexander Zverev",
+      "joueur": "Alexander Zverev",
+      "resultat": "Gagné",
+      "gain_perte": 28.0
+    },
+    {
+      "date": "2026-04-10",
+      "bankroll": 1113.51,
+      "match": "Valentin Vacherot vs Alex de Minaur",
+      "joueur": "Valentin Vacherot",
+      "resultat": "Gagné",
+      "gain_perte": 63.3
     }
   ],
   "roi_cumulatif": [
@@ -725,6 +741,14 @@
     {
       "date": "2026-04-09",
       "roi": 2.22
+    },
+    {
+      "date": "2026-04-10",
+      "roi": 5.02
+    },
+    {
+      "date": "2026-04-10",
+      "roi": 11.35
     }
   ],
   "ev_par_semaine": [
@@ -763,9 +787,9 @@
       "cote": 2.75,
       "mise": 36.17,
       "ev": 12.7,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 1022.21
+      "resultat": "Gagné",
+      "gain_perte": 63.3,
+      "bankroll": 1113.51
     },
     {
       "date": "2026-04-10",
@@ -775,9 +799,9 @@
       "cote": 1.56,
       "mise": 50.0,
       "ev": 15.3,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 1022.21
+      "resultat": "Gagné",
+      "gain_perte": 28.0,
+      "bankroll": 1050.21
     },
     {
       "date": "2026-04-09",
