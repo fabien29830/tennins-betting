@@ -1,16 +1,16 @@
 {
   "meta": {
-    "updated_at": "2026-04-16T19:00:33",
+    "updated_at": "2026-04-17T08:00:27",
     "bankroll_initiale": 1000.0
   },
   "stats": {
     "bankroll_actuelle": 1191.51,
     "roi_global": 19.15,
     "total_paris": 70,
-    "paris_gagnes": 35,
+    "paris_gagnes": 36,
     "paris_perdus": 32,
-    "paris_en_cours": 3,
-    "taux_reussite": 52.2,
+    "paris_en_cours": 2,
+    "taux_reussite": 52.9,
     "total_mise": 3392.61,
     "gain_perte_total": 191.51,
     "ev_moyen_global": 8.2
@@ -559,6 +559,14 @@
       "joueur": "Ben Shelton",
       "resultat": "Gagné",
       "gain_perte": 34.5
+    },
+    {
+      "date": "2026-04-16",
+      "bankroll": 1223.51,
+      "match": "Liudmila Samsonova vs Coco Gauff",
+      "joueur": "Coco Gauff",
+      "resultat": "Gagné",
+      "gain_perte": 32.0
     }
   ],
   "roi_cumulatif": [
@@ -833,6 +841,10 @@
     {
       "date": "2026-04-15",
       "roi": 19.15
+    },
+    {
+      "date": "2026-04-16",
+      "roi": 22.35
     }
   ],
   "ev_par_semaine": [
@@ -900,9 +912,9 @@
       "cote": 1.64,
       "mise": 50.0,
       "ev": 17.8,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 1191.51
+      "resultat": "Gagné",
+      "gain_perte": 32.0,
+      "bankroll": 1223.51
     },
     {
       "date": "2026-04-15",
