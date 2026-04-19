@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-04-18T19:00:20",
+    "updated_at": "2026-04-19T08:00:23",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 1251.01,
-    "roi_global": 25.1,
+    "bankroll_actuelle": 1306.01,
+    "roi_global": 30.6,
     "total_paris": 71,
-    "paris_gagnes": 37,
+    "paris_gagnes": 38,
     "paris_perdus": 33,
-    "paris_en_cours": 1,
-    "taux_reussite": 52.9,
+    "paris_en_cours": 0,
+    "taux_reussite": 53.5,
     "total_mise": 3442.61,
-    "gain_perte_total": 251.01,
+    "gain_perte_total": 306.01,
     "ev_moyen_global": 8.6
   },
   "bankroll_historique": [
@@ -583,6 +583,14 @@
       "joueur": "Ben Shelton",
       "resultat": "Gagné",
       "gain_perte": 77.5
+    },
+    {
+      "date": "2026-04-18",
+      "bankroll": 1306.01,
+      "match": "Elina Svitolina vs Karolina Muchova",
+      "joueur": "Karolina Muchova",
+      "resultat": "Gagné",
+      "gain_perte": 55.0
     }
   ],
   "roi_cumulatif": [
@@ -869,6 +877,10 @@
     {
       "date": "2026-04-17",
       "roi": 21.9
+    },
+    {
+      "date": "2026-04-18",
+      "roi": 30.6
     }
   ],
   "ev_par_semaine": [
@@ -912,9 +924,9 @@
       "cote": 2.1,
       "mise": 50.0,
       "ev": 35.9,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 1251.01
+      "resultat": "Gagné",
+      "gain_perte": 55.0,
+      "bankroll": 1306.01
     },
     {
       "date": "2026-04-17",
