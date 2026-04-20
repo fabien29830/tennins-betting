@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-04-19T19:00:21",
+    "updated_at": "2026-04-20T07:01:43",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 1306.01,
-    "roi_global": 30.6,
+    "bankroll_actuelle": 1351.01,
+    "roi_global": 35.1,
     "total_paris": 72,
-    "paris_gagnes": 38,
+    "paris_gagnes": 39,
     "paris_perdus": 33,
-    "paris_en_cours": 1,
-    "taux_reussite": 53.5,
+    "paris_en_cours": 0,
+    "taux_reussite": 54.2,
     "total_mise": 3492.61,
-    "gain_perte_total": 306.01,
+    "gain_perte_total": 351.01,
     "ev_moyen_global": 8.8
   },
   "bankroll_historique": [
@@ -591,6 +591,14 @@
       "joueur": "Karolina Muchova",
       "resultat": "Gagné",
       "gain_perte": 55.0
+    },
+    {
+      "date": "2026-04-19",
+      "bankroll": 1351.01,
+      "match": "Flavio Cobolli vs Ben Shelton",
+      "joueur": "Ben Shelton",
+      "resultat": "Gagné",
+      "gain_perte": 45.0
     }
   ],
   "roi_cumulatif": [
@@ -881,6 +889,10 @@
     {
       "date": "2026-04-18",
       "roi": 30.6
+    },
+    {
+      "date": "2026-04-19",
+      "roi": 35.1
     }
   ],
   "ev_par_semaine": [
@@ -924,9 +936,9 @@
       "cote": 1.9,
       "mise": 50.0,
       "ev": 26.0,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 1306.01
+      "resultat": "Gagné",
+      "gain_perte": 45.0,
+      "bankroll": 1351.01
     },
     {
       "date": "2026-04-18",
@@ -1165,16 +1177,16 @@
       "surface": "terre",
       "joueur1": "Andrey Rublev",
       "joueur2": "Arthur Fils",
-      "elo1": 1757,
+      "elo1": 1756,
       "elo2": 1802,
       "cote1": 3.15,
       "cote2": 1.39,
       "bm1": "unibet_fr",
       "bm2": "unibet_fr",
-      "prob1": 0.493,
-      "prob2": 0.507,
-      "ev1": 0.554,
-      "ev2": -0.296
+      "prob1": 0.492,
+      "prob2": 0.508,
+      "ev1": 0.549,
+      "ev2": -0.294
     },
     {
       "date": "2026-04-19",
@@ -1184,15 +1196,15 @@
       "joueur1": "Flavio Cobolli",
       "joueur2": "Ben Shelton",
       "elo1": 1688,
-      "elo2": 1799,
+      "elo2": 1798,
       "cote1": 1.95,
       "cote2": 1.9,
       "bm1": "betclic_fr",
       "bm2": "betclic_fr",
-      "prob1": 0.337,
-      "prob2": 0.663,
-      "ev1": -0.343,
-      "ev2": 0.26
+      "prob1": 0.338,
+      "prob2": 0.662,
+      "ev1": -0.341,
+      "ev2": 0.258
     },
     {
       "date": "2026-04-19",
