@@ -1,19 +1,19 @@
 {
   "meta": {
-    "updated_at": "2026-04-20T13:00:19",
+    "updated_at": "2026-04-20T19:00:32",
     "bankroll_initiale": 1000.0
   },
   "stats": {
     "bankroll_actuelle": 1351.01,
     "roi_global": 35.1,
-    "total_paris": 72,
+    "total_paris": 74,
     "paris_gagnes": 39,
     "paris_perdus": 33,
-    "paris_en_cours": 0,
+    "paris_en_cours": 2,
     "taux_reussite": 54.2,
-    "total_mise": 3492.61,
+    "total_mise": 3592.61,
     "gain_perte_total": 351.01,
-    "ev_moyen_global": 8.8
+    "ev_moyen_global": 10.0
   },
   "bankroll_historique": [
     {
@@ -925,9 +925,38 @@
       "semaine": "2026-S16",
       "ev_moyen": 33.0,
       "nb_paris": 12
+    },
+    {
+      "semaine": "2026-S17",
+      "ev_moyen": 53.9,
+      "nb_paris": 2
     }
   ],
   "paris_recents": [
+    {
+      "date": "2026-04-21",
+      "match": "Peyton Stearns vs Lois Boisson",
+      "joueur": "Lois Boisson",
+      "bookmaker": "unibet_fr",
+      "cote": 2.7,
+      "mise": 50.0,
+      "ev": 30.8,
+      "resultat": "En cours",
+      "gain_perte": null,
+      "bankroll": 1351.01
+    },
+    {
+      "date": "2026-04-21",
+      "match": "Beatriz Haddad Maia vs Jessica Bouzas Maneiro",
+      "joueur": "Beatriz Haddad Maia",
+      "bookmaker": "pmu_fr",
+      "cote": 2.48,
+      "mise": 50.0,
+      "ev": 77.0,
+      "resultat": "En cours",
+      "gain_perte": null,
+      "bankroll": 1351.01
+    },
     {
       "date": "2026-04-19",
       "match": "Flavio Cobolli vs Ben Shelton",
@@ -1143,86 +1172,80 @@
       "resultat": "Perdu",
       "gain_perte": -50.0,
       "bankroll": 1026.19
-    },
-    {
-      "date": "2026-04-03",
-      "match": "Diana Shnaider vs Jessica Pegula",
-      "joueur": "Diana Shnaider",
-      "bookmaker": "pmu_fr",
-      "cote": 3.2,
-      "mise": 45.31,
-      "ev": 19.9,
-      "resultat": "Perdu",
-      "gain_perte": -45.31,
-      "bankroll": 1076.19
-    },
-    {
-      "date": "2026-03-23",
-      "match": "Francisco Cerundolo vs Daniil Medvedev",
-      "joueur": "Daniil Medvedev",
-      "bookmaker": "pmu_fr",
-      "cote": 4.0,
-      "mise": 59.03,
-      "ev": 1.5,
-      "resultat": "Perdu",
-      "gain_perte": -59.03,
-      "bankroll": 1121.5
     }
   ],
   "matchs_venir": [
     {
-      "date": "2026-04-19",
-      "tournoi": "tennis_atp_barcelona_open",
-      "circuit": "ATP",
-      "surface": "terre",
-      "joueur1": "Andrey Rublev",
-      "joueur2": "Arthur Fils",
-      "elo1": 1756,
-      "elo2": 1802,
-      "cote1": 3.15,
-      "cote2": 1.39,
-      "bm1": "unibet_fr",
-      "bm2": "unibet_fr",
-      "prob1": 0.492,
-      "prob2": 0.508,
-      "ev1": 0.549,
-      "ev2": -0.294
-    },
-    {
-      "date": "2026-04-19",
-      "tournoi": "tennis_atp_munich",
-      "circuit": "ATP",
-      "surface": "dur",
-      "joueur1": "Flavio Cobolli",
-      "joueur2": "Ben Shelton",
-      "elo1": 1688,
-      "elo2": 1798,
-      "cote1": 1.95,
-      "cote2": 1.9,
-      "bm1": "betclic_fr",
-      "bm2": "betclic_fr",
-      "prob1": 0.338,
-      "prob2": 0.662,
-      "ev1": -0.341,
-      "ev2": 0.258
-    },
-    {
-      "date": "2026-04-19",
-      "tournoi": "tennis_wta_stuttgart_open",
+      "date": "2026-04-21",
+      "tournoi": "tennis_wta_madrid_open",
       "circuit": "WTA",
-      "surface": "dur",
-      "joueur1": "Elena Rybakina",
-      "joueur2": "Karolina Muchova",
-      "elo1": 1860,
-      "elo2": 1865,
+      "surface": "terre",
+      "joueur1": "Beatriz Haddad Maia",
+      "joueur2": "Jessica Bouzas Maneiro",
+      "elo1": 1726,
+      "elo2": 1520,
+      "cote1": 2.48,
+      "cote2": 1.51,
+      "bm1": "pmu_fr",
+      "bm2": "unibet_fr",
+      "prob1": 0.714,
+      "prob2": 0.286,
+      "ev1": 0.77,
+      "ev2": -0.568
+    },
+    {
+      "date": "2026-04-21",
+      "tournoi": "tennis_wta_madrid_open",
+      "circuit": "WTA",
+      "surface": "terre",
+      "joueur1": "Paula Badosa",
+      "joueur2": "Julia Grabher",
+      "elo1": 1842,
+      "elo2": 1487,
+      "cote1": 1.19,
+      "cote2": 4.3,
+      "bm1": "pmu_fr",
+      "bm2": "pmu_fr",
+      "prob1": 0.787,
+      "prob2": 0.213,
+      "ev1": -0.063,
+      "ev2": -0.084
+    },
+    {
+      "date": "2026-04-21",
+      "tournoi": "tennis_wta_madrid_open",
+      "circuit": "WTA",
+      "surface": "terre",
+      "joueur1": "Robin Montgomery",
+      "joueur2": "Magda Linette",
+      "elo1": 1473,
+      "elo2": 1664,
+      "cote1": 2.48,
+      "cote2": 1.49,
+      "bm1": "pmu_fr",
+      "bm2": "pmu_fr",
+      "prob1": 0.332,
+      "prob2": 0.668,
+      "ev1": -0.177,
+      "ev2": -0.005
+    },
+    {
+      "date": "2026-04-21",
+      "tournoi": "tennis_wta_madrid_open",
+      "circuit": "WTA",
+      "surface": "terre",
+      "joueur1": "Peyton Stearns",
+      "joueur2": "Lois Boisson",
+      "elo1": 1650,
+      "elo2": 1600,
       "cote1": 1.41,
-      "cote2": 3.07,
-      "bm1": "unibet_fr",
-      "bm2": "betclic_fr",
-      "prob1": 0.498,
-      "prob2": 0.502,
-      "ev1": -0.297,
-      "ev2": 0.54
+      "cote2": 2.7,
+      "bm1": "pmu_fr",
+      "bm2": "unibet_fr",
+      "prob1": 0.515,
+      "prob2": 0.485,
+      "ev1": -0.273,
+      "ev2": 0.308
     }
   ]
 }
