@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-04-26T19:00:31",
+    "updated_at": "2026-04-27T07:01:48",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 623.67,
-    "roi_global": -37.63,
+    "bankroll_actuelle": 615.66,
+    "roi_global": -38.43,
     "total_paris": 115,
-    "paris_gagnes": 49,
-    "paris_perdus": 58,
-    "paris_en_cours": 8,
-    "taux_reussite": 45.8,
+    "paris_gagnes": 51,
+    "paris_perdus": 61,
+    "paris_en_cours": 3,
+    "taux_reussite": 45.5,
     "total_mise": 5544.57,
-    "gain_perte_total": -376.33,
+    "gain_perte_total": -384.34,
     "ev_moyen_global": 18.9
   },
   "bankroll_historique": [
@@ -879,6 +879,46 @@
       "joueur": "Naomi Osaka",
       "resultat": "Gagné",
       "gain_perte": 33.0
+    },
+    {
+      "date": "2026-04-26",
+      "bankroll": 653.82,
+      "match": "Dino Prizmic vs Tomas Martin Etcheverry",
+      "joueur": "Tomas Martin Etcheverry",
+      "resultat": "Gagné",
+      "gain_perte": 30.15
+    },
+    {
+      "date": "2026-04-26",
+      "bankroll": 615.66,
+      "match": "Vit Kopriva vs Arthur Rinderknech",
+      "joueur": "Arthur Rinderknech",
+      "resultat": "Perdu",
+      "gain_perte": -38.16
+    },
+    {
+      "date": "2026-04-26",
+      "bankroll": 577.5,
+      "match": "Katerina Siniakova vs Caty McNally",
+      "joueur": "Katerina Siniakova",
+      "resultat": "Perdu",
+      "gain_perte": -38.16
+    },
+    {
+      "date": "2026-04-26",
+      "bankroll": 539.34,
+      "match": "Linda Noskova vs Liudmila Samsonova",
+      "joueur": "Liudmila Samsonova",
+      "resultat": "Perdu",
+      "gain_perte": -38.16
+    },
+    {
+      "date": "2026-04-26",
+      "bankroll": 611.84,
+      "match": "Elise Mertens vs Karolina Pliskova",
+      "joueur": "Karolina Pliskova",
+      "resultat": "Gagné",
+      "gain_perte": 72.5
     }
   ],
   "roi_cumulatif": [
@@ -1313,6 +1353,26 @@
     {
       "date": "2026-04-25",
       "roi": -37.63
+    },
+    {
+      "date": "2026-04-26",
+      "roi": -34.62
+    },
+    {
+      "date": "2026-04-26",
+      "roi": -38.43
+    },
+    {
+      "date": "2026-04-26",
+      "roi": -42.25
+    },
+    {
+      "date": "2026-04-26",
+      "roi": -46.07
+    },
+    {
+      "date": "2026-04-26",
+      "roi": -38.82
     }
   ],
   "ev_par_semaine": [
@@ -1368,7 +1428,7 @@
       "ev": 15.3,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 623.67
+      "bankroll": 615.66
     },
     {
       "date": "2026-04-27",
@@ -1380,7 +1440,7 @@
       "ev": 28.7,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 623.67
+      "bankroll": 615.66
     },
     {
       "date": "2026-04-26",
@@ -1390,9 +1450,9 @@
       "cote": 2.9,
       "mise": 38.16,
       "ev": 43.0,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 623.67
+      "resultat": "Gagné",
+      "gain_perte": 72.5,
+      "bankroll": 611.84
     },
     {
       "date": "2026-04-26",
@@ -1402,9 +1462,9 @@
       "cote": 2.45,
       "mise": 38.16,
       "ev": 19.1,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 623.67
+      "resultat": "Perdu",
+      "gain_perte": -38.16,
+      "bankroll": 539.34
     },
     {
       "date": "2026-04-26",
@@ -1414,9 +1474,9 @@
       "cote": 2.1,
       "mise": 38.16,
       "ev": 26.2,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 623.67
+      "resultat": "Perdu",
+      "gain_perte": -38.16,
+      "bankroll": 577.5
     },
     {
       "date": "2026-04-26",
@@ -1426,9 +1486,9 @@
       "cote": 1.68,
       "mise": 38.16,
       "ev": 18.2,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 623.67
+      "resultat": "Perdu",
+      "gain_perte": -38.16,
+      "bankroll": 615.66
     },
     {
       "date": "2026-04-26",
@@ -1438,9 +1498,9 @@
       "cote": 1.79,
       "mise": 38.16,
       "ev": 17.7,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 623.67
+      "resultat": "Gagné",
+      "gain_perte": 30.15,
+      "bankroll": 653.82
     },
     {
       "date": "2026-04-25",
