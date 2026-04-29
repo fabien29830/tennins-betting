@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-04-28T19:00:27",
+    "updated_at": "2026-04-29T08:00:29",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 474.34,
-    "roi_global": -52.57,
+    "bankroll_actuelle": 450.62,
+    "roi_global": -54.94,
     "total_paris": 120,
     "paris_gagnes": 51,
-    "paris_perdus": 65,
-    "paris_en_cours": 4,
-    "taux_reussite": 44.0,
+    "paris_perdus": 66,
+    "paris_en_cours": 3,
+    "taux_reussite": 43.6,
     "total_mise": 5676.91,
-    "gain_perte_total": -525.66,
+    "gain_perte_total": -549.38,
     "ev_moyen_global": 19.0
   },
   "bankroll_historique": [
@@ -951,6 +951,14 @@
       "joueur": "Coco Gauff",
       "resultat": "Perdu",
       "gain_perte": -30.59
+    },
+    {
+      "date": "2026-04-28",
+      "bankroll": 450.62,
+      "match": "Daniil Medvedev vs Flavio Cobolli",
+      "joueur": "Daniil Medvedev",
+      "resultat": "Perdu",
+      "gain_perte": -23.72
     }
   ],
   "roi_cumulatif": [
@@ -1421,6 +1429,10 @@
     {
       "date": "2026-04-27",
       "roi": -52.57
+    },
+    {
+      "date": "2026-04-28",
+      "roi": -54.94
     }
   ],
   "ev_par_semaine": [
@@ -1476,7 +1488,7 @@
       "ev": 20.7,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 474.34
+      "bankroll": 450.62
     },
     {
       "date": "2026-04-29",
@@ -1488,7 +1500,7 @@
       "ev": 19.3,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 474.34
+      "bankroll": 450.62
     },
     {
       "date": "2026-04-28",
@@ -1498,9 +1510,9 @@
       "cote": 1.84,
       "mise": 23.72,
       "ev": 25.6,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 474.34
+      "resultat": "Perdu",
+      "gain_perte": -23.72,
+      "bankroll": 450.62
     },
     {
       "date": "2026-04-27",
