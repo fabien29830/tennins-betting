@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updated_at": "2026-05-02T13:00:25",
+    "updated_at": "2026-05-02T19:00:24",
     "bankroll_initiale": 1000.0
   },
   "stats": {
@@ -1745,58 +1745,22 @@
   ],
   "matchs_venir": [
     {
-      "date": "2026-05-01",
+      "date": "2026-05-03",
       "tournoi": "tennis_atp_madrid_open",
       "circuit": "ATP",
       "surface": "terre",
       "joueur1": "Jannik Sinner",
-      "joueur2": "Arthur Fils",
-      "elo1": 2108,
-      "elo2": 1802,
-      "cote1": 1.16,
-      "cote2": 5.8,
-      "bm1": "unibet_fr",
-      "bm2": "winamax_fr",
-      "prob1": 0.783,
-      "prob2": 0.217,
-      "ev1": -0.092,
-      "ev2": 0.261
-    },
-    {
-      "date": "2026-05-01",
-      "tournoi": "tennis_atp_madrid_open",
-      "circuit": "ATP",
-      "surface": "terre",
-      "joueur1": "Alexander Blockx",
       "joueur2": "Alexander Zverev",
-      "elo1": 1455,
+      "elo1": 2108,
       "elo2": 1863,
-      "cote1": 3.95,
-      "cote2": 3.95,
+      "cote1": 1.17,
+      "cote2": 5.4,
       "bm1": "unibet_fr",
       "bm2": "unibet_fr",
-      "prob1": 0.186,
-      "prob2": 0.814,
-      "ev1": -0.267,
-      "ev2": 2.217
-    },
-    {
-      "date": "2026-05-02",
-      "tournoi": "tennis_wta_madrid_open",
-      "circuit": "WTA",
-      "surface": "terre",
-      "joueur1": "Mirra Andreeva",
-      "joueur2": "Marta Kostyuk",
-      "elo1": 1782,
-      "elo2": 1747,
-      "cote1": 1.68,
-      "cote2": 2.15,
-      "bm1": "unibet_fr",
-      "bm2": "unibet_fr",
-      "prob1": 0.499,
-      "prob2": 0.501,
-      "ev1": -0.162,
-      "ev2": 0.078
+      "prob1": 0.678,
+      "prob2": 0.322,
+      "ev1": -0.207,
+      "ev2": 0.74
     }
   ]
 }
