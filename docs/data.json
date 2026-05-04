@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updated_at": "2026-05-03T19:00:19",
+    "updated_at": "2026-05-04T07:01:42",
     "bankroll_initiale": 1000.0
   },
   "stats": {
@@ -1743,24 +1743,5 @@
       "bankroll": 663.17
     }
   ],
-  "matchs_venir": [
-    {
-      "date": "2026-05-03",
-      "tournoi": "tennis_atp_madrid_open",
-      "circuit": "ATP",
-      "surface": "terre",
-      "joueur1": "Jannik Sinner",
-      "joueur2": "Alexander Zverev",
-      "elo1": 2108,
-      "elo2": 1863,
-      "cote1": 1.17,
-      "cote2": 5.4,
-      "bm1": "unibet_fr",
-      "bm2": "unibet_fr",
-      "prob1": 0.678,
-      "prob2": 0.322,
-      "ev1": -0.207,
-      "ev2": 0.74
-    }
-  ]
+  "matchs_venir": []
 }
