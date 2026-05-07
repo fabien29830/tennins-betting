@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-05-06T19:00:28",
+    "updated_at": "2026-05-07T08:00:27",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 414.9,
-    "roi_global": -58.51,
+    "bankroll_actuelle": 365.69,
+    "roi_global": -63.43,
     "total_paris": 135,
-    "paris_gagnes": 52,
-    "paris_perdus": 68,
-    "paris_en_cours": 15,
-    "taux_reussite": 43.3,
+    "paris_gagnes": 53,
+    "paris_perdus": 73,
+    "paris_en_cours": 9,
+    "taux_reussite": 42.1,
     "total_mise": 6000.21,
-    "gain_perte_total": -585.1,
+    "gain_perte_total": -634.31,
     "ev_moyen_global": 20.9
   },
   "bankroll_historique": [
@@ -978,11 +978,59 @@
     },
     {
       "date": "2026-05-05",
-      "bankroll": 414.9,
+      "bankroll": 392.37,
       "match": "Barbora Krejcikova vs Elsa Jacquemot",
       "joueur": "Barbora Krejcikova",
       "resultat": "Gagné",
       "gain_perte": 11.72
+    },
+    {
+      "date": "2026-05-06",
+      "bankroll": 380.65,
+      "match": "Fabian Marozsan vs Vit Kopriva",
+      "joueur": "Fabian Marozsan",
+      "resultat": "Perdu",
+      "gain_perte": -22.53
+    },
+    {
+      "date": "2026-05-06",
+      "bankroll": 369.84,
+      "match": "Caty McNally vs Daria Kasatkina",
+      "joueur": "Daria Kasatkina",
+      "resultat": "Perdu",
+      "gain_perte": -22.53
+    },
+    {
+      "date": "2026-05-06",
+      "bankroll": 349.09,
+      "match": "Yulia Putintseva vs Tereza Valentova",
+      "joueur": "Yulia Putintseva",
+      "resultat": "Perdu",
+      "gain_perte": -20.75
+    },
+    {
+      "date": "2026-05-06",
+      "bankroll": 328.34,
+      "match": "Matteo Arnaldi vs Jaume Munar",
+      "joueur": "Jaume Munar",
+      "resultat": "Perdu",
+      "gain_perte": -20.75
+    },
+    {
+      "date": "2026-05-06",
+      "bankroll": 365.69,
+      "match": "Jan-Lennard Struff vs Francisco Comesana",
+      "joueur": "Jan-Lennard Struff",
+      "resultat": "Gagné",
+      "gain_perte": 37.35
+    },
+    {
+      "date": "2026-05-06",
+      "bankroll": 344.94,
+      "match": "Leolia Jeanjean vs Beatriz Haddad Maia",
+      "joueur": "Beatriz Haddad Maia",
+      "resultat": "Perdu",
+      "gain_perte": -20.75
     }
   ],
   "roi_cumulatif": [
@@ -1468,7 +1516,31 @@
     },
     {
       "date": "2026-05-05",
-      "roi": -58.51
+      "roi": -60.76
+    },
+    {
+      "date": "2026-05-06",
+      "roi": -61.94
+    },
+    {
+      "date": "2026-05-06",
+      "roi": -63.02
+    },
+    {
+      "date": "2026-05-06",
+      "roi": -65.09
+    },
+    {
+      "date": "2026-05-06",
+      "roi": -67.17
+    },
+    {
+      "date": "2026-05-06",
+      "roi": -63.43
+    },
+    {
+      "date": "2026-05-06",
+      "roi": -65.51
     }
   ],
   "ev_par_semaine": [
@@ -1529,7 +1601,7 @@
       "ev": 12.8,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 414.9
+      "bankroll": 365.69
     },
     {
       "date": "2026-05-07",
@@ -1541,7 +1613,7 @@
       "ev": 14.6,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 414.9
+      "bankroll": 365.69
     },
     {
       "date": "2026-05-06",
@@ -1551,9 +1623,9 @@
       "cote": 2.72,
       "mise": 20.75,
       "ev": 104.6,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 414.9
+      "resultat": "Perdu",
+      "gain_perte": -20.75,
+      "bankroll": 344.94
     },
     {
       "date": "2026-05-06",
@@ -1565,7 +1637,7 @@
       "ev": 33.1,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 414.9
+      "bankroll": 365.69
     },
     {
       "date": "2026-05-06",
@@ -1575,9 +1647,9 @@
       "cote": 2.8,
       "mise": 20.75,
       "ev": 70.0,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 414.9
+      "resultat": "Gagné",
+      "gain_perte": 37.35,
+      "bankroll": 365.69
     },
     {
       "date": "2026-05-06",
@@ -1587,9 +1659,9 @@
       "cote": 2.18,
       "mise": 20.75,
       "ev": 12.4,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 414.9
+      "resultat": "Perdu",
+      "gain_perte": -20.75,
+      "bankroll": 328.34
     },
     {
       "date": "2026-05-06",
@@ -1599,9 +1671,9 @@
       "cote": 2.27,
       "mise": 20.75,
       "ev": 44.2,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 414.9
+      "resultat": "Perdu",
+      "gain_perte": -20.75,
+      "bankroll": 349.09
     },
     {
       "date": "2026-05-06",
@@ -1611,9 +1683,9 @@
       "cote": 1.82,
       "mise": 22.53,
       "ev": 25.9,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 414.9
+      "resultat": "Perdu",
+      "gain_perte": -22.53,
+      "bankroll": 369.84
     },
     {
       "date": "2026-05-06",
@@ -1625,7 +1697,7 @@
       "ev": 80.7,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 414.9
+      "bankroll": 392.37
     },
     {
       "date": "2026-05-06",
@@ -1637,7 +1709,7 @@
       "ev": 13.8,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 403.18
+      "bankroll": 380.65
     },
     {
       "date": "2026-05-06",
@@ -1647,9 +1719,9 @@
       "cote": 1.88,
       "mise": 22.53,
       "ev": 12.5,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 403.18
+      "resultat": "Perdu",
+      "gain_perte": -22.53,
+      "bankroll": 380.65
     },
     {
       "date": "2026-05-06",
@@ -1673,7 +1745,7 @@
       "ev": 57.6,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 414.9
+      "bankroll": 392.37
     },
     {
       "date": "2026-05-05",
@@ -1685,7 +1757,7 @@
       "ev": 17.3,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 414.9
+      "bankroll": 392.37
     },
     {
       "date": "2026-05-05",
@@ -1697,7 +1769,7 @@
       "ev": 22.3,
       "resultat": "Gagné",
       "gain_perte": 11.72,
-      "bankroll": 414.9
+      "bankroll": 392.37
     },
     {
       "date": "2026-04-29",
