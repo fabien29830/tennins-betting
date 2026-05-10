@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-05-09T19:00:31",
+    "updated_at": "2026-05-10T08:00:29",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 365.95,
-    "roi_global": -63.41,
+    "bankroll_actuelle": 358.35,
+    "roi_global": -64.16,
     "total_paris": 154,
-    "paris_gagnes": 60,
-    "paris_perdus": 80,
-    "paris_en_cours": 14,
-    "taux_reussite": 42.9,
+    "paris_gagnes": 62,
+    "paris_perdus": 83,
+    "paris_en_cours": 9,
+    "taux_reussite": 42.8,
     "total_mise": 6369.18,
-    "gain_perte_total": -634.05,
+    "gain_perte_total": -641.65,
     "ev_moyen_global": 23.2
   },
   "bankroll_historique": [
@@ -1143,6 +1143,46 @@
       "joueur": "Emma Navarro",
       "resultat": "Perdu",
       "gain_perte": -19.27
+    },
+    {
+      "date": "2026-05-09",
+      "bankroll": 345.92,
+      "match": "Felix Auger-Aliassime vs Mariano Navone",
+      "joueur": "Felix Auger-Aliassime",
+      "resultat": "Perdu",
+      "gain_perte": -20.03
+    },
+    {
+      "date": "2026-05-09",
+      "bankroll": 373.56,
+      "match": "Frances Tiafoe vs Ignacio Buse",
+      "joueur": "Frances Tiafoe",
+      "resultat": "Gagné",
+      "gain_perte": 27.64
+    },
+    {
+      "date": "2026-05-09",
+      "bankroll": 398.41,
+      "match": "Hamad Medjedovic vs Joao Fonseca",
+      "joueur": "Hamad Medjedovic",
+      "resultat": "Gagné",
+      "gain_perte": 24.85
+    },
+    {
+      "date": "2026-05-09",
+      "bankroll": 378.38,
+      "match": "Jasmine Paolini vs Elise Mertens",
+      "joueur": "Jasmine Paolini",
+      "resultat": "Perdu",
+      "gain_perte": -20.03
+    },
+    {
+      "date": "2026-05-09",
+      "bankroll": 358.35,
+      "match": "Taylor Townsend vs Iva Jović",
+      "joueur": "Taylor Townsend",
+      "resultat": "Perdu",
+      "gain_perte": -20.03
     }
   ],
   "roi_cumulatif": [
@@ -1709,6 +1749,26 @@
     {
       "date": "2026-05-08",
       "roi": -63.41
+    },
+    {
+      "date": "2026-05-09",
+      "roi": -65.41
+    },
+    {
+      "date": "2026-05-09",
+      "roi": -62.64
+    },
+    {
+      "date": "2026-05-09",
+      "roi": -60.16
+    },
+    {
+      "date": "2026-05-09",
+      "roi": -62.16
+    },
+    {
+      "date": "2026-05-09",
+      "roi": -64.16
     }
   ],
   "ev_par_semaine": [
@@ -1769,7 +1829,7 @@
       "ev": 27.8,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 365.95
+      "bankroll": 358.35
     },
     {
       "date": "2026-05-10",
@@ -1781,7 +1841,7 @@
       "ev": 119.0,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 365.95
+      "bankroll": 398.41
     },
     {
       "date": "2026-05-10",
@@ -1793,7 +1853,7 @@
       "ev": 29.7,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 365.95
+      "bankroll": 398.41
     },
     {
       "date": "2026-05-10",
@@ -1805,7 +1865,7 @@
       "ev": 29.9,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 365.95
+      "bankroll": 398.41
     },
     {
       "date": "2026-05-09",
@@ -1815,9 +1875,9 @@
       "cote": 2.15,
       "mise": 20.03,
       "ev": 30.0,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 365.95
+      "resultat": "Perdu",
+      "gain_perte": -20.03,
+      "bankroll": 358.35
     },
     {
       "date": "2026-05-09",
@@ -1827,9 +1887,9 @@
       "cote": 2.1,
       "mise": 20.03,
       "ev": 35.2,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 365.95
+      "resultat": "Perdu",
+      "gain_perte": -20.03,
+      "bankroll": 378.38
     },
     {
       "date": "2026-05-09",
@@ -1839,9 +1899,9 @@
       "cote": 2.55,
       "mise": 16.03,
       "ev": 12.4,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 365.95
+      "resultat": "Gagné",
+      "gain_perte": 24.85,
+      "bankroll": 398.41
     },
     {
       "date": "2026-05-09",
@@ -1851,9 +1911,9 @@
       "cote": 2.38,
       "mise": 20.03,
       "ev": 67.9,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 365.95
+      "resultat": "Gagné",
+      "gain_perte": 27.64,
+      "bankroll": 373.56
     },
     {
       "date": "2026-05-09",
@@ -1863,9 +1923,9 @@
       "cote": 1.52,
       "mise": 20.03,
       "ev": 22.3,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 365.95
+      "resultat": "Perdu",
+      "gain_perte": -20.03,
+      "bankroll": 345.92
     },
     {
       "date": "2026-05-08",
