@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-05-11T07:02:21",
+    "updated_at": "2026-05-11T08:00:30",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 313.81,
-    "roi_global": -68.62,
+    "bankroll_actuelle": 298.72,
+    "roi_global": -70.13,
     "total_paris": 158,
     "paris_gagnes": 63,
-    "paris_perdus": 87,
-    "paris_en_cours": 8,
-    "taux_reussite": 42.0,
+    "paris_perdus": 88,
+    "paris_en_cours": 7,
+    "taux_reussite": 41.7,
     "total_mise": 6433.81,
-    "gain_perte_total": -686.19,
+    "gain_perte_total": -701.28,
     "ev_moyen_global": 23.2
   },
   "bankroll_historique": [
@@ -1223,6 +1223,14 @@
       "joueur": "Tommy Paul",
       "resultat": "Perdu",
       "gain_perte": -17.92
+    },
+    {
+      "date": "2026-05-10",
+      "bankroll": 298.72,
+      "match": "Karen Khachanov vs Botic van de Zandschulp",
+      "joueur": "Botic van de Zandschulp",
+      "resultat": "Perdu",
+      "gain_perte": -15.09
     }
   ],
   "roi_cumulatif": [
@@ -1829,6 +1837,10 @@
     {
       "date": "2026-05-10",
       "roi": -68.62
+    },
+    {
+      "date": "2026-05-10",
+      "roi": -70.13
     }
   ],
   "ev_par_semaine": [
@@ -1894,7 +1906,7 @@
       "ev": 14.2,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 313.81
+      "bankroll": 298.72
     },
     {
       "date": "2026-05-11",
@@ -1916,9 +1928,9 @@
       "cote": 2.2,
       "mise": 15.09,
       "ev": 10.1,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 313.81
+      "resultat": "Perdu",
+      "gain_perte": -15.09,
+      "bankroll": 298.72
     },
     {
       "date": "2026-05-10",
