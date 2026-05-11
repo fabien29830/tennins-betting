@@ -1,19 +1,19 @@
 {
   "meta": {
-    "updated_at": "2026-05-10T19:00:31",
+    "updated_at": "2026-05-11T07:02:21",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 358.35,
-    "roi_global": -64.16,
-    "total_paris": 156,
-    "paris_gagnes": 62,
-    "paris_perdus": 83,
-    "paris_en_cours": 11,
-    "taux_reussite": 42.8,
-    "total_mise": 6400.8,
-    "gain_perte_total": -641.65,
-    "ev_moyen_global": 23.4
+    "bankroll_actuelle": 313.81,
+    "roi_global": -68.62,
+    "total_paris": 158,
+    "paris_gagnes": 63,
+    "paris_perdus": 87,
+    "paris_en_cours": 8,
+    "taux_reussite": 42.0,
+    "total_mise": 6433.81,
+    "gain_perte_total": -686.19,
+    "ev_moyen_global": 23.2
   },
   "bankroll_historique": [
     {
@@ -1170,7 +1170,7 @@
     },
     {
       "date": "2026-05-09",
-      "bankroll": 378.38,
+      "bankroll": 369.68,
       "match": "Jasmine Paolini vs Elise Mertens",
       "joueur": "Jasmine Paolini",
       "resultat": "Perdu",
@@ -1178,11 +1178,51 @@
     },
     {
       "date": "2026-05-09",
-      "bankroll": 358.35,
+      "bankroll": 349.65,
       "match": "Taylor Townsend vs Iva Jović",
       "joueur": "Taylor Townsend",
       "resultat": "Perdu",
       "gain_perte": -20.03
+    },
+    {
+      "date": "2026-05-10",
+      "bankroll": 429.77,
+      "match": "Learner Tien vs Alexander Bublik",
+      "joueur": "Learner Tien",
+      "resultat": "Gagné",
+      "gain_perte": 31.36
+    },
+    {
+      "date": "2026-05-10",
+      "bankroll": 409.74,
+      "match": "Casper Ruud vs Jiri Lehecka",
+      "joueur": "Jiri Lehecka",
+      "resultat": "Perdu",
+      "gain_perte": -20.03
+    },
+    {
+      "date": "2026-05-10",
+      "bankroll": 389.71,
+      "match": "Ugo Humbert vs Dino Prizmic",
+      "joueur": "Ugo Humbert",
+      "resultat": "Perdu",
+      "gain_perte": -20.03
+    },
+    {
+      "date": "2026-05-10",
+      "bankroll": 331.73,
+      "match": "Liudmila Samsonova vs Anastasia Potapova",
+      "joueur": "Liudmila Samsonova",
+      "resultat": "Perdu",
+      "gain_perte": -17.92
+    },
+    {
+      "date": "2026-05-10",
+      "bankroll": 313.81,
+      "match": "Tommy Paul vs Luciano Darderi",
+      "joueur": "Tommy Paul",
+      "resultat": "Perdu",
+      "gain_perte": -17.92
     }
   ],
   "roi_cumulatif": [
@@ -1764,11 +1804,31 @@
     },
     {
       "date": "2026-05-09",
-      "roi": -62.16
+      "roi": -63.03
     },
     {
       "date": "2026-05-09",
-      "roi": -64.16
+      "roi": -65.03
+    },
+    {
+      "date": "2026-05-10",
+      "roi": -57.02
+    },
+    {
+      "date": "2026-05-10",
+      "roi": -59.03
+    },
+    {
+      "date": "2026-05-10",
+      "roi": -61.03
+    },
+    {
+      "date": "2026-05-10",
+      "roi": -66.83
+    },
+    {
+      "date": "2026-05-10",
+      "roi": -68.62
     }
   ],
   "ev_par_semaine": [
@@ -1814,16 +1874,28 @@
     },
     {
       "semaine": "2026-S19",
-      "ev_moyen": 38.7,
-      "nb_paris": 35
+      "ev_moyen": 37.9,
+      "nb_paris": 36
     },
     {
       "semaine": "2026-S20",
-      "ev_moyen": 12.8,
-      "nb_paris": 1
+      "ev_moyen": 13.5,
+      "nb_paris": 2
     }
   ],
   "paris_recents": [
+    {
+      "date": "2026-05-11",
+      "match": "Pablo Llamas Ruiz vs Daniil Medvedev",
+      "joueur": "Daniil Medvedev",
+      "bookmaker": "pmu_fr",
+      "cote": 1.42,
+      "mise": 17.92,
+      "ev": 14.2,
+      "resultat": "En cours",
+      "gain_perte": null,
+      "bankroll": 313.81
+    },
     {
       "date": "2026-05-11",
       "match": "Anna Kalinskaya vs Jelena Ostapenko",
@@ -1834,7 +1906,19 @@
       "ev": 12.8,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 358.35
+      "bankroll": 313.81
+    },
+    {
+      "date": "2026-05-10",
+      "match": "Karen Khachanov vs Botic van de Zandschulp",
+      "joueur": "Botic van de Zandschulp",
+      "bookmaker": "pmu_fr",
+      "cote": 2.2,
+      "mise": 15.09,
+      "ev": 10.1,
+      "resultat": "En cours",
+      "gain_perte": null,
+      "bankroll": 313.81
     },
     {
       "date": "2026-05-10",
@@ -1844,9 +1928,9 @@
       "cote": 1.75,
       "mise": 17.92,
       "ev": 30.0,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 358.35
+      "resultat": "Perdu",
+      "gain_perte": -17.92,
+      "bankroll": 313.81
     },
     {
       "date": "2026-05-10",
@@ -1856,9 +1940,9 @@
       "cote": 2.6,
       "mise": 17.92,
       "ev": 39.6,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 358.35
+      "resultat": "Perdu",
+      "gain_perte": -17.92,
+      "bankroll": 331.73
     },
     {
       "date": "2026-05-10",
@@ -1868,9 +1952,9 @@
       "cote": 2.9,
       "mise": 20.03,
       "ev": 119.0,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 398.41
+      "resultat": "Perdu",
+      "gain_perte": -20.03,
+      "bankroll": 389.71
     },
     {
       "date": "2026-05-10",
@@ -1880,9 +1964,9 @@
       "cote": 2.35,
       "mise": 20.03,
       "ev": 29.7,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 398.41
+      "resultat": "Perdu",
+      "gain_perte": -20.03,
+      "bankroll": 409.74
     },
     {
       "date": "2026-05-10",
@@ -1892,9 +1976,9 @@
       "cote": 2.75,
       "mise": 17.92,
       "ev": 40.1,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 398.41
+      "resultat": "Gagné",
+      "gain_perte": 31.36,
+      "bankroll": 429.77
     },
     {
       "date": "2026-05-09",
@@ -1906,7 +1990,7 @@
       "ev": 30.0,
       "resultat": "Perdu",
       "gain_perte": -20.03,
-      "bankroll": 358.35
+      "bankroll": 349.65
     },
     {
       "date": "2026-05-09",
@@ -1918,7 +2002,7 @@
       "ev": 35.2,
       "resultat": "Perdu",
       "gain_perte": -20.03,
-      "bankroll": 378.38
+      "bankroll": 369.68
     },
     {
       "date": "2026-05-09",
@@ -2039,30 +2123,6 @@
       "resultat": "Gagné",
       "gain_perte": 25.05,
       "bankroll": 430.31
-    },
-    {
-      "date": "2026-05-08",
-      "match": "Sebastian Baez vs Alexander Bublik",
-      "joueur": "Alexander Bublik",
-      "bookmaker": "winamax_fr",
-      "cote": 1.62,
-      "mise": 19.27,
-      "ev": 17.6,
-      "resultat": "Gagné",
-      "gain_perte": 11.95,
-      "bankroll": 405.26
-    },
-    {
-      "date": "2026-05-08",
-      "match": "Dino Prizmic vs Novak Djokovic",
-      "joueur": "Novak Djokovic",
-      "bookmaker": "pmu_fr",
-      "cote": 1.54,
-      "mise": 19.27,
-      "ev": 27.7,
-      "resultat": "Perdu",
-      "gain_perte": -19.27,
-      "bankroll": 393.31
     }
   ],
   "matchs_venir": [
@@ -2073,16 +2133,16 @@
       "surface": "dur",
       "joueur1": "Alexander Blockx",
       "joueur2": "Alexander Zverev",
-      "elo1": 1455,
-      "elo2": 1863,
+      "elo1": 1660,
+      "elo2": 1963,
       "cote1": 4.5,
       "cote2": 4.5,
       "bm1": "betclic_fr",
       "bm2": "betclic_fr",
-      "prob1": 0.186,
-      "prob2": 0.814,
-      "ev1": -0.164,
-      "ev2": 2.664
+      "prob1": 0.25,
+      "prob2": 0.75,
+      "ev1": 0.127,
+      "ev2": 2.373
     },
     {
       "date": "2026-05-10",
@@ -2091,16 +2151,16 @@
       "surface": "dur",
       "joueur1": "Ugo Humbert",
       "joueur2": "Dino Prizmic",
-      "elo1": 1646,
-      "elo2": 1434,
+      "elo1": 1666,
+      "elo2": 1533,
       "cote1": 3.15,
       "cote2": 1.41,
       "bm1": "betclic_fr",
       "bm2": "unibet_fr",
-      "prob1": 0.755,
-      "prob2": 0.245,
-      "ev1": 1.379,
-      "ev2": -0.655
+      "prob1": 0.68,
+      "prob2": 0.32,
+      "ev1": 1.143,
+      "ev2": -0.549
     },
     {
       "date": "2026-05-10",
@@ -2109,16 +2169,16 @@
       "surface": "dur",
       "joueur1": "Karen Khachanov",
       "joueur2": "Botic Van De Zandschulp",
-      "elo1": 1688,
-      "elo2": 1606,
+      "elo1": 1617,
+      "elo2": 1630,
       "cote1": 1.71,
       "cote2": 2.2,
       "bm1": "betclic_fr",
       "bm2": "pmu_fr",
-      "prob1": 0.565,
-      "prob2": 0.435,
-      "ev1": -0.034,
-      "ev2": -0.043
+      "prob1": 0.5,
+      "prob2": 0.5,
+      "ev1": -0.146,
+      "ev2": 0.101
     },
     {
       "date": "2026-05-10",
@@ -2127,16 +2187,16 @@
       "surface": "dur",
       "joueur1": "Lorenzo Musetti",
       "joueur2": "Francisco Cerundolo",
-      "elo1": 1832,
-      "elo2": 1750,
+      "elo1": 1818,
+      "elo2": 1780,
       "cote1": 1.91,
       "cote2": 1.94,
       "bm1": "unibet_fr",
       "bm2": "unibet_fr",
-      "prob1": 0.554,
-      "prob2": 0.446,
-      "ev1": 0.059,
-      "ev2": -0.136
+      "prob1": 0.516,
+      "prob2": 0.484,
+      "ev1": -0.014,
+      "ev2": -0.061
     },
     {
       "date": "2026-05-10",
@@ -2145,16 +2205,16 @@
       "surface": "dur",
       "joueur1": "Learner Tien",
       "joueur2": "Alexander Bublik",
-      "elo1": 1730,
-      "elo2": 1724,
+      "elo1": 1759,
+      "elo2": 1759,
       "cote1": 2.75,
       "cote2": 1.49,
       "bm1": "winamax_fr",
       "bm2": "pmu_fr",
-      "prob1": 0.509,
-      "prob2": 0.491,
-      "ev1": 0.401,
-      "ev2": -0.269
+      "prob1": 0.515,
+      "prob2": 0.485,
+      "ev1": 0.417,
+      "ev2": -0.278
     },
     {
       "date": "2026-05-10",
@@ -2163,16 +2223,16 @@
       "surface": "dur",
       "joueur1": "Tommy Paul",
       "joueur2": "Luciano Darderi",
-      "elo1": 1809,
-      "elo2": 1590,
+      "elo1": 1822,
+      "elo2": 1636,
       "cote1": 1.75,
       "cote2": 2.18,
       "bm1": "betclic_fr",
       "bm2": "pmu_fr",
-      "prob1": 0.743,
-      "prob2": 0.257,
-      "ev1": 0.3,
-      "ev2": -0.439
+      "prob1": 0.71,
+      "prob2": 0.29,
+      "ev1": 0.243,
+      "ev2": -0.368
     },
     {
       "date": "2026-05-10",
@@ -2180,17 +2240,17 @@
       "circuit": "ATP",
       "surface": "dur",
       "joueur1": "Matteo Arnaldi",
-      "joueur2": "Rafael Nadal",
-      "elo1": 1574,
-      "elo2": 1747,
+      "joueur2": "Rafael Jodar",
+      "elo1": 1479,
+      "elo2": 1728,
       "cote1": 3.7,
       "cote2": 1.3,
       "bm1": "betclic_fr",
       "bm2": "pmu_fr",
-      "prob1": 0.334,
-      "prob2": 0.666,
-      "ev1": 0.237,
-      "ev2": -0.135
+      "prob1": 0.339,
+      "prob2": 0.661,
+      "ev1": 0.253,
+      "ev2": -0.14
     },
     {
       "date": "2026-05-11",
@@ -2199,16 +2259,16 @@
       "surface": "dur",
       "joueur1": "Andrey Rublev",
       "joueur2": "Alejandro Davidovich Fokina",
-      "elo1": 1756,
-      "elo2": 1670,
+      "elo1": 1739,
+      "elo2": 1667,
       "cote1": 1.67,
       "cote2": 2.15,
       "bm1": "pmu_fr",
       "bm2": "pmu_fr",
-      "prob1": 0.577,
-      "prob2": 0.423,
-      "ev1": -0.036,
-      "ev2": -0.091
+      "prob1": 0.547,
+      "prob2": 0.453,
+      "ev1": -0.087,
+      "ev2": -0.026
     },
     {
       "date": "2026-05-11",
@@ -2217,16 +2277,16 @@
       "surface": "dur",
       "joueur1": "Jannik Sinner",
       "joueur2": "Alexei Popyrin",
-      "elo1": 2108,
-      "elo2": 1623,
+      "elo1": 2220,
+      "elo2": 1566,
       "cote1": 1.01,
       "cote2": 14.0,
       "bm1": "unibet_fr",
       "bm2": "winamax_fr",
-      "prob1": 0.835,
-      "prob2": 0.165,
-      "ev1": -0.157,
-      "ev2": 1.312
+      "prob1": 0.766,
+      "prob2": 0.234,
+      "ev1": -0.226,
+      "ev2": 2.27
     },
     {
       "date": "2026-05-11",
@@ -2235,16 +2295,16 @@
       "surface": "dur",
       "joueur1": "Frances Tiafoe",
       "joueur2": "Andrea Pellegrino",
-      "elo1": 1686,
-      "elo2": 1473,
+      "elo1": 1761,
+      "elo2": 1499,
       "cote1": 1.43,
       "cote2": 2.95,
       "bm1": "winamax_fr",
       "bm2": "pmu_fr",
-      "prob1": 0.731,
-      "prob2": 0.269,
-      "ev1": 0.045,
-      "ev2": -0.206
+      "prob1": 0.739,
+      "prob2": 0.261,
+      "ev1": 0.057,
+      "ev2": -0.23
     },
     {
       "date": "2026-05-11",
@@ -2253,16 +2313,16 @@
       "surface": "dur",
       "joueur1": "Brandon Nakashima",
       "joueur2": "Nikoloz Basilashvili",
-      "elo1": 1609,
-      "elo2": 1403,
+      "elo1": 1634,
+      "elo2": 1414,
       "cote1": 1.48,
       "cote2": 2.55,
       "bm1": "pmu_fr",
       "bm2": "pmu_fr",
-      "prob1": 0.742,
-      "prob2": 0.258,
-      "ev1": 0.098,
-      "ev2": -0.342
+      "prob1": 0.709,
+      "prob2": 0.291,
+      "ev1": 0.049,
+      "ev2": -0.258
     },
     {
       "date": "2026-05-11",
@@ -2271,16 +2331,16 @@
       "surface": "dur",
       "joueur1": "Pablo Llamas Ruiz",
       "joueur2": "Daniil Medvedev",
-      "elo1": 1501,
-      "elo2": 1804,
+      "elo1": 1503,
+      "elo2": 1884,
       "cote1": 2.8,
       "cote2": 1.42,
       "bm1": "pmu_fr",
       "bm2": "pmu_fr",
-      "prob1": 0.251,
-      "prob2": 0.749,
-      "ev1": -0.298,
-      "ev2": 0.064
+      "prob1": 0.196,
+      "prob2": 0.804,
+      "ev1": -0.452,
+      "ev2": 0.142
     },
     {
       "date": "2026-05-11",
@@ -2289,16 +2349,16 @@
       "surface": "dur",
       "joueur1": "Flavio Cobolli",
       "joueur2": "Thiago Agustin Tirante",
-      "elo1": 1688,
-      "elo2": 1520,
+      "elo1": 1772,
+      "elo2": 1622,
       "cote1": 1.4,
       "cote2": 2.88,
       "bm1": "pmu_fr",
       "bm2": "pmu_fr",
-      "prob1": 0.633,
-      "prob2": 0.367,
-      "ev1": -0.114,
-      "ev2": 0.058
+      "prob1": 0.646,
+      "prob2": 0.354,
+      "ev1": -0.095,
+      "ev2": 0.019
     },
     {
       "date": "2026-05-10",
@@ -2313,10 +2373,10 @@
       "cote2": 1.82,
       "bm1": "pmu_fr",
       "bm2": "betclic_fr",
-      "prob1": 0.763,
-      "prob2": 0.237,
-      "ev1": 3.122,
-      "ev2": -0.569
+      "prob1": 0.759,
+      "prob2": 0.241,
+      "ev1": 3.096,
+      "ev2": -0.56
     },
     {
       "date": "2026-05-10",
@@ -2331,10 +2391,10 @@
       "cote2": 5.8,
       "bm1": "unibet_fr",
       "bm2": "betclic_fr",
-      "prob1": 0.807,
-      "prob2": 0.193,
-      "ev1": -0.072,
-      "ev2": 0.12
+      "prob1": 0.787,
+      "prob2": 0.213,
+      "ev1": -0.095,
+      "ev2": 0.238
     },
     {
       "date": "2026-05-10",
@@ -2349,10 +2409,10 @@
       "cote2": 1.55,
       "bm1": "betclic_fr",
       "bm2": "pmu_fr",
-      "prob1": 0.537,
-      "prob2": 0.463,
-      "ev1": 0.396,
-      "ev2": -0.282
+      "prob1": 0.535,
+      "prob2": 0.465,
+      "ev1": 0.391,
+      "ev2": -0.279
     },
     {
       "date": "2026-05-10",
@@ -2370,7 +2430,7 @@
       "prob1": 0.466,
       "prob2": 0.534,
       "ev1": -0.068,
-      "ev2": -0.001
+      "ev2": -0.002
     },
     {
       "date": "2026-05-10",
@@ -2385,10 +2445,10 @@
       "cote2": 1.06,
       "bm1": "winamax_fr",
       "bm2": "pmu_fr",
-      "prob1": 0.247,
-      "prob2": 0.753,
-      "ev1": 1.966,
-      "ev2": -0.202
+      "prob1": 0.248,
+      "prob2": 0.752,
+      "ev1": 1.978,
+      "ev2": -0.203
     },
     {
       "date": "2026-05-10",
@@ -2405,8 +2465,8 @@
       "bm2": "unibet_fr",
       "prob1": 0.175,
       "prob2": 0.825,
-      "ev1": 0.403,
-      "ev2": -0.101
+      "ev1": 0.396,
+      "ev2": -0.1
     },
     {
       "date": "2026-05-11",
@@ -2424,7 +2484,7 @@
       "prob1": 0.537,
       "prob2": 0.463,
       "ev1": 0.128,
-      "ev2": -0.199
+      "ev2": -0.2
     },
     {
       "date": "2026-05-11",
@@ -2439,10 +2499,10 @@
       "cote2": 3.75,
       "bm1": "pmu_fr",
       "bm2": "winamax_fr",
-      "prob1": 0.808,
-      "prob2": 0.192,
-      "ev1": 0.035,
-      "ev2": -0.281
+      "prob1": 0.804,
+      "prob2": 0.196,
+      "ev1": 0.029,
+      "ev2": -0.263
     },
     {
       "date": "2026-05-11",
@@ -2457,10 +2517,10 @@
       "cote2": 1.36,
       "bm1": "pmu_fr",
       "bm2": "pmu_fr",
-      "prob1": 0.375,
-      "prob2": 0.625,
-      "ev1": 0.145,
-      "ev2": -0.151
+      "prob1": 0.387,
+      "prob2": 0.613,
+      "ev1": 0.18,
+      "ev2": -0.166
     },
     {
       "date": "2026-05-11",
@@ -2475,10 +2535,10 @@
       "cote2": 1.75,
       "bm1": "pmu_fr",
       "bm2": "pmu_fr",
-      "prob1": 0.438,
-      "prob2": 0.562,
-      "ev1": -0.107,
-      "ev2": -0.016
+      "prob1": 0.437,
+      "prob2": 0.563,
+      "ev1": -0.108,
+      "ev2": -0.015
     }
   ]
 }
