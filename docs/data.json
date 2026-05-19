@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-05-18T19:00:28",
+    "updated_at": "2026-05-19T08:00:33",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 295.5,
-    "roi_global": -70.45,
+    "bankroll_actuelle": 265.62,
+    "roi_global": -73.44,
     "total_paris": 167,
-    "paris_gagnes": 66,
-    "paris_perdus": 91,
-    "paris_en_cours": 10,
-    "taux_reussite": 42.0,
+    "paris_gagnes": 67,
+    "paris_perdus": 93,
+    "paris_en_cours": 7,
+    "taux_reussite": 41.9,
     "total_mise": 6565.99,
-    "gain_perte_total": -704.5,
+    "gain_perte_total": -734.38,
     "ev_moyen_global": 23.5
   },
   "bankroll_historique": [
@@ -1279,6 +1279,30 @@
       "joueur": "Coco Gauff",
       "resultat": "Gagné",
       "gain_perte": 14.64
+    },
+    {
+      "date": "2026-05-18",
+      "bankroll": 280.56,
+      "match": "Kamil Majchrzak vs Camilo Ugo Carabelli",
+      "joueur": "Kamil Majchrzak",
+      "resultat": "Perdu",
+      "gain_perte": -14.94
+    },
+    {
+      "date": "2026-05-18",
+      "bankroll": 265.62,
+      "match": "Terence Atmane vs Tomas Martin Etcheverry",
+      "joueur": "Terence Atmane",
+      "resultat": "Perdu",
+      "gain_perte": -14.94
+    },
+    {
+      "date": "2026-05-18",
+      "bankroll": 280.81,
+      "match": "Marie Bouzkova vs Katerina Siniakova",
+      "joueur": "Marie Bouzkova",
+      "resultat": "Gagné",
+      "gain_perte": 15.19
     }
   ],
   "roi_cumulatif": [
@@ -1913,6 +1937,18 @@
     {
       "date": "2026-05-12",
       "roi": -70.45
+    },
+    {
+      "date": "2026-05-18",
+      "roi": -71.94
+    },
+    {
+      "date": "2026-05-18",
+      "roi": -73.44
+    },
+    {
+      "date": "2026-05-18",
+      "roi": -71.92
     }
   ],
   "ev_par_semaine": [
@@ -1983,7 +2019,7 @@
       "ev": 28.3,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 295.5
+      "bankroll": 265.62
     },
     {
       "date": "2026-05-19",
@@ -1995,7 +2031,7 @@
       "ev": 15.4,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 295.5
+      "bankroll": 265.62
     },
     {
       "date": "2026-05-18",
@@ -2005,9 +2041,9 @@
       "cote": 2.2,
       "mise": 12.66,
       "ev": 10.2,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 295.5
+      "resultat": "Gagné",
+      "gain_perte": 15.19,
+      "bankroll": 280.81
     },
     {
       "date": "2026-05-18",
@@ -2017,9 +2053,9 @@
       "cote": 2.8,
       "mise": 14.94,
       "ev": 24.4,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 295.5
+      "resultat": "Perdu",
+      "gain_perte": -14.94,
+      "bankroll": 265.62
     },
     {
       "date": "2026-05-18",
@@ -2029,9 +2065,9 @@
       "cote": 2.38,
       "mise": 14.94,
       "ev": 26.9,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 295.5
+      "resultat": "Perdu",
+      "gain_perte": -14.94,
+      "bankroll": 280.56
     },
     {
       "date": "2026-05-12",
