@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-05-19T19:00:28",
+    "updated_at": "2026-05-20T08:00:32",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 280.81,
-    "roi_global": -71.92,
+    "bankroll_actuelle": 236.89,
+    "roi_global": -76.31,
     "total_paris": 172,
     "paris_gagnes": 67,
-    "paris_perdus": 93,
-    "paris_en_cours": 12,
-    "taux_reussite": 41.9,
+    "paris_perdus": 96,
+    "paris_en_cours": 9,
+    "taux_reussite": 41.1,
     "total_mise": 6636.19,
-    "gain_perte_total": -719.19,
+    "gain_perte_total": -763.11,
     "ev_moyen_global": 23.8
   },
   "bankroll_historique": [
@@ -1298,11 +1298,35 @@
     },
     {
       "date": "2026-05-18",
-      "bankroll": 280.81,
+      "bankroll": 250.93,
       "match": "Marie Bouzkova vs Katerina Siniakova",
       "joueur": "Marie Bouzkova",
       "resultat": "Gagné",
       "gain_perte": 15.19
+    },
+    {
+      "date": "2026-05-19",
+      "bankroll": 250.68,
+      "match": "Flavio Cobolli vs Ignacio Buse",
+      "joueur": "Flavio Cobolli",
+      "resultat": "Perdu",
+      "gain_perte": -14.94
+    },
+    {
+      "date": "2026-05-19",
+      "bankroll": 235.74,
+      "match": "Luciano Darderi vs Roman Andres Burruchaga",
+      "joueur": "Roman Andres Burruchaga",
+      "resultat": "Perdu",
+      "gain_perte": -14.94
+    },
+    {
+      "date": "2026-05-19",
+      "bankroll": 236.89,
+      "match": "Daniel Altmaier vs Ben Shelton",
+      "joueur": "Ben Shelton",
+      "resultat": "Perdu",
+      "gain_perte": -14.04
     }
   ],
   "roi_cumulatif": [
@@ -1948,7 +1972,19 @@
     },
     {
       "date": "2026-05-18",
-      "roi": -71.92
+      "roi": -74.91
+    },
+    {
+      "date": "2026-05-19",
+      "roi": -74.93
+    },
+    {
+      "date": "2026-05-19",
+      "roi": -76.43
+    },
+    {
+      "date": "2026-05-19",
+      "roi": -76.31
     }
   ],
   "ev_par_semaine": [
@@ -2019,7 +2055,7 @@
       "ev": 92.9,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 280.81
+      "bankroll": 236.89
     },
     {
       "date": "2026-05-20",
@@ -2031,7 +2067,7 @@
       "ev": 30.9,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 280.81
+      "bankroll": 236.89
     },
     {
       "date": "2026-05-20",
@@ -2043,7 +2079,7 @@
       "ev": 16.9,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 280.81
+      "bankroll": 236.89
     },
     {
       "date": "2026-05-19",
@@ -2053,9 +2089,9 @@
       "cote": 1.4,
       "mise": 14.04,
       "ev": 14.3,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 280.81
+      "resultat": "Perdu",
+      "gain_perte": -14.04,
+      "bankroll": 236.89
     },
     {
       "date": "2026-05-19",
@@ -2067,7 +2103,7 @@
       "ev": 11.7,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 280.81
+      "bankroll": 250.93
     },
     {
       "date": "2026-05-19",
@@ -2077,9 +2113,9 @@
       "cote": 2.75,
       "mise": 14.94,
       "ev": 28.3,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 265.62
+      "resultat": "Perdu",
+      "gain_perte": -14.94,
+      "bankroll": 235.74
     },
     {
       "date": "2026-05-19",
@@ -2089,9 +2125,9 @@
       "cote": 1.7,
       "mise": 14.94,
       "ev": 15.4,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 265.62
+      "resultat": "Perdu",
+      "gain_perte": -14.94,
+      "bankroll": 250.68
     },
     {
       "date": "2026-05-18",
@@ -2103,7 +2139,7 @@
       "ev": 10.2,
       "resultat": "Gagné",
       "gain_perte": 15.19,
-      "bankroll": 280.81
+      "bankroll": 250.93
     },
     {
       "date": "2026-05-18",
