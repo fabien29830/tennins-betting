@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-05-20T13:00:32",
+    "updated_at": "2026-05-20T19:00:26",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 236.89,
-    "roi_global": -76.31,
+    "bankroll_actuelle": 247.84,
+    "roi_global": -75.22,
     "total_paris": 172,
-    "paris_gagnes": 67,
+    "paris_gagnes": 68,
     "paris_perdus": 96,
-    "paris_en_cours": 9,
-    "taux_reussite": 41.1,
+    "paris_en_cours": 8,
+    "taux_reussite": 41.5,
     "total_mise": 6636.19,
-    "gain_perte_total": -763.11,
+    "gain_perte_total": -752.16,
     "ev_moyen_global": 23.8
   },
   "bankroll_historique": [
@@ -1322,7 +1322,15 @@
     },
     {
       "date": "2026-05-19",
-      "bankroll": 236.89,
+      "bankroll": 261.88,
+      "match": "Tommy Paul vs Tomas Martin Etcheverry",
+      "joueur": "Tommy Paul",
+      "resultat": "Gagné",
+      "gain_perte": 10.95
+    },
+    {
+      "date": "2026-05-19",
+      "bankroll": 247.84,
       "match": "Daniel Altmaier vs Ben Shelton",
       "joueur": "Ben Shelton",
       "resultat": "Perdu",
@@ -1984,7 +1992,11 @@
     },
     {
       "date": "2026-05-19",
-      "roi": -76.31
+      "roi": -73.81
+    },
+    {
+      "date": "2026-05-19",
+      "roi": -75.22
     }
   ],
   "ev_par_semaine": [
@@ -2055,7 +2067,7 @@
       "ev": 92.9,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 236.89
+      "bankroll": 247.84
     },
     {
       "date": "2026-05-20",
@@ -2067,7 +2079,7 @@
       "ev": 30.9,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 236.89
+      "bankroll": 247.84
     },
     {
       "date": "2026-05-20",
@@ -2079,7 +2091,7 @@
       "ev": 16.9,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 236.89
+      "bankroll": 247.84
     },
     {
       "date": "2026-05-19",
@@ -2091,7 +2103,7 @@
       "ev": 14.3,
       "resultat": "Perdu",
       "gain_perte": -14.04,
-      "bankroll": 236.89
+      "bankroll": 247.84
     },
     {
       "date": "2026-05-19",
@@ -2101,9 +2113,9 @@
       "cote": 1.78,
       "mise": 14.04,
       "ev": 11.7,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 250.93
+      "resultat": "Gagné",
+      "gain_perte": 10.95,
+      "bankroll": 261.88
     },
     {
       "date": "2026-05-19",
