@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-05-21T19:00:21",
+    "updated_at": "2026-05-22T08:00:35",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 243.63,
-    "roi_global": -75.64,
+    "bankroll_actuelle": 234.47,
+    "roi_global": -76.55,
     "total_paris": 176,
-    "paris_gagnes": 69,
-    "paris_perdus": 98,
-    "paris_en_cours": 9,
-    "taux_reussite": 41.3,
+    "paris_gagnes": 71,
+    "paris_perdus": 100,
+    "paris_en_cours": 5,
+    "taux_reussite": 41.5,
     "total_mise": 6685.75,
-    "gain_perte_total": -756.37,
+    "gain_perte_total": -765.53,
     "ev_moyen_global": 23.9
   },
   "bankroll_historique": [
@@ -1359,6 +1359,38 @@
       "joueur": "Emma Navarro",
       "resultat": "Gagné",
       "gain_perte": 23.87
+    },
+    {
+      "date": "2026-05-21",
+      "bankroll": 249.21,
+      "match": "Tommy Paul vs Daniel Altmaier",
+      "joueur": "Tommy Paul",
+      "resultat": "Gagné",
+      "gain_perte": 5.58
+    },
+    {
+      "date": "2026-05-21",
+      "bankroll": 259.25,
+      "match": "Luciano Darderi vs Alex de Minaur",
+      "joueur": "Alex de Minaur",
+      "resultat": "Gagné",
+      "gain_perte": 10.04
+    },
+    {
+      "date": "2026-05-21",
+      "bankroll": 246.86,
+      "match": "Jaqueline Cristian vs Daria Kasatkina",
+      "joueur": "Daria Kasatkina",
+      "resultat": "Perdu",
+      "gain_perte": -12.39
+    },
+    {
+      "date": "2026-05-21",
+      "bankroll": 234.47,
+      "match": "Victoria Mboko vs Leylah Fernandez",
+      "joueur": "Leylah Fernandez",
+      "resultat": "Perdu",
+      "gain_perte": -12.39
     }
   ],
   "roi_cumulatif": [
@@ -2033,6 +2065,22 @@
     {
       "date": "2026-05-20",
       "roi": -75.64
+    },
+    {
+      "date": "2026-05-21",
+      "roi": -75.08
+    },
+    {
+      "date": "2026-05-21",
+      "roi": -74.08
+    },
+    {
+      "date": "2026-05-21",
+      "roi": -75.31
+    },
+    {
+      "date": "2026-05-21",
+      "roi": -76.55
     }
   ],
   "ev_par_semaine": [
@@ -2101,9 +2149,9 @@
       "cote": 2.4,
       "mise": 12.39,
       "ev": 66.9,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 243.63
+      "resultat": "Perdu",
+      "gain_perte": -12.39,
+      "bankroll": 234.47
     },
     {
       "date": "2026-05-21",
@@ -2113,9 +2161,9 @@
       "cote": 1.62,
       "mise": 12.39,
       "ev": 10.2,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 243.63
+      "resultat": "Perdu",
+      "gain_perte": -12.39,
+      "bankroll": 246.86
     },
     {
       "date": "2026-05-21",
@@ -2125,9 +2173,9 @@
       "cote": 1.81,
       "mise": 12.39,
       "ev": 29.0,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 243.63
+      "resultat": "Gagné",
+      "gain_perte": 10.04,
+      "bankroll": 259.25
     },
     {
       "date": "2026-05-21",
@@ -2137,9 +2185,9 @@
       "cote": 1.45,
       "mise": 12.39,
       "ev": 14.5,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 243.63
+      "resultat": "Gagné",
+      "gain_perte": 5.58,
+      "bankroll": 249.21
     },
     {
       "date": "2026-05-20",
