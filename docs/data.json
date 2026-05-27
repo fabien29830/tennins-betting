@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-05-26T19:00:31",
+    "updated_at": "2026-05-27T08:00:26",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 248.77,
-    "roi_global": -75.12,
+    "bankroll_actuelle": 241.39,
+    "roi_global": -75.86,
     "total_paris": 183,
-    "paris_gagnes": 72,
-    "paris_perdus": 100,
-    "paris_en_cours": 11,
-    "taux_reussite": 41.9,
+    "paris_gagnes": 73,
+    "paris_perdus": 101,
+    "paris_en_cours": 9,
+    "taux_reussite": 42.0,
     "total_mise": 6762.76,
-    "gain_perte_total": -751.23,
+    "gain_perte_total": -758.61,
     "ev_moyen_global": 24.1
   },
   "bankroll_historique": [
@@ -1399,6 +1399,22 @@
       "joueur": "Emma Navarro",
       "resultat": "Gagné",
       "gain_perte": 14.3
+    },
+    {
+      "date": "2026-05-26",
+      "bankroll": 237.05,
+      "match": "Alexander Bublik vs Jan-Lennard Struff",
+      "joueur": "Alexander Bublik",
+      "resultat": "Perdu",
+      "gain_perte": -11.72
+    },
+    {
+      "date": "2026-05-26",
+      "bankroll": 241.39,
+      "match": "Felix Auger-Aliassime vs Daniel Altmaier",
+      "joueur": "Felix Auger-Aliassime",
+      "resultat": "Gagné",
+      "gain_perte": 4.34
     }
   ],
   "roi_cumulatif": [
@@ -2093,6 +2109,14 @@
     {
       "date": "2026-05-22",
       "roi": -75.12
+    },
+    {
+      "date": "2026-05-26",
+      "roi": -76.3
+    },
+    {
+      "date": "2026-05-26",
+      "roi": -75.86
     }
   ],
   "ev_par_semaine": [
@@ -2168,7 +2192,7 @@
       "ev": 10.7,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 248.77
+      "bankroll": 241.39
     },
     {
       "date": "2026-05-27",
@@ -2180,7 +2204,7 @@
       "ev": 30.5,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 248.77
+      "bankroll": 241.39
     },
     {
       "date": "2026-05-27",
@@ -2192,7 +2216,7 @@
       "ev": 29.9,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 248.77
+      "bankroll": 241.39
     },
     {
       "date": "2026-05-27",
@@ -2204,7 +2228,7 @@
       "ev": 18.5,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 248.77
+      "bankroll": 241.39
     },
     {
       "date": "2026-05-26",
@@ -2214,9 +2238,9 @@
       "cote": 1.37,
       "mise": 11.72,
       "ev": 12.4,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 248.77
+      "resultat": "Gagné",
+      "gain_perte": 4.34,
+      "bankroll": 241.39
     },
     {
       "date": "2026-05-26",
@@ -2226,9 +2250,9 @@
       "cote": 2.03,
       "mise": 11.72,
       "ev": 40.2,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 248.77
+      "resultat": "Perdu",
+      "gain_perte": -11.72,
+      "bankroll": 237.05
     },
     {
       "date": "2026-05-22",
