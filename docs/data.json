@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-05-29T19:00:26",
+    "updated_at": "2026-05-30T08:00:27",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 231.84,
-    "roi_global": -76.82,
+    "bankroll_actuelle": 243.31,
+    "roi_global": -75.67,
     "total_paris": 194,
-    "paris_gagnes": 76,
-    "paris_perdus": 105,
-    "paris_en_cours": 13,
-    "taux_reussite": 42.0,
+    "paris_gagnes": 77,
+    "paris_perdus": 106,
+    "paris_en_cours": 11,
+    "taux_reussite": 42.1,
     "total_mise": 6895.59,
-    "gain_perte_total": -768.16,
+    "gain_perte_total": -756.69,
     "ev_moyen_global": 24.8
   },
   "bankroll_historique": [
@@ -1458,7 +1458,7 @@
     },
     {
       "date": "2026-05-28",
-      "bankroll": 243.91,
+      "bankroll": 255.38,
       "match": "Iva Jović vs Emma Navarro",
       "joueur": "Emma Navarro",
       "resultat": "Perdu",
@@ -1466,11 +1466,27 @@
     },
     {
       "date": "2026-05-28",
-      "bankroll": 231.84,
+      "bankroll": 243.31,
       "match": "Yulia Putintseva vs Maria Camila Osorio Serrano",
       "joueur": "Yulia Putintseva",
       "resultat": "Perdu",
       "gain_perte": -12.07
+    },
+    {
+      "date": "2026-05-29",
+      "bankroll": 243.91,
+      "match": "Joao Fonseca vs Novak Djokovic",
+      "joueur": "Novak Djokovic",
+      "resultat": "Perdu",
+      "gain_perte": -12.07
+    },
+    {
+      "date": "2026-05-29",
+      "bankroll": 267.45,
+      "match": "Thiago Agustin Tirante vs Pablo Carreno Busta",
+      "joueur": "Pablo Carreno Busta",
+      "resultat": "Gagné",
+      "gain_perte": 23.54
     }
   ],
   "roi_cumulatif": [
@@ -2196,11 +2212,19 @@
     },
     {
       "date": "2026-05-28",
-      "roi": -75.61
+      "roi": -74.46
     },
     {
       "date": "2026-05-28",
-      "roi": -76.82
+      "roi": -75.67
+    },
+    {
+      "date": "2026-05-29",
+      "roi": -75.61
+    },
+    {
+      "date": "2026-05-29",
+      "roi": -73.25
     }
   ],
   "ev_par_semaine": [
@@ -2276,7 +2300,7 @@
       "ev": 43.4,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 231.84
+      "bankroll": 243.31
     },
     {
       "date": "2026-05-30",
@@ -2288,7 +2312,7 @@
       "ev": 63.5,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 231.84
+      "bankroll": 243.31
     },
     {
       "date": "2026-05-30",
@@ -2300,7 +2324,7 @@
       "ev": 25.5,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 231.84
+      "bankroll": 243.31
     },
     {
       "date": "2026-05-30",
@@ -2312,7 +2336,7 @@
       "ev": 29.7,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 231.84
+      "bankroll": 243.31
     },
     {
       "date": "2026-05-30",
@@ -2324,7 +2348,7 @@
       "ev": 21.2,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 231.84
+      "bankroll": 243.31
     },
     {
       "date": "2026-05-30",
@@ -2336,7 +2360,7 @@
       "ev": 50.1,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 231.84
+      "bankroll": 243.31
     },
     {
       "date": "2026-05-29",
@@ -2346,9 +2370,9 @@
       "cote": 2.95,
       "mise": 12.07,
       "ev": 30.8,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 255.98
+      "resultat": "Gagné",
+      "gain_perte": 23.54,
+      "bankroll": 267.45
     },
     {
       "date": "2026-05-29",
@@ -2358,9 +2382,9 @@
       "cote": 1.54,
       "mise": 12.07,
       "ev": 16.3,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 255.98
+      "resultat": "Perdu",
+      "gain_perte": -12.07,
+      "bankroll": 243.91
     },
     {
       "date": "2026-05-28",
@@ -2372,7 +2396,7 @@
       "ev": 63.6,
       "resultat": "Perdu",
       "gain_perte": -12.07,
-      "bankroll": 231.84
+      "bankroll": 243.31
     },
     {
       "date": "2026-05-28",
@@ -2384,7 +2408,7 @@
       "ev": 41.1,
       "resultat": "Perdu",
       "gain_perte": -12.07,
-      "bankroll": 243.91
+      "bankroll": 255.38
     },
     {
       "date": "2026-05-28",
