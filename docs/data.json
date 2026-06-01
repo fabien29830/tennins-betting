@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-05-31T19:00:29",
+    "updated_at": "2026-06-01T07:02:11",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 259.32,
-    "roi_global": -74.07,
+    "bankroll_actuelle": 280.95,
+    "roi_global": -71.91,
     "total_paris": 204,
-    "paris_gagnes": 82,
-    "paris_perdus": 109,
-    "paris_en_cours": 13,
-    "taux_reussite": 42.9,
+    "paris_gagnes": 84,
+    "paris_perdus": 110,
+    "paris_en_cours": 10,
+    "taux_reussite": 43.3,
     "total_mise": 7021.87,
-    "gain_perte_total": -740.68,
+    "gain_perte_total": -719.05,
     "ev_moyen_global": 24.8
   },
   "bankroll_historique": [
@@ -1546,11 +1546,35 @@
     },
     {
       "date": "2026-05-30",
-      "bankroll": 259.32,
+      "bankroll": 280.07,
       "match": "Diana Shnaider vs Oleksandra Oliynykova",
       "joueur": "Diana Shnaider",
       "resultat": "Gagné",
       "gain_perte": 9.98
+    },
+    {
+      "date": "2026-05-31",
+      "bankroll": 270.09,
+      "match": "Casper Ruud vs Joao Fonseca",
+      "joueur": "Joao Fonseca",
+      "resultat": "Gagné",
+      "gain_perte": 20.75
+    },
+    {
+      "date": "2026-05-31",
+      "bankroll": 267.9,
+      "match": "Elina Svitolina vs Belinda Bencic",
+      "joueur": "Belinda Bencic",
+      "resultat": "Perdu",
+      "gain_perte": -12.17
+    },
+    {
+      "date": "2026-05-31",
+      "bankroll": 280.95,
+      "match": "Jakub Mensik vs Andrey Rublev",
+      "joueur": "Jakub Mensik",
+      "resultat": "Gagné",
+      "gain_perte": 13.05
     }
   ],
   "roi_cumulatif": [
@@ -2320,7 +2344,19 @@
     },
     {
       "date": "2026-05-30",
-      "roi": -74.07
+      "roi": -71.99
+    },
+    {
+      "date": "2026-05-31",
+      "roi": -72.99
+    },
+    {
+      "date": "2026-05-31",
+      "roi": -73.21
+    },
+    {
+      "date": "2026-05-31",
+      "roi": -71.91
     }
   ],
   "ev_par_semaine": [
@@ -2401,7 +2437,7 @@
       "ev": 15.6,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 259.32
+      "bankroll": 280.95
     },
     {
       "date": "2026-06-01",
@@ -2413,7 +2449,7 @@
       "ev": 52.2,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 259.32
+      "bankroll": 280.95
     },
     {
       "date": "2026-06-01",
@@ -2425,7 +2461,7 @@
       "ev": 34.8,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 259.32
+      "bankroll": 280.95
     },
     {
       "date": "2026-06-01",
@@ -2437,7 +2473,7 @@
       "ev": 14.3,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 259.32
+      "bankroll": 280.95
     },
     {
       "date": "2026-06-01",
@@ -2449,7 +2485,7 @@
       "ev": 18.5,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 259.32
+      "bankroll": 280.95
     },
     {
       "date": "2026-05-31",
@@ -2459,9 +2495,9 @@
       "cote": 2.1,
       "mise": 11.86,
       "ev": 10.1,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 259.32
+      "resultat": "Gagné",
+      "gain_perte": 13.05,
+      "bankroll": 280.95
     },
     {
       "date": "2026-05-31",
@@ -2471,9 +2507,9 @@
       "cote": 2.4,
       "mise": 12.17,
       "ev": 24.3,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 259.32
+      "resultat": "Perdu",
+      "gain_perte": -12.17,
+      "bankroll": 267.9
     },
     {
       "date": "2026-05-31",
@@ -2483,9 +2519,9 @@
       "cote": 2.6,
       "mise": 12.97,
       "ev": 36.3,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 249.34
+      "resultat": "Gagné",
+      "gain_perte": 20.75,
+      "bankroll": 270.09
     },
     {
       "date": "2026-05-30",
@@ -2497,7 +2533,7 @@
       "ev": 16.5,
       "resultat": "Gagné",
       "gain_perte": 9.98,
-      "bankroll": 259.32
+      "bankroll": 280.07
     },
     {
       "date": "2026-05-30",
@@ -2640,16 +2676,16 @@
       "surface": "dur",
       "joueur1": "Jakub Mensik",
       "joueur2": "Andrey Rublev",
-      "elo1": 1775,
-      "elo2": 1739,
+      "elo1": 1738,
+      "elo2": 1762,
       "cote1": 2.1,
       "cote2": 1.8,
       "bm1": "pmu_fr",
       "bm2": "winamax_fr",
-      "prob1": 0.524,
-      "prob2": 0.476,
-      "ev1": 0.101,
-      "ev2": -0.143
+      "prob1": 0.504,
+      "prob2": 0.496,
+      "ev1": 0.059,
+      "ev2": -0.108
     },
     {
       "date": "2026-05-31",
@@ -2658,16 +2694,16 @@
       "surface": "dur",
       "joueur1": "Casper Ruud",
       "joueur2": "Joao Fonseca",
-      "elo1": 1730,
-      "elo2": 1747,
+      "elo1": 1794,
+      "elo2": 1721,
       "cote1": 1.59,
       "cote2": 2.6,
       "bm1": "betclic_fr",
       "bm2": "pmu_fr",
-      "prob1": 0.476,
-      "prob2": 0.524,
-      "ev1": -0.243,
-      "ev2": 0.363
+      "prob1": 0.536,
+      "prob2": 0.464,
+      "ev1": -0.148,
+      "ev2": 0.207
     },
     {
       "date": "2026-06-01",
@@ -2676,16 +2712,16 @@
       "surface": "dur",
       "joueur1": "Flavio Cobolli",
       "joueur2": "Zachary Svajda",
-      "elo1": 1772,
-      "elo2": 1451,
+      "elo1": 1736,
+      "elo2": 1464,
       "cote1": 1.13,
       "cote2": 6.0,
       "bm1": "winamax_fr",
       "bm2": "winamax_fr",
-      "prob1": 0.738,
-      "prob2": 0.262,
-      "ev1": -0.166,
-      "ev2": 0.572
+      "prob1": 0.693,
+      "prob2": 0.307,
+      "ev1": -0.216,
+      "ev2": 0.839
     },
     {
       "date": "2026-06-01",
@@ -2694,16 +2730,16 @@
       "surface": "dur",
       "joueur1": "Juan Manuel Cerundolo",
       "joueur2": "Matteo Berrettini",
-      "elo1": 1514,
-      "elo2": 1671,
+      "elo1": 1500,
+      "elo2": 1649,
       "cote1": 2.3,
       "cote2": 1.64,
       "bm1": "winamax_fr",
       "bm2": "winamax_fr",
-      "prob1": 0.277,
-      "prob2": 0.723,
-      "ev1": -0.362,
-      "ev2": 0.185
+      "prob1": 0.291,
+      "prob2": 0.709,
+      "ev1": -0.331,
+      "ev2": 0.163
     },
     {
       "date": "2026-06-01",
@@ -2712,16 +2748,16 @@
       "surface": "dur",
       "joueur1": "Felix Auger Aliassime",
       "joueur2": "Alejandro Tabilo",
-      "elo1": 1874,
+      "elo1": 1827,
       "elo2": 1654,
       "cote1": 1.58,
       "cote2": 2.48,
       "bm1": "winamax_fr",
       "bm2": "pmu_fr",
-      "prob1": 0.723,
-      "prob2": 0.277,
-      "ev1": 0.143,
-      "ev2": -0.314
+      "prob1": 0.718,
+      "prob2": 0.282,
+      "ev1": 0.134,
+      "ev2": -0.3
     },
     {
       "date": "2026-06-01",
@@ -2730,16 +2766,16 @@
       "surface": "dur",
       "joueur1": "Frances Tiafoe",
       "joueur2": "Matteo Arnaldi",
-      "elo1": 1761,
-      "elo2": 1479,
+      "elo1": 1727,
+      "elo2": 1522,
       "cote1": 1.82,
       "cote2": 2.0,
       "bm1": "winamax_fr",
       "bm2": "unibet_fr",
-      "prob1": 0.741,
-      "prob2": 0.259,
-      "ev1": 0.348,
-      "ev2": -0.481
+      "prob1": 0.693,
+      "prob2": 0.307,
+      "ev1": 0.261,
+      "ev2": -0.386
     },
     {
       "date": "2026-06-01",
@@ -2793,7 +2829,7 @@
       "prob1": 0.714,
       "prob2": 0.286,
       "ev1": -0.136,
-      "ev2": 0.314
+      "ev2": 0.315
     }
   ]
 }
