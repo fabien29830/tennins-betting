@@ -1,19 +1,19 @@
 {
   "meta": {
-    "updated_at": "2026-06-01T19:00:35",
+    "updated_at": "2026-06-02T08:00:33",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 280.95,
-    "roi_global": -71.91,
-    "total_paris": 204,
-    "paris_gagnes": 84,
-    "paris_perdus": 110,
-    "paris_en_cours": 10,
-    "taux_reussite": 43.3,
-    "total_mise": 7021.87,
-    "gain_perte_total": -719.05,
-    "ev_moyen_global": 24.8
+    "bankroll_actuelle": 322.71,
+    "roi_global": -67.73,
+    "total_paris": 207,
+    "paris_gagnes": 88,
+    "paris_perdus": 111,
+    "paris_en_cours": 8,
+    "taux_reussite": 44.2,
+    "total_mise": 7064.02,
+    "gain_perte_total": -677.29,
+    "ev_moyen_global": 24.9
   },
   "bankroll_historique": [
     {
@@ -1575,6 +1575,46 @@
       "joueur": "Jakub Mensik",
       "resultat": "Gagné",
       "gain_perte": 13.05
+    },
+    {
+      "date": "2026-06-01",
+      "bankroll": 289.25,
+      "match": "Juan Manuel Cerundolo vs Matteo Berrettini",
+      "joueur": "Matteo Berrettini",
+      "resultat": "Gagné",
+      "gain_perte": 8.3
+    },
+    {
+      "date": "2026-06-01",
+      "bankroll": 296.77,
+      "match": "Felix Auger-Aliassime vs Alejandro Tabilo",
+      "joueur": "Felix Auger-Aliassime",
+      "resultat": "Gagné",
+      "gain_perte": 7.52
+    },
+    {
+      "date": "2026-06-01",
+      "bankroll": 283.8,
+      "match": "Frances Tiafoe vs Matteo Arnaldi",
+      "joueur": "Frances Tiafoe",
+      "resultat": "Perdu",
+      "gain_perte": -12.97
+    },
+    {
+      "date": "2026-06-01",
+      "bankroll": 305.85,
+      "match": "Anastasia Potapova vs Anna Kalinskaya",
+      "joueur": "Anna Kalinskaya",
+      "resultat": "Gagné",
+      "gain_perte": 22.05
+    },
+    {
+      "date": "2026-06-01",
+      "bankroll": 322.71,
+      "match": "Madison Keys vs Diana Shnaider",
+      "joueur": "Diana Shnaider",
+      "resultat": "Gagné",
+      "gain_perte": 16.86
     }
   ],
   "roi_cumulatif": [
@@ -2357,6 +2397,26 @@
     {
       "date": "2026-05-31",
       "roi": -71.91
+    },
+    {
+      "date": "2026-06-01",
+      "roi": -71.08
+    },
+    {
+      "date": "2026-06-01",
+      "roi": -70.32
+    },
+    {
+      "date": "2026-06-01",
+      "roi": -71.62
+    },
+    {
+      "date": "2026-06-01",
+      "roi": -69.41
+    },
+    {
+      "date": "2026-06-01",
+      "roi": -67.73
     }
   ],
   "ev_par_semaine": [
@@ -2422,11 +2482,47 @@
     },
     {
       "semaine": "2026-S23",
-      "ev_moyen": 27.1,
-      "nb_paris": 5
+      "ev_moyen": 29.8,
+      "nb_paris": 8
     }
   ],
   "paris_recents": [
+    {
+      "date": "2026-06-03",
+      "match": "Anna Kalinskaya vs Maja Chwalinska",
+      "joueur": "Anna Kalinskaya",
+      "bookmaker": "unibet_fr",
+      "cote": 1.9,
+      "mise": 14.05,
+      "ev": 34.3,
+      "resultat": "En cours",
+      "gain_perte": null,
+      "bankroll": 322.71
+    },
+    {
+      "date": "2026-06-03",
+      "match": "Felix Auger-Aliassime vs Flavio Cobolli",
+      "joueur": "Felix Auger-Aliassime",
+      "bookmaker": "winamax_fr",
+      "cote": 1.94,
+      "mise": 14.05,
+      "ev": 25.2,
+      "resultat": "En cours",
+      "gain_perte": null,
+      "bankroll": 322.71
+    },
+    {
+      "date": "2026-06-02",
+      "match": "Jakub Mensik vs Joao Fonseca",
+      "joueur": "Jakub Mensik",
+      "bookmaker": "unibet_fr",
+      "cote": 2.8,
+      "mise": 14.05,
+      "ev": 43.1,
+      "resultat": "En cours",
+      "gain_perte": null,
+      "bankroll": 322.71
+    },
     {
       "date": "2026-06-01",
       "match": "Madison Keys vs Diana Shnaider",
@@ -2435,9 +2531,9 @@
       "cote": 2.3,
       "mise": 12.97,
       "ev": 15.6,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 280.95
+      "resultat": "Gagné",
+      "gain_perte": 16.86,
+      "bankroll": 322.71
     },
     {
       "date": "2026-06-01",
@@ -2447,9 +2543,9 @@
       "cote": 2.7,
       "mise": 12.97,
       "ev": 52.2,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 280.95
+      "resultat": "Gagné",
+      "gain_perte": 22.05,
+      "bankroll": 305.85
     },
     {
       "date": "2026-06-01",
@@ -2459,9 +2555,9 @@
       "cote": 1.82,
       "mise": 12.97,
       "ev": 34.8,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 280.95
+      "resultat": "Perdu",
+      "gain_perte": -12.97,
+      "bankroll": 283.8
     },
     {
       "date": "2026-06-01",
@@ -2471,9 +2567,9 @@
       "cote": 1.58,
       "mise": 12.97,
       "ev": 14.3,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 280.95
+      "resultat": "Gagné",
+      "gain_perte": 7.52,
+      "bankroll": 296.77
     },
     {
       "date": "2026-06-01",
@@ -2483,9 +2579,9 @@
       "cote": 1.64,
       "mise": 12.97,
       "ev": 18.5,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 280.95
+      "resultat": "Gagné",
+      "gain_perte": 8.3,
+      "bankroll": 289.25
     },
     {
       "date": "2026-05-31",
@@ -2630,206 +2726,152 @@
       "resultat": "Gagné",
       "gain_perte": 23.54,
       "bankroll": 267.45
-    },
-    {
-      "date": "2026-05-29",
-      "match": "Joao Fonseca vs Novak Djokovic",
-      "joueur": "Novak Djokovic",
-      "bookmaker": "pmu_fr",
-      "cote": 1.54,
-      "mise": 12.07,
-      "ev": 16.3,
-      "resultat": "Perdu",
-      "gain_perte": -12.07,
-      "bankroll": 243.91
-    },
-    {
-      "date": "2026-05-28",
-      "match": "Yulia Putintseva vs Maria Camila Osorio Serrano",
-      "joueur": "Yulia Putintseva",
-      "bookmaker": "winamax_fr",
-      "cote": 2.2,
-      "mise": 12.07,
-      "ev": 63.6,
-      "resultat": "Perdu",
-      "gain_perte": -12.07,
-      "bankroll": 243.31
-    },
-    {
-      "date": "2026-05-28",
-      "match": "Iva Jović vs Emma Navarro",
-      "joueur": "Emma Navarro",
-      "bookmaker": "winamax_fr",
-      "cote": 2.0,
-      "mise": 12.07,
-      "ev": 41.1,
-      "resultat": "Perdu",
-      "gain_perte": -12.07,
-      "bankroll": 255.38
     }
   ],
   "matchs_venir": [
     {
-      "date": "2026-05-31",
+      "date": "2026-06-02",
+      "tournoi": "tennis_atp_french_open",
+      "circuit": "ATP",
+      "surface": "dur",
+      "joueur1": "Rafael Jodar",
+      "joueur2": "Alexander Zverev",
+      "elo1": 1746,
+      "elo2": 1947,
+      "cote1": 3.65,
+      "cote2": 1.32,
+      "bm1": "betclic_fr",
+      "bm2": "unibet_fr",
+      "prob1": 0.283,
+      "prob2": 0.717,
+      "ev1": 0.033,
+      "ev2": -0.054
+    },
+    {
+      "date": "2026-06-02",
       "tournoi": "tennis_atp_french_open",
       "circuit": "ATP",
       "surface": "dur",
       "joueur1": "Jakub Mensik",
-      "joueur2": "Andrey Rublev",
-      "elo1": 1738,
-      "elo2": 1762,
-      "cote1": 2.1,
-      "cote2": 1.8,
-      "bm1": "pmu_fr",
-      "bm2": "winamax_fr",
-      "prob1": 0.504,
-      "prob2": 0.496,
-      "ev1": 0.059,
-      "ev2": -0.108
-    },
-    {
-      "date": "2026-05-31",
-      "tournoi": "tennis_atp_french_open",
-      "circuit": "ATP",
-      "surface": "dur",
-      "joueur1": "Casper Ruud",
       "joueur2": "Joao Fonseca",
-      "elo1": 1794,
+      "elo1": 1738,
       "elo2": 1721,
-      "cote1": 1.59,
-      "cote2": 2.6,
-      "bm1": "betclic_fr",
-      "bm2": "pmu_fr",
-      "prob1": 0.536,
-      "prob2": 0.464,
-      "ev1": -0.148,
-      "ev2": 0.207
+      "cote1": 2.8,
+      "cote2": 1.47,
+      "bm1": "unibet_fr",
+      "bm2": "betclic_fr",
+      "prob1": 0.511,
+      "prob2": 0.489,
+      "ev1": 0.431,
+      "ev2": -0.281
     },
     {
-      "date": "2026-06-01",
-      "tournoi": "tennis_atp_french_open",
-      "circuit": "ATP",
-      "surface": "dur",
-      "joueur1": "Flavio Cobolli",
-      "joueur2": "Zachary Svajda",
-      "elo1": 1736,
-      "elo2": 1464,
-      "cote1": 1.13,
-      "cote2": 6.0,
-      "bm1": "winamax_fr",
-      "bm2": "winamax_fr",
-      "prob1": 0.693,
-      "prob2": 0.307,
-      "ev1": -0.216,
-      "ev2": 0.839
-    },
-    {
-      "date": "2026-06-01",
-      "tournoi": "tennis_atp_french_open",
-      "circuit": "ATP",
-      "surface": "dur",
-      "joueur1": "Juan Manuel Cerundolo",
-      "joueur2": "Matteo Berrettini",
-      "elo1": 1500,
-      "elo2": 1649,
-      "cote1": 2.3,
-      "cote2": 1.64,
-      "bm1": "winamax_fr",
-      "bm2": "winamax_fr",
-      "prob1": 0.291,
-      "prob2": 0.709,
-      "ev1": -0.331,
-      "ev2": 0.163
-    },
-    {
-      "date": "2026-06-01",
+      "date": "2026-06-03",
       "tournoi": "tennis_atp_french_open",
       "circuit": "ATP",
       "surface": "dur",
       "joueur1": "Felix Auger Aliassime",
-      "joueur2": "Alejandro Tabilo",
+      "joueur2": "Flavio Cobolli",
       "elo1": 1827,
-      "elo2": 1654,
-      "cote1": 1.58,
-      "cote2": 2.48,
+      "elo2": 1736,
+      "cote1": 1.94,
+      "cote2": 1.95,
       "bm1": "winamax_fr",
-      "bm2": "pmu_fr",
-      "prob1": 0.718,
-      "prob2": 0.282,
-      "ev1": 0.134,
-      "ev2": -0.3
+      "bm2": "unibet_fr",
+      "prob1": 0.645,
+      "prob2": 0.355,
+      "ev1": 0.252,
+      "ev2": -0.308
     },
     {
-      "date": "2026-06-01",
+      "date": "2026-06-03",
       "tournoi": "tennis_atp_french_open",
       "circuit": "ATP",
       "surface": "dur",
-      "joueur1": "Frances Tiafoe",
+      "joueur1": "Matteo Berrettini",
       "joueur2": "Matteo Arnaldi",
-      "elo1": 1727,
+      "elo1": 1649,
       "elo2": 1522,
-      "cote1": 1.82,
-      "cote2": 2.0,
-      "bm1": "winamax_fr",
-      "bm2": "unibet_fr",
-      "prob1": 0.693,
-      "prob2": 0.307,
-      "ev1": 0.261,
-      "ev2": -0.386
-    },
-    {
-      "date": "2026-06-01",
-      "tournoi": "tennis_wta_french_open",
-      "circuit": "WTA",
-      "surface": "dur",
-      "joueur1": "Anastasia Potapova",
-      "joueur2": "Anna Kalinskaya",
-      "elo1": 1641,
-      "elo2": 1720,
-      "cote1": 1.47,
-      "cote2": 2.7,
-      "bm1": "pmu_fr",
-      "bm2": "unibet_fr",
-      "prob1": 0.436,
-      "prob2": 0.564,
-      "ev1": -0.359,
-      "ev2": 0.522
-    },
-    {
-      "date": "2026-06-01",
-      "tournoi": "tennis_wta_french_open",
-      "circuit": "WTA",
-      "surface": "dur",
-      "joueur1": "Madison Keys",
-      "joueur2": "Diana Shnaider",
-      "elo1": 1787,
-      "elo2": 1768,
-      "cote1": 1.64,
-      "cote2": 2.3,
+      "cote1": 1.56,
+      "cote2": 2.45,
       "bm1": "winamax_fr",
       "bm2": "winamax_fr",
-      "prob1": 0.497,
-      "prob2": 0.503,
-      "ev1": -0.184,
-      "ev2": 0.156
+      "prob1": 0.681,
+      "prob2": 0.319,
+      "ev1": 0.063,
+      "ev2": -0.22
     },
     {
-      "date": "2026-06-01",
+      "date": "2026-06-02",
+      "tournoi": "tennis_wta_french_open",
+      "circuit": "WTA",
+      "surface": "dur",
+      "joueur1": "Mirra Andreeva",
+      "joueur2": "Sorana Cirstea",
+      "elo1": 1782,
+      "elo2": 1595,
+      "cote1": 1.52,
+      "cote2": 2.67,
+      "bm1": "winamax_fr",
+      "bm2": "betclic_fr",
+      "prob1": 0.613,
+      "prob2": 0.387,
+      "ev1": -0.068,
+      "ev2": 0.032
+    },
+    {
+      "date": "2026-06-02",
+      "tournoi": "tennis_wta_french_open",
+      "circuit": "WTA",
+      "surface": "dur",
+      "joueur1": "Elina Svitolina",
+      "joueur2": "Marta Kostyuk",
+      "elo1": 1742,
+      "elo2": 1747,
+      "cote1": 2.1,
+      "cote2": 1.79,
+      "bm1": "unibet_fr",
+      "bm2": "betclic_fr",
+      "prob1": 0.501,
+      "prob2": 0.499,
+      "ev1": 0.052,
+      "ev2": -0.106
+    },
+    {
+      "date": "2026-06-03",
+      "tournoi": "tennis_wta_french_open",
+      "circuit": "WTA",
+      "surface": "dur",
+      "joueur1": "Anna Kalinskaya",
+      "joueur2": "Maja Chwalinska",
+      "elo1": 1720,
+      "elo2": 1470,
+      "cote1": 1.9,
+      "cote2": 2.02,
+      "bm1": "unibet_fr",
+      "bm2": "pmu_fr",
+      "prob1": 0.707,
+      "prob2": 0.293,
+      "ev1": 0.343,
+      "ev2": -0.407
+    },
+    {
+      "date": "2026-06-03",
       "tournoi": "tennis_wta_french_open",
       "circuit": "WTA",
       "surface": "dur",
       "joueur1": "Aryna Sabalenka",
-      "joueur2": "Naomi Osaka",
+      "joueur2": "Diana Shnaider",
       "elo1": 1991,
-      "elo2": 1703,
-      "cote1": 1.21,
-      "cote2": 4.6,
-      "bm1": "pmu_fr",
+      "elo2": 1768,
+      "cote1": 1.15,
+      "cote2": 6.1,
+      "bm1": "unibet_fr",
       "bm2": "betclic_fr",
-      "prob1": 0.714,
-      "prob2": 0.286,
-      "ev1": -0.136,
-      "ev2": 0.315
+      "prob1": 0.699,
+      "prob2": 0.301,
+      "ev1": -0.196,
+      "ev2": 0.835
     }
   ]
 }
