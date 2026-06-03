@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-06-02T19:00:31",
+    "updated_at": "2026-06-03T08:00:25",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 322.71,
-    "roi_global": -67.73,
+    "bankroll_actuelle": 348.0,
+    "roi_global": -65.2,
     "total_paris": 207,
-    "paris_gagnes": 88,
+    "paris_gagnes": 89,
     "paris_perdus": 111,
-    "paris_en_cours": 8,
-    "taux_reussite": 44.2,
+    "paris_en_cours": 7,
+    "taux_reussite": 44.5,
     "total_mise": 7064.02,
-    "gain_perte_total": -677.29,
+    "gain_perte_total": -652.0,
     "ev_moyen_global": 24.9
   },
   "bankroll_historique": [
@@ -1615,6 +1615,14 @@
       "joueur": "Diana Shnaider",
       "resultat": "Gagné",
       "gain_perte": 16.86
+    },
+    {
+      "date": "2026-06-02",
+      "bankroll": 348.0,
+      "match": "Jakub Mensik vs Joao Fonseca",
+      "joueur": "Jakub Mensik",
+      "resultat": "Gagné",
+      "gain_perte": 25.29
     }
   ],
   "roi_cumulatif": [
@@ -2417,6 +2425,10 @@
     {
       "date": "2026-06-01",
       "roi": -67.73
+    },
+    {
+      "date": "2026-06-02",
+      "roi": -65.2
     }
   ],
   "ev_par_semaine": [
@@ -2497,7 +2509,7 @@
       "ev": 34.3,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 322.71
+      "bankroll": 348.0
     },
     {
       "date": "2026-06-03",
@@ -2509,7 +2521,7 @@
       "ev": 25.2,
       "resultat": "En cours",
       "gain_perte": null,
-      "bankroll": 322.71
+      "bankroll": 348.0
     },
     {
       "date": "2026-06-02",
@@ -2519,9 +2531,9 @@
       "cote": 2.8,
       "mise": 14.05,
       "ev": 43.1,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 322.71
+      "resultat": "Gagné",
+      "gain_perte": 25.29,
+      "bankroll": 348.0
     },
     {
       "date": "2026-06-01",
