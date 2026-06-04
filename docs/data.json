@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-06-03T19:00:22",
+    "updated_at": "2026-06-04T08:00:32",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 348.0,
-    "roi_global": -65.2,
+    "bankroll_actuelle": 319.9,
+    "roi_global": -68.01,
     "total_paris": 207,
     "paris_gagnes": 89,
-    "paris_perdus": 111,
-    "paris_en_cours": 7,
-    "taux_reussite": 44.5,
+    "paris_perdus": 113,
+    "paris_en_cours": 5,
+    "taux_reussite": 44.1,
     "total_mise": 7064.02,
-    "gain_perte_total": -652.0,
+    "gain_perte_total": -680.1,
     "ev_moyen_global": 24.9
   },
   "bankroll_historique": [
@@ -1623,6 +1623,22 @@
       "joueur": "Jakub Mensik",
       "resultat": "Gagné",
       "gain_perte": 25.29
+    },
+    {
+      "date": "2026-06-03",
+      "bankroll": 333.95,
+      "match": "Felix Auger-Aliassime vs Flavio Cobolli",
+      "joueur": "Felix Auger-Aliassime",
+      "resultat": "Perdu",
+      "gain_perte": -14.05
+    },
+    {
+      "date": "2026-06-03",
+      "bankroll": 319.9,
+      "match": "Anna Kalinskaya vs Maja Chwalinska",
+      "joueur": "Anna Kalinskaya",
+      "resultat": "Perdu",
+      "gain_perte": -14.05
     }
   ],
   "roi_cumulatif": [
@@ -2429,6 +2445,14 @@
     {
       "date": "2026-06-02",
       "roi": -65.2
+    },
+    {
+      "date": "2026-06-03",
+      "roi": -66.6
+    },
+    {
+      "date": "2026-06-03",
+      "roi": -68.01
     }
   ],
   "ev_par_semaine": [
@@ -2507,9 +2531,9 @@
       "cote": 1.9,
       "mise": 14.05,
       "ev": 34.3,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 348.0
+      "resultat": "Perdu",
+      "gain_perte": -14.05,
+      "bankroll": 319.9
     },
     {
       "date": "2026-06-03",
@@ -2519,9 +2543,9 @@
       "cote": 1.94,
       "mise": 14.05,
       "ev": 25.2,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 348.0
+      "resultat": "Perdu",
+      "gain_perte": -14.05,
+      "bankroll": 333.95
     },
     {
       "date": "2026-06-02",
