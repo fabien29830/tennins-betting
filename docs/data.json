@@ -1,19 +1,19 @@
 {
   "meta": {
-    "updated_at": "2026-06-04T13:00:29",
+    "updated_at": "2026-06-04T19:00:37",
     "bankroll_initiale": 1000.0
   },
   "stats": {
     "bankroll_actuelle": 319.9,
     "roi_global": -68.01,
-    "total_paris": 207,
+    "total_paris": 208,
     "paris_gagnes": 89,
     "paris_perdus": 113,
-    "paris_en_cours": 5,
+    "paris_en_cours": 6,
     "taux_reussite": 44.1,
-    "total_mise": 7064.02,
+    "total_mise": 7080.01,
     "gain_perte_total": -680.1,
-    "ev_moyen_global": 24.9
+    "ev_moyen_global": 25.1
   },
   "bankroll_historique": [
     {
@@ -2518,11 +2518,23 @@
     },
     {
       "semaine": "2026-S23",
-      "ev_moyen": 29.8,
-      "nb_paris": 8
+      "ev_moyen": 32.9,
+      "nb_paris": 9
     }
   ],
   "paris_recents": [
+    {
+      "date": "2026-06-04",
+      "match": "Diana Shnaider vs Maja Chwalinska",
+      "joueur": "Diana Shnaider",
+      "bookmaker": "betclic_fr",
+      "cote": 2.05,
+      "mise": 15.99,
+      "ev": 58.1,
+      "resultat": "En cours",
+      "gain_perte": null,
+      "bankroll": 319.9
+    },
     {
       "date": "2026-06-03",
       "match": "Anna Kalinskaya vs Maja Chwalinska",
@@ -2750,110 +2762,62 @@
       "resultat": "Perdu",
       "gain_perte": -12.08,
       "bankroll": 231.23
-    },
-    {
-      "date": "2026-05-29",
-      "match": "Thiago Agustin Tirante vs Pablo Carreno Busta",
-      "joueur": "Pablo Carreno Busta",
-      "bookmaker": "pmu_fr",
-      "cote": 2.95,
-      "mise": 12.07,
-      "ev": 30.8,
-      "resultat": "Gagné",
-      "gain_perte": 23.54,
-      "bankroll": 267.45
     }
   ],
   "matchs_venir": [
     {
-      "date": "2026-06-03",
+      "date": "2026-06-05",
       "tournoi": "tennis_atp_french_open",
       "circuit": "ATP",
       "surface": "dur",
-      "joueur1": "Felix Auger Aliassime",
-      "joueur2": "Flavio Cobolli",
-      "elo1": 1827,
-      "elo2": 1736,
-      "cote1": 1.93,
-      "cote2": 1.94,
+      "joueur1": "Jakub Mensik",
+      "joueur2": "Alexander Zverev",
+      "elo1": 1738,
+      "elo2": 1947,
+      "cote1": 4.35,
+      "cote2": 1.26,
       "bm1": "pmu_fr",
       "bm2": "unibet_fr",
-      "prob1": 0.645,
-      "prob2": 0.355,
-      "ev1": 0.245,
-      "ev2": -0.312
+      "prob1": 0.329,
+      "prob2": 0.671,
+      "ev1": 0.433,
+      "ev2": -0.155
     },
     {
-      "date": "2026-06-03",
+      "date": "2026-06-05",
       "tournoi": "tennis_atp_french_open",
       "circuit": "ATP",
       "surface": "dur",
-      "joueur1": "Matteo Berrettini",
-      "joueur2": "Matteo Arnaldi",
-      "elo1": 1649,
-      "elo2": 1522,
-      "cote1": 1.55,
-      "cote2": 2.6,
-      "bm1": "pmu_fr",
-      "bm2": "betclic_fr",
-      "prob1": 0.681,
-      "prob2": 0.319,
-      "ev1": 0.056,
-      "ev2": -0.172
-    },
-    {
-      "date": "2026-06-03",
-      "tournoi": "tennis_wta_french_open",
-      "circuit": "WTA",
-      "surface": "dur",
-      "joueur1": "Anna Kalinskaya",
-      "joueur2": "Maja Chwalinska",
-      "elo1": 1720,
-      "elo2": 1470,
-      "cote1": 28.0,
-      "cote2": 1.02,
-      "bm1": "winamax_fr",
-      "bm2": "betclic_fr",
-      "prob1": 0.707,
-      "prob2": 0.293,
-      "ev1": 18.785,
-      "ev2": -0.701
-    },
-    {
-      "date": "2026-06-03",
-      "tournoi": "tennis_wta_french_open",
-      "circuit": "WTA",
-      "surface": "dur",
-      "joueur1": "Aryna Sabalenka",
-      "joueur2": "Diana Shnaider",
-      "elo1": 1991,
-      "elo2": 1768,
-      "cote1": 1.11,
-      "cote2": 8.0,
-      "bm1": "betclic_fr",
-      "bm2": "pmu_fr",
-      "prob1": 0.699,
-      "prob2": 0.301,
-      "ev1": -0.224,
-      "ev2": 1.407
+      "joueur1": "Matteo Arnaldi",
+      "joueur2": "Flavio Cobolli",
+      "elo1": 1522,
+      "elo2": 1736,
+      "cote1": 3.0,
+      "cote2": 1.42,
+      "bm1": "unibet_fr",
+      "bm2": "winamax_fr",
+      "prob1": 0.334,
+      "prob2": 0.666,
+      "ev1": 0.002,
+      "ev2": -0.054
     },
     {
       "date": "2026-06-04",
       "tournoi": "tennis_wta_french_open",
       "circuit": "WTA",
       "surface": "dur",
-      "joueur1": "Marta Kostyuk",
-      "joueur2": "Mirra Andreeva",
-      "elo1": 1747,
-      "elo2": 1782,
-      "cote1": 1.76,
-      "cote2": 2.15,
-      "bm1": "unibet_fr",
-      "bm2": "unibet_fr",
-      "prob1": 0.501,
-      "prob2": 0.499,
-      "ev1": -0.118,
-      "ev2": 0.073
+      "joueur1": "Diana Shnaider",
+      "joueur2": "Maja Chwalinska",
+      "elo1": 1768,
+      "elo2": 1470,
+      "cote1": 2.05,
+      "cote2": 1.67,
+      "bm1": "betclic_fr",
+      "bm2": "betclic_fr",
+      "prob1": 0.771,
+      "prob2": 0.229,
+      "ev1": 0.581,
+      "ev2": -0.618
     }
   ]
 }
