@@ -1,18 +1,18 @@
 {
   "meta": {
-    "updated_at": "2026-06-04T19:00:37",
+    "updated_at": "2026-06-05T08:00:32",
     "bankroll_initiale": 1000.0
   },
   "stats": {
-    "bankroll_actuelle": 319.9,
-    "roi_global": -68.01,
+    "bankroll_actuelle": 303.91,
+    "roi_global": -69.61,
     "total_paris": 208,
     "paris_gagnes": 89,
-    "paris_perdus": 113,
-    "paris_en_cours": 6,
-    "taux_reussite": 44.1,
+    "paris_perdus": 114,
+    "paris_en_cours": 5,
+    "taux_reussite": 43.8,
     "total_mise": 7080.01,
-    "gain_perte_total": -680.1,
+    "gain_perte_total": -696.09,
     "ev_moyen_global": 25.1
   },
   "bankroll_historique": [
@@ -1639,6 +1639,14 @@
       "joueur": "Anna Kalinskaya",
       "resultat": "Perdu",
       "gain_perte": -14.05
+    },
+    {
+      "date": "2026-06-04",
+      "bankroll": 303.91,
+      "match": "Diana Shnaider vs Maja Chwalinska",
+      "joueur": "Diana Shnaider",
+      "resultat": "Perdu",
+      "gain_perte": -15.99
     }
   ],
   "roi_cumulatif": [
@@ -2453,6 +2461,10 @@
     {
       "date": "2026-06-03",
       "roi": -68.01
+    },
+    {
+      "date": "2026-06-04",
+      "roi": -69.61
     }
   ],
   "ev_par_semaine": [
@@ -2531,9 +2543,9 @@
       "cote": 2.05,
       "mise": 15.99,
       "ev": 58.1,
-      "resultat": "En cours",
-      "gain_perte": null,
-      "bankroll": 319.9
+      "resultat": "Perdu",
+      "gain_perte": -15.99,
+      "bankroll": 303.91
     },
     {
       "date": "2026-06-03",
