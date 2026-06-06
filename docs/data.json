@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updated_at": "2026-06-05T19:00:29",
+    "updated_at": "2026-06-06T08:00:23",
     "bankroll_initiale": 1000.0
   },
   "stats": {
@@ -2778,58 +2778,40 @@
   ],
   "matchs_venir": [
     {
-      "date": "2026-06-05",
+      "date": "2026-06-07",
       "tournoi": "tennis_atp_french_open",
       "circuit": "ATP",
       "surface": "dur",
-      "joueur1": "Jakub Mensik",
+      "joueur1": "Flavio Cobolli",
       "joueur2": "Alexander Zverev",
-      "elo1": 1738,
+      "elo1": 1736,
       "elo2": 1947,
-      "cote1": 4.35,
+      "cote1": 4.15,
       "cote2": 1.26,
-      "bm1": "pmu_fr",
+      "bm1": "betclic_fr",
       "bm2": "unibet_fr",
-      "prob1": 0.329,
-      "prob2": 0.671,
-      "ev1": 0.433,
-      "ev2": -0.155
+      "prob1": 0.324,
+      "prob2": 0.676,
+      "ev1": 0.347,
+      "ev2": -0.149
     },
     {
-      "date": "2026-06-05",
-      "tournoi": "tennis_atp_french_open",
-      "circuit": "ATP",
-      "surface": "dur",
-      "joueur1": "Matteo Arnaldi",
-      "joueur2": "Flavio Cobolli",
-      "elo1": 1522,
-      "elo2": 1736,
-      "cote1": 3.0,
-      "cote2": 1.42,
-      "bm1": "unibet_fr",
-      "bm2": "winamax_fr",
-      "prob1": 0.334,
-      "prob2": 0.666,
-      "ev1": 0.002,
-      "ev2": -0.054
-    },
-    {
-      "date": "2026-06-04",
+      "date": "2026-06-06",
       "tournoi": "tennis_wta_french_open",
       "circuit": "WTA",
       "surface": "dur",
-      "joueur1": "Diana Shnaider",
-      "joueur2": "Maja Chwalinska",
-      "elo1": 1768,
-      "elo2": 1470,
-      "cote1": 2.05,
-      "cote2": 1.67,
-      "bm1": "betclic_fr",
-      "bm2": "betclic_fr",
-      "prob1": 0.771,
-      "prob2": 0.229,
-      "ev1": 0.581,
-      "ev2": -0.618
+      "joueur1": "Maja Chwalinska",
+      "joueur2": "Mirra Andreeva",
+      "elo1": 1470,
+      "elo2": 1782,
+      "cote1": 4.2,
+      "cote2": 1.28,
+      "bm1": "pmu_fr",
+      "bm2": "unibet_fr",
+      "prob1": 0.223,
+      "prob2": 0.777,
+      "ev1": -0.061,
+      "ev2": -0.006
     }
   ]
 }
