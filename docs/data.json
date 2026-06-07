@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updated_at": "2026-06-06T19:00:21",
+    "updated_at": "2026-06-07T08:00:24",
     "bankroll_initiale": 1000.0
   },
   "stats": {
@@ -2786,32 +2786,14 @@
       "joueur2": "Alexander Zverev",
       "elo1": 1736,
       "elo2": 1947,
-      "cote1": 4.15,
-      "cote2": 1.26,
-      "bm1": "betclic_fr",
+      "cote1": 4.3,
+      "cote2": 1.25,
+      "bm1": "unibet_fr",
       "bm2": "unibet_fr",
       "prob1": 0.324,
       "prob2": 0.676,
-      "ev1": 0.347,
-      "ev2": -0.149
-    },
-    {
-      "date": "2026-06-06",
-      "tournoi": "tennis_wta_french_open",
-      "circuit": "WTA",
-      "surface": "dur",
-      "joueur1": "Maja Chwalinska",
-      "joueur2": "Mirra Andreeva",
-      "elo1": 1470,
-      "elo2": 1782,
-      "cote1": 4.2,
-      "cote2": 1.28,
-      "bm1": "pmu_fr",
-      "bm2": "unibet_fr",
-      "prob1": 0.223,
-      "prob2": 0.777,
-      "ev1": -0.061,
-      "ev2": -0.006
+      "ev1": 0.395,
+      "ev2": -0.156
     }
   ]
 }
