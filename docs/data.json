@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updated_at": "2026-06-07T19:00:21",
+    "updated_at": "2026-06-08T07:06:00",
     "bankroll_initiale": 1000.0
   },
   "stats": {
@@ -2784,16 +2784,16 @@
       "surface": "dur",
       "joueur1": "Flavio Cobolli",
       "joueur2": "Alexander Zverev",
-      "elo1": 1736,
-      "elo2": 1947,
+      "elo1": 1730,
+      "elo2": 1946,
       "cote1": 4.3,
       "cote2": 1.25,
       "bm1": "unibet_fr",
       "bm2": "unibet_fr",
-      "prob1": 0.324,
-      "prob2": 0.676,
-      "ev1": 0.395,
-      "ev2": -0.156
+      "prob1": 0.316,
+      "prob2": 0.684,
+      "ev1": 0.361,
+      "ev2": -0.146
     }
   ]
 }
